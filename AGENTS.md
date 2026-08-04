@@ -1,5 +1,2 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+C:\Users\Murad Fataliyev\GLOBAL_AI_RULES.md 
+Always strictly read and follow both the local `ui-pro-max-skills` for design and visual UI/UX, AND the global rules from `GLOBAL_AI_RULES.md` located in the user home directory for code architecture, Playwright E2E testing, and security.

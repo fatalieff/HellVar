@@ -143,6 +143,50 @@ export type Dictionary = {
     reviewSaveError: string;
     unknownAddress: string;
   };
+  aboutPage: {
+    badge: string;
+    heroTitle: string;
+    heroSubtitle: string;
+    ctaStart: string;
+    ctaViewProviders: string;
+    trustTitle: string;
+    trustSubtitle: string;
+    statProviders: string;
+    statProvidersText: string;
+    statSpeed: string;
+    statSpeedText: string;
+    benefitsEyebrow: string;
+    benefitsTitle: string;
+    benefitsText: string;
+    missionEyebrow: string;
+    missionTitle: string;
+    missionText: string;
+    missionPoints: {
+      customer: { title: string; text: string };
+      provider: { title: string; text: string };
+      experience: { title: string; text: string };
+    };
+    highlights: {
+      trustedChoice: { title: string; text: string };
+      fastContact: { title: string; text: string };
+      everythingInOne: { title: string; text: string };
+    };
+    faqEyebrow: string;
+    faqTitle: string;
+    faqText: string;
+    faqs: {
+      why: { question: string; answer: string };
+      becomeProvider: { question: string; answer: string };
+      verification: { question: string; answer: string };
+      payments: { question: string; answer: string };
+    };
+    contactEyebrow: string;
+    contactTitle: string;
+    contactText: string;
+    contactEmail: string;
+    contactButton: string;
+    signupButton: string;
+  };
   footer: {
     description: string;
     sections: {
@@ -292,6 +336,50 @@ const az: Dictionary = {
     reviewRequiredRole: "Rəy yazmaq üçün müştəri kimi daxil olmalısınız.",
     reviewSaveError: "Rəyi yadda saxlamaq olmadı. Yenidən cəhd edin.",
     unknownAddress: "Ünvan qeyd edilməyib",
+  },
+  aboutPage: {
+    badge: "UstaTap haqqında",
+    heroTitle: "Ev işlərini daha sürətli, daha etibarlı və daha rahat etmək üçün yaradıq.",
+    heroSubtitle: "UstaTap müştərilərə uyğun ustaları tapmağa, ustalara isə iş tapmağa kömək edən modern bir xidmət platformasıdır. Bizim məqsədimiz hər iki tərəfi də rahat və etibarlı bir prosesə çıxarmaqdır.",
+    ctaStart: "İndi başla",
+    ctaViewProviders: "Ustaları gör",
+    trustTitle: "Etibarlılıq",
+    trustSubtitle: "Təsdiqlənmiş xidmət təcrübəsi",
+    statProviders: "500+ usta",
+    statProvidersText: "Müxtəlif xidmət sahələrində aktiv təkliflər.",
+    statSpeed: "15 dəq ərzində",
+    statSpeedText: "Sürətli müraciət və ilkin əlaqə imkanı.",
+    benefitsEyebrow: "Bizim missiyamız",
+    benefitsTitle: "Ev xidmətlərini daha asan, daha təhlükəsiz və daha insanı bir yerdə toplamaq.",
+    benefitsText: "UstaTap yalnız bir xidmət siyahısı deyil. Bu, müştəri ilə usta arasında etibar, sürət və rahatlıq yaradan bir məkan olaraq düşünülür.",
+    missionEyebrow: "Bizim missiyamız",
+    missionTitle: "Ev xidmətlərini daha asan, daha təhlükəsiz və daha insanı bir yerdə toplamaq.",
+    missionText: "UstaTap yalnız bir xidmət siyahısı deyil. Bu, müştəri ilə usta arasında etibar, sürət və rahatlıq yaradan bir məkan olaraq düşünülür.",
+    missionPoints: {
+      customer: { title: "Müştəri məmnuniyyəti", text: "Dəqiq məlumat, rahat seçim və asan əlaqə ilə hər addım daha aydın olur." },
+      provider: { title: "Usta inkişafı", text: "İş tapma, profil görünürlüğü və təkliflərin artırılması üçün daha rahat mexanizm yaradırıq." },
+      experience: { title: "Davamlı təcrübə", text: "Gələcəkdə daha çox avtomatlaşdırma, reytinq və təklif sistemləri ilə inkişaf edəcəyik." },
+    },
+    highlights: {
+      trustedChoice: { title: "Etibarlı seçim", text: "Təsdiqlənmiş ustalar və müştəri rəyləri ilə daha yaxşı seçim etmək mümkündür." },
+      fastContact: { title: "Sürətli əlaqə", text: "Problem yazıldıqdan sonra uyğun usta ilə münasibət çox daha tez qurulur." },
+      everythingInOne: { title: "Hər şey bir yerdə", text: "Kateqoriya, reytinq, yaxınlıq və əlaqə imkanları bir platformada birləşdirilir." },
+    },
+    faqEyebrow: "Tez-tez verilən suallar",
+    faqTitle: "Aydınlıq üçün ən çox sorulan sualları bir yerdə topladıq.",
+    faqText: "Hələ də bir sualınız qalırsa, aşağıdakı əlaqə bölməsindən yazın. Təsdiq edildikdən sonra davam edəcəyik.",
+    faqs: {
+      why: { question: "UstaTap nə üçün lazımlıdır?", answer: "UstaTap ev və iş sahəsi üçün etibarlı ustaları tez tapmağa kömək edir. Müştəri problemini yazır, sistem uyğun ustaları göstərir və əlaqə qurma prosesini asanlaşdırır." },
+      becomeProvider: { question: "Usta olmaq mümkün müdür?", answer: "Bəli. Qeydiyyatdan keçib profil yaradaraq usta kimi qeydiyyatdan keçə bilərsiniz. Təsdiqləmə sonrası profiliniz görünür və xidmət təklif edə bilirsiniz." },
+      verification: { question: "Ustalar necə təsdiqlənir?", answer: "Profil, xidmət sahəsi və məlumatlar yoxlanılır. Təsdiqlənmiş ustalar daha çox etibar qazandığı üçün müştərilər üçün daha əlçatan olur." },
+      payments: { question: "Ödəniş və ya rezervasiya necə gedir?", answer: "Hazırda platforma əsasən xidmətə uyğun əlaqə və təşəbbüs prosesi yönləndirilir. Daha sonra rezervasiya və ödəniş addımları daha da genişləndirilə bilər." },
+    },
+    contactEyebrow: "Sualınız var?",
+    contactTitle: "Bizimlə əlaqə saxlamaq üçün rahat bir yol var.",
+    contactText: "İstədiyiniz məlumatı yazın, təklif və ya sualınızı bizə göndərin. Təsdiqləndikdən sonra davam edəcəyik.",
+    contactEmail: "Suallarınız üçün support@ustatap.az ünvanına yazın.",
+    contactButton: "Əlaqə saxla",
+    signupButton: "Qeydiyyatdan keç",
   },
   categories: {
     electric: "Elektrik",
@@ -462,6 +550,50 @@ const en: Dictionary = {
     reviewSaveError: "The review could not be saved. Please try again.",
     unknownAddress: "Address not provided",
   },
+  aboutPage: {
+    badge: "About UstaTap",
+    heroTitle: "We built this platform to make home services faster, more reliable, and easier to access.",
+    heroSubtitle: "UstaTap helps customers find trusted professionals and helps providers discover new opportunities. Our goal is to make both sides of the experience smoother and more dependable.",
+    ctaStart: "Get started",
+    ctaViewProviders: "View providers",
+    trustTitle: "Trust",
+    trustSubtitle: "Verified service experience",
+    statProviders: "500+ pros",
+    statProvidersText: "Active offers across multiple home service categories.",
+    statSpeed: "In 15 min",
+    statSpeedText: "Fast first contact and quick initial connection.",
+    benefitsEyebrow: "Our mission",
+    benefitsTitle: "Making home services simpler, safer, and more human-centered.",
+    benefitsText: "UstaTap is more than a directory. It is a space designed to build trust, speed, and comfort between customers and providers.",
+    missionEyebrow: "Our mission",
+    missionTitle: "Making home services simpler, safer, and more human-centered.",
+    missionText: "UstaTap is more than a directory. It is a space designed to build trust, speed, and comfort between customers and providers.",
+    missionPoints: {
+      customer: { title: "Customer satisfaction", text: "Every step becomes clearer with accurate information, easy choices, and simple communication." },
+      provider: { title: "Provider growth", text: "We create a smoother experience for finding work, increasing visibility, and improving opportunities." },
+      experience: { title: "A lasting experience", text: "We will keep expanding with more automation, reviews, and intelligent matching features." },
+    },
+    highlights: {
+      trustedChoice: { title: "Trusted choice", text: "Verified providers and customer reviews make it easier to choose with confidence." },
+      fastContact: { title: "Fast contact", text: "Once a request is submitted, connecting with the right provider becomes much faster." },
+      everythingInOne: { title: "Everything in one place", text: "Category, ratings, proximity, and contact options are brought together in one platform." },
+    },
+    faqEyebrow: "Frequently asked questions",
+    faqTitle: "We gathered the most common questions in one place for clarity.",
+    faqText: "If you still have a question, feel free to reach out through the contact section below. We will continue from there.",
+    faqs: {
+      why: { question: "Why is UstaTap useful?", answer: "UstaTap helps people quickly find trusted professionals for home and business needs. Customers describe the problem, the system suggests suitable providers, and the connection process becomes simpler." },
+      becomeProvider: { question: "Can I become a provider?", answer: "Yes. After signing up and creating a profile, you can join as a provider. Once verified, your profile becomes visible and you can offer services." },
+      verification: { question: "How are providers verified?", answer: "Profiles, service areas, and information are reviewed. Verified providers are easier for customers to trust and contact." },
+      payments: { question: "How do payments or bookings work?", answer: "At the moment the platform focuses on connection and onboarding. Future updates will expand booking and payment flows." },
+    },
+    contactEyebrow: "Have a question?",
+    contactTitle: "There is a simple way to get in touch with us.",
+    contactText: "Write us with any information, offer, or question you have. We will continue from there after confirmation.",
+    contactEmail: "Send your questions to support@ustatap.az.",
+    contactButton: "Contact us",
+    signupButton: "Sign up",
+  },
   categories: {
     electric: "Electrical",
     electric_desc: "Wiring, sockets, lighting",
@@ -630,6 +762,50 @@ const tr: Dictionary = {
     reviewRequiredRole: "Yorum yazmak için müşteri olarak giriş yapmalısınız.",
     reviewSaveError: "Yorum kaydedilemedi. Lütfen tekrar deneyin.",
     unknownAddress: "Adres belirtilmemiş",
+  },
+  aboutPage: {
+    badge: "UstaTap Hakkında",
+    heroTitle: "Ev işlerini daha hızlı, daha güvenilir ve daha erişilebilir hale getirmek için bu platformu kurduk.",
+    heroSubtitle: "UstaTap, müşterilerin güvenilir uzmanlara ulaşmasına ve ustaların yeni fırsatları keşfetmesine yardımcı olur. Amacımız her iki tarafın deneyimini de daha akıcı ve güvenilir hale getirmektir.",
+    ctaStart: "Başla",
+    ctaViewProviders: "Ustaları gör",
+    trustTitle: "Güven",
+    trustSubtitle: "Doğrulanmış hizmet deneyimi",
+    statProviders: "500+ usta",
+    statProvidersText: "Birçok hizmet kategorisinde aktif teklifler.",
+    statSpeed: "15 dakikada",
+    statSpeedText: "Hızlı ilk temas ve hızlı bağlantı imkanı.",
+    benefitsEyebrow: "Misyonumuz",
+    benefitsTitle: "Ev hizmetlerini daha basit, daha güvenli ve daha insana yakın hale getiriyoruz.",
+    benefitsText: "UstaTap sadece bir rehber değil; müşteriler ile ustalar arasında güven, hız ve rahatlık kurmayı amaçlayan bir alan.",
+    missionEyebrow: "Misyonumuz",
+    missionTitle: "Ev hizmetlerini daha basit, daha güvenli ve daha insana yakın hale getiriyoruz.",
+    missionText: "UstaTap sadece bir rehber değil; müşteriler ile ustalar arasında güven, hız ve rahatlık kurmayı amaçlayan bir alan.",
+    missionPoints: {
+      customer: { title: "Müşteri memnuniyeti", text: "Doğru bilgi, kolay seçim ve basit iletişim ile her adım daha anlaşılır hale gelir." },
+      provider: { title: "Usta büyümesi", text: "İş bulma, görünürlük artırma ve fırsatların daha kolay açılması için daha akıcı bir deneyim sunuyoruz." },
+      experience: { title: "Kalıcı bir deneyim", text: "Daha fazla otomasyon, yorum ve akıllı eşleştirme ile hizmeti genişletmeye devam edeceğiz." },
+    },
+    highlights: {
+      trustedChoice: { title: "Güvenilir seçim", text: "Doğrulanmış ustalar ve müşteri yorumlarıyla daha emin seçim yapmak kolaylaşır." },
+      fastContact: { title: "Hızlı iletişim", text: "Talep gönderildikten sonra doğru usta ile bağlantı çok daha hızlı kurulur." },
+      everythingInOne: { title: "Her şey bir yerde", text: "Kategori, puan, yakınlık ve iletişim seçenekleri tek bir platformda bir araya gelir." },
+    },
+    faqEyebrow: "Sık sorulan sorular",
+    faqTitle: "Açıklık için en sık sorulan soruları bir araya topladık.",
+    faqText: "Hâlâ bir sorunuz varsa, aşağıdaki iletişim bölümünden yazabilirsiniz. Oradan devam edeceğiz.",
+    faqs: {
+      why: { question: "UstaTap neden işe yarar?", answer: "UstaTap, ev ve iş yerleri için güvenilir uzmanları hızlıca bulmaya yardımcı olur. Müşteriler sorunu açıklar, sistem uygun ustaları önerir ve bağlanma süreci daha basit hale gelir." },
+      becomeProvider: { question: "Usta olabilir miyim?", answer: "Evet. Kayıt olup profil oluşturarak usta olarak katılabilirsiniz. Onaylandıktan sonra profiliniz görünür hale gelir ve hizmet sunabilirsiniz." },
+      verification: { question: "Ustalar nasıl doğrulanır?", answer: "Profil, hizmet alanı ve bilgiler kontrol edilir. Doğrulanmış ustalar müşteriler için daha güvenilir ve ulaşılabilir olur." },
+      payments: { question: "Ödeme veya rezervasyon nasıl işler?", answer: "Şu anda platform temel olarak bağlantı ve giriş sürecine odaklanır. Gelecekte rezervasyon ve ödeme akışları genişletilecektir." },
+    },
+    contactEyebrow: "Sorunuz mu var?",
+    contactTitle: "Bizimle iletişime geçmenin kolay bir yolu var.",
+    contactText: "İster bilgi, ister teklif ya da soru paylaşın. Onaylandıktan sonra devam edeceğiz.",
+    contactEmail: "Sorularınızı support@ustatap.az adresine gönderin.",
+    contactButton: "İletişime geç",
+    signupButton: "Kayıt ol",
   },
   categories: {
     electric: "Elektrik",

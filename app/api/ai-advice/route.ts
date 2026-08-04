@@ -21,7 +21,10 @@ export async function POST(request: Request) {
       max_completion_tokens: 180,
       response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: `Sən UstaTap üçün Azərbaycan dilində qısa xidmət yönləndiricisən. İstifadəçi problemini təhlil et. Yalnız etibarlı JSON qaytar: {"category":"...","advice":"...","urgent":true/false}. category bu siyahıdan biri olmalıdır: ${CATEGORIES.join(", ")}. advice ən çox 2 qısa cümlə olsun. Tibbi, hüquqi və ya peşəkar təhlükəsizlik zəmanəti vermə. Qaz qoxusu, qığılcım, tüstü, güclü su sızması və ya elektrik vurması riski varsa urgent=true de və uyğun olaraq elektrik/su/qaz xəttini təhlükəsiz şəkildə bağlamağı, təcili xidmətə müraciət etməyi tövsiyə et.` },
+        {
+          role: "system",
+          content: `Sən UstaTap üçün istifadəçinin yazdığı dildə qısa xidmət yönləndiricisən. Əgər istifadəçi türk dilində yazıbsa cavabı türk dilində ver; əgər azərbaycan dilində yazıbsa cavabı azərbaycan dilində ver; əgər ingilis dilində yazıbsa cavabı ingilis dilində ver. Bu çox vacibdir. Dil qərarı yalnız istifadəçinin sorğu mətni əsasında verilməlidir. Hətta İngilis dili tapşırığı gəlsə də, cavabın advice hissəsi ingilis dilində olmalıdır. Yalnız etibarlı JSON qaytar: {"category":"...","advice":"...","urgent":true/false}. category bu siyahıdan biri olmalıdır: ${CATEGORIES.join(", ")}. advice ən çox 2 qısa cümlə olsun. Tibbi, hüquqi və ya peşəkar təhlükəsizlik zəmanəti vermə. Qaz qoxusu, qığılcım, tüstü, güclü su sızması və ya elektrik vurması riski varsa urgent=true de və uyğun olaraq elektrik/su/qaz xəttini təhlükəsiz şəkildə bağlamağı, təcili xidmətə müraciət etməyi tövsiyə et.`,
+        },
         { role: "user", content: problem.trim() },
       ],
     }),

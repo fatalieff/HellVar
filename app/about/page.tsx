@@ -1,0 +1,271 @@
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  BadgeCheck,
+  CircleCheckBig,
+  Clock3,
+  MessageCircleQuestion,
+  ShieldCheck,
+  Sparkles,
+  Users,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Container } from "@/components/layout/container";
+import { useI18n } from "@/lib/i18n/i18n-context";
+import { cn } from "@/lib/utils";
+
+export default function AboutPage() {
+  const { t } = useI18n();
+  const [openFaq, setOpenFaq] = React.useState(0);
+
+  const benefits = React.useMemo(
+    () => [
+      {
+        title: t.aboutPage.missionPoints.customer.title,
+        text: t.aboutPage.missionPoints.customer.text,
+      },
+      {
+        title: t.aboutPage.missionPoints.provider.title,
+        text: t.aboutPage.missionPoints.provider.text,
+      },
+      {
+        title: t.aboutPage.missionPoints.experience.title,
+        text: t.aboutPage.missionPoints.experience.text,
+      },
+    ],
+    [t]
+  );
+
+  const faqs = React.useMemo(
+    () => [
+      {
+        question: t.aboutPage.faqs.why.question,
+        answer: t.aboutPage.faqs.why.answer,
+      },
+      {
+        question: t.aboutPage.faqs.becomeProvider.question,
+        answer: t.aboutPage.faqs.becomeProvider.answer,
+      },
+      {
+        question: t.aboutPage.faqs.verification.question,
+        answer: t.aboutPage.faqs.verification.answer,
+      },
+      {
+        question: t.aboutPage.faqs.payments.question,
+        answer: t.aboutPage.faqs.payments.answer,
+      },
+    ],
+    [t]
+  );
+
+  return (
+    <div className="flex flex-col">
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,oklch(0.99_0.004_85)_0%,oklch(0.985_0.006_75)_100%)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,oklch(0.6231_0.1880_41.11_/_0.12),transparent_35%),radial-gradient(circle_at_bottom_right,oklch(0.79_0.14_70_/_0.12),transparent_38%)]" />
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -left-10 top-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-amber-400/15 blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 h-48 w-48 rounded-full bg-sky-400/10 blur-3xl" />
+        </div>
+        <Container size="xl" className="relative py-18 sm:py-24 lg:py-28">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/80 px-3.5 py-2 text-sm font-semibold text-primary shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-white">
+                <Sparkles className="size-4" />
+                {t.aboutPage.badge}
+              </div>
+              <div className="space-y-4">
+                <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl [text-wrap:balance]">
+                  {t.aboutPage.heroTitle}
+                </h1>
+                <p className="max-w-2xl text-lg leading-8 text-foreground/75">
+                  {t.aboutPage.heroSubtitle}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Button asChild variant="premium" size="lg" className="rounded-2xl px-5">
+                  <Link href="/signup">
+                    {t.aboutPage.ctaStart}
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="rounded-2xl px-5">
+                  <Link href="/dashboard">
+                    {t.aboutPage.ctaViewProviders}
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            <Card className="border border-white/70 bg-white/80 shadow-[0_24px_70px_-30px_oklch(0.2_0.02_250_/_0.35)] backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_90px_-32px_oklch(0.2_0.02_250_/_0.45)]">
+              <CardContent className="space-y-5 p-6 sm:p-8">
+                <div className="rounded-2xl bg-gradient-primary p-5 text-white shadow-glow-primary transition-transform duration-500 hover:scale-[1.01]">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-2xl bg-white/20 p-2.5">
+                      <ShieldCheck className="size-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">{t.aboutPage.trustTitle}</p>
+                      <p className="text-xl font-semibold">{t.aboutPage.trustSubtitle}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-border bg-slate-50 p-4">
+                    <div className="flex items-center gap-2 text-primary">
+                      <Users className="size-4" />
+                      <span className="text-sm font-semibold">{t.aboutPage.statProviders}</span>
+                    </div>
+                    <p className="mt-2 text-sm text-foreground/70">{t.aboutPage.statProvidersText}</p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-slate-50 p-4">
+                    <div className="flex items-center gap-2 text-primary">
+                      <Clock3 className="size-4" />
+                      <span className="text-sm font-semibold">{t.aboutPage.statSpeed}</span>
+                    </div>
+                    <p className="mt-2 text-sm text-foreground/70">{t.aboutPage.statSpeedText}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      </section>
+
+      <section className="border-b border-border/60 bg-white/70">
+        <Container size="xl" className="py-16 sm:py-20">
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              {
+                title: t.aboutPage.highlights.trustedChoice.title,
+                text: t.aboutPage.highlights.trustedChoice.text,
+                icon: BadgeCheck,
+              },
+              {
+                title: t.aboutPage.highlights.fastContact.title,
+                text: t.aboutPage.highlights.fastContact.text,
+                icon: Sparkles,
+              },
+              {
+                title: t.aboutPage.highlights.everythingInOne.title,
+                text: t.aboutPage.highlights.everythingInOne.text,
+                icon: CircleCheckBig,
+              },
+            ].map(({ title, text, icon: Icon }) => (
+              <Card key={title} className="group border-border/70 bg-background/80 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-premium-lg hover:bg-white/90">
+                <CardContent className="p-6">
+                  <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/15">
+                    <Icon className="size-5" />
+                  </div>
+                  <h3 className="mt-4 text-lg font-semibold text-foreground">{title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-foreground/70">{text}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      <section className="bg-background">
+        <Container size="xl" className="py-16 sm:py-20">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{t.aboutPage.missionEyebrow}</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              {t.aboutPage.missionTitle}
+            </h2>
+            <p className="mt-4 text-lg leading-8 text-foreground/70">
+              {t.aboutPage.missionText}
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {benefits.map((item) => (
+              <div key={item.title} className="rounded-3xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-premium-lg hover:bg-gradient-to-br hover:from-white hover:to-amber-50/70">
+                <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-foreground/70">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      <section className="border-t border-border/60 bg-slate-50/70">
+        <Container size="xl" className="py-16 sm:py-20">
+          <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
+            <div className="space-y-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{t.aboutPage.faqEyebrow}</p>
+              <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+                {t.aboutPage.faqTitle}
+              </h2>
+              <p className="text-lg leading-8 text-foreground/70">
+                {t.aboutPage.faqText}
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              {faqs.map((faq, index) => {
+                const isOpen = openFaq === index;
+
+                return (
+                  <div key={faq.question} className="overflow-hidden rounded-2xl border border-border/70 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-premium">
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaq(isOpen ? -1 : index)}
+                      className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                    >
+                      <span className="font-semibold text-foreground">{faq.question}</span>
+                      <span className={cn("text-xl text-muted-foreground transition-transform", isOpen && "rotate-45")}>
+                        +
+                      </span>
+                    </button>
+                    {isOpen ? <p className="border-t border-border/60 px-5 py-4 text-sm leading-7 text-foreground/70">{faq.answer}</p> : null}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="bg-background">
+        <Container size="xl" className="py-16 sm:py-20">
+          <Card className="overflow-hidden border border-white/80 bg-gradient-to-br from-primary/10 via-white to-amber-50 shadow-[0_20px_60px_-30px_oklch(0.2_0.02_250_/_0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_-28px_oklch(0.2_0.02_250_/_0.4)]">
+            <CardContent className="grid gap-8 p-8 sm:p-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{t.aboutPage.contactEyebrow}</p>
+                <h3 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+                  {t.aboutPage.contactTitle}
+                </h3>
+                <p className="mt-4 text-lg leading-8 text-foreground/70">
+                  {t.aboutPage.contactText}
+                </p>
+              </div>
+              <div className="rounded-3xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-premium">
+                <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3 text-sm text-foreground/80">
+                  <MessageCircleQuestion className="size-5 text-primary" />
+                  <span>{t.aboutPage.contactEmail}</span>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <Button asChild variant="premium" className="rounded-2xl px-5">
+                    <a href="mailto:support@ustatap.az">
+                      {t.aboutPage.contactButton}
+                      <ArrowRight className="size-4" />
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" className="rounded-2xl px-5">
+                    <Link href="/signup">{t.aboutPage.signupButton}</Link>
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </Container>
+      </section>
+    </div>
+  );
+}
