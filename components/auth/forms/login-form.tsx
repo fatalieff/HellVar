@@ -15,9 +15,11 @@ import {
   Check
 } from "lucide-react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n/i18n-context";
 
 export function LoginForm() {
   const router = useRouter();
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,12 +32,12 @@ export function LoginForm() {
     setLoading(true);
 
     if (!email.trim() || !email.includes("@")) {
-      setError("Düzgün e-poçt ünvanı daxil edin.");
+      setError(t.auth.signIn.invalidEmail);
       setLoading(false);
       return;
     }
     if (password.length < 6) {
-      setError("Şifrə ən azı 6 simvoldan ibarət olmalıdır.");
+      setError(t.auth.signIn.passwordLength);
       setLoading(false);
       return;
     }
@@ -49,9 +51,9 @@ export function LoginForm() {
 
       if (authError) {
         if (authError.message.includes("Invalid login credentials")) {
-          throw new Error("E-poçt ünvanı və ya şifrə yanlışdır.");
+          throw new Error(t.auth.signIn.invalidCredentials);
         } else if (authError.message.includes("Email not confirmed")) {
-          throw new Error("E-poçt ünvanınız təsdiqlənməyib. Zəhmət olmasa e-poçtunuza göndərilən təsdiq linkinə daxil olun.");
+          throw new Error(t.auth.signIn.emailNotConfirmed);
         } else {
           throw authError;
         }
@@ -59,7 +61,7 @@ export function LoginForm() {
 
       const user = data.user;
       if (!user) {
-        throw new Error("Giriş zamanı istifadəçi məlumatları tapılmadı.");
+        throw new Error(t.auth.signIn.userMissing);
       }
 
       // 2. Fetch profile to determine role and redirect destination
@@ -90,7 +92,7 @@ export function LoginForm() {
 
     } catch (err: any) {
       console.error("Giriş xətası:", err);
-      setError(err.message || "Sistemə daxil olarkən gözlənilməz xəta baş verdi.");
+      setError(err.message || t.auth.signIn.genericError);
     } finally {
       setLoading(false);
     }
@@ -99,8 +101,8 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-md mx-auto bg-card border border-border shadow-premium rounded-2xl overflow-hidden p-6 md:p-8 backdrop-blur-md bg-white/95">
       <div className="text-left mb-6">
-        <h2 className="text-xl font-bold text-foreground">Hesabınıza daxil olun</h2>
-        <p className="text-sm text-muted-foreground">Xidmətlərdən yararlanmaq üçün məlumatlarınızı daxil edin.</p>
+        <h2 className="text-xl font-bold text-foreground">{t.auth.signIn.title}</h2>
+        <p className="text-sm text-muted-foreground">{t.auth.signIn.subtitle}</p>
       </div>
 
       {success ? (
@@ -108,19 +110,19 @@ export function LoginForm() {
           <div className="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center animate-bounce">
             <Check className="w-6 h-6" />
           </div>
-          <p className="font-semibold text-foreground">Uğurla daxil oldunuz!</p>
-          <p className="text-xs text-muted-foreground">Yönləndirilirsiniz...</p>
+          <p className="font-semibold text-foreground">{t.auth.signIn.successTitle}</p>
+          <p className="text-xs text-muted-foreground">{t.auth.signIn.successSubtitle}</p>
         </div>
       ) : (
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">E-poçt ünvanı</Label>
+            <Label htmlFor="email">{t.auth.signIn.emailLabel}</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 id="email"
                 type="email"
-                placeholder="example@domain.com"
+                placeholder={t.auth.signIn.emailPlaceholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10 bg-white border-border focus-visible:ring-primary"
@@ -131,12 +133,12 @@ export function LoginForm() {
 
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <Label htmlFor="password">Şifrə</Label>
+              <Label htmlFor="password">{t.auth.signIn.passwordLabel}</Label>
               <Link 
                 href="/forgot-password" 
                 className="text-xs text-primary hover:underline font-medium"
               >
-                Şifrəni unutmusunuz?
+                {t.auth.signIn.forgotPassword}
               </Link>
             </div>
             <div className="relative">
@@ -144,7 +146,7 @@ export function LoginForm() {
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder={t.auth.signIn.passwordPlaceholder}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 bg-white border-border focus-visible:ring-primary"
@@ -168,23 +170,23 @@ export function LoginForm() {
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Giriş edilir...
+                {t.auth.signIn.loading}
               </>
             ) : (
               <>
-                Daxil ol
+                {t.auth.signIn.submit}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </>
             )}
           </Button>
 
           <div className="text-center mt-6 text-xs text-muted-foreground">
-            Hesabınız yoxdur?{" "}
+            {t.auth.signIn.noAccount}{" "}
             <Link 
               href="/signup" 
               className="text-primary font-semibold hover:underline"
             >
-              Qeydiyyatdan keçin
+              {t.auth.signIn.createAccount}
             </Link>
           </div>
         </form>

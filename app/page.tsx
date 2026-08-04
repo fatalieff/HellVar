@@ -160,7 +160,118 @@ export default function Home() {
                 </Button>
               </div>
             </form>
-            {(advice || adviceError) && <div className={`mx-auto w-full max-w-2xl rounded-2xl border p-4 text-left shadow-sm ${advice?.urgent ? "border-red-200 bg-red-50" : "border-primary/15 bg-white"}`}><div className="flex items-start gap-3">{advice?.urgent ? <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-600" /> : <Sparkles className="mt-0.5 size-5 shrink-0 text-primary" />}<div className="min-w-0 flex-1">{advice ? <><div className="flex flex-wrap items-center gap-2"><p className="font-semibold text-foreground">AI məsləhəti</p><Badge variant={advice.urgent ? "destructive" : "accent"}>{advice.category}</Badge></div><p className="mt-1 text-sm leading-6 text-foreground/75">{advice.advice}</p><Link href="/dashboard" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">Uyğun ustaları göstər <ArrowRight className="size-4" /></Link></> : <p className="text-sm text-red-700">{adviceError}</p>}</div></div></div>}
+            {(advice || adviceError) && (
+              <div
+                className={cn(
+                  "mx-auto w-full max-w-2xl overflow-hidden rounded-3xl border text-left shadow-[0_24px_80px_-32px_oklch(0.15_0.02_260_/_0.25)] backdrop-blur-sm animate-lift",
+                  advice
+                    ? advice.urgent
+                      ? "border-red-200/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(254,242,242,0.96))]"
+                      : "border-primary/15 bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(255,247,237,0.92))]"
+                    : "border-amber-200/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(255,251,235,0.96))]"
+                )}
+              >
+                <div
+                  className={cn(
+                    "h-1.5 w-full",
+                    advice
+                      ? advice.urgent
+                        ? "bg-gradient-to-r from-red-500 via-orange-400 to-amber-300"
+                        : "bg-gradient-to-r from-primary via-orange-400 to-amber-300"
+                      : "bg-gradient-to-r from-amber-400 via-orange-300 to-yellow-200"
+                  )}
+                />
+                <div className="p-5 sm:p-6">
+                  {advice ? (
+                    <div className="flex flex-col gap-4">
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={cn(
+                            "mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-2xl border shadow-sm",
+                            advice.urgent
+                              ? "border-red-200 bg-red-50 text-red-600"
+                              : "border-primary/15 bg-primary/10 text-primary"
+                          )}
+                        >
+                          {advice.urgent ? (
+                            <AlertTriangle className="size-5" />
+                          ) : (
+                            <Sparkles className="size-5" />
+                          )}
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Badge
+                              variant={advice.urgent ? "destructive" : "accent"}
+                              className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]"
+                            >
+                              {advice.urgent ? "Təcili AI Analizi" : "AI Tövsiyəsi"}
+                            </Badge>
+                            <Badge
+                              variant="outline"
+                              className="rounded-full border-border/70 bg-white/70 px-3 py-1 text-[11px] font-medium text-foreground/70"
+                            >
+                              {advice.category}
+                            </Badge>
+                          </div>
+
+                          <div className="mt-3 space-y-2">
+                            <p className="text-base font-semibold tracking-tight text-foreground sm:text-lg">
+                              {advice.urgent
+                                ? "Bu problem üçün sürətli müdaxilə tövsiyə olunur"
+                                : "AI probleminiz üçün uyğun istiqaməti təyin etdi"}
+                            </p>
+                            <p className="text-sm leading-7 text-foreground/75 sm:text-[15px]">
+                              {advice.advice}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-3 rounded-2xl border border-white/70 bg-white/70 p-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="space-y-1">
+                          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                            Növbəti addım
+                          </p>
+                          <p className="text-sm text-foreground/75">
+                            AI analizinə uyğun ustaları birbaşa siyahıda göstər.
+                          </p>
+                        </div>
+
+                        <Button
+                          asChild
+                          variant="premium"
+                          className="h-11 rounded-2xl px-5 shadow-premium"
+                        >
+                          <Link href="/dashboard">
+                            Uygun ustaları göster
+                            <ArrowRight className="size-4" data-icon="inline-end" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-2xl border border-amber-200 bg-amber-50 text-amber-600 shadow-sm">
+                        <AlertTriangle className="size-5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <Badge
+                          variant="warning"
+                          className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]"
+                        >
+                          AI Yanıtı Alınamadı
+                        </Badge>
+                        <p className="mt-3 text-sm leading-7 text-foreground/80 sm:text-[15px]">
+                          {adviceError}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* ===== CATEGORIES ===== */}

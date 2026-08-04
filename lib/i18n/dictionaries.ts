@@ -23,6 +23,9 @@ export type Dictionary = {
     login: string;
     signup: string;
     myBookings: string;
+    customerPanel: string;
+    providerPanel: string;
+    logout: string;
   };
   hero: {
     eyebrow: string;
@@ -49,6 +52,72 @@ export type Dictionary = {
     repair_desc: string;
     moving: string;
     moving_desc: string;
+  };
+  auth: {
+    signIn: {
+      title: string;
+      subtitle: string;
+      emailLabel: string;
+      emailPlaceholder: string;
+      passwordLabel: string;
+      passwordPlaceholder: string;
+      forgotPassword: string;
+      submit: string;
+      loading: string;
+      successTitle: string;
+      successSubtitle: string;
+      noAccount: string;
+      createAccount: string;
+      invalidEmail: string;
+      passwordLength: string;
+      invalidCredentials: string;
+      emailNotConfirmed: string;
+      genericError: string;
+      userMissing: string;
+    };
+    signUp: {
+      title: string;
+      subtitle: string;
+      next: string;
+      back: string;
+      submit: string;
+      customer: string;
+      provider: string;
+      firstNameRequired: string;
+      lastNameRequired: string;
+      phoneRequired: string;
+      emailRequired: string;
+      passwordLength: string;
+      roleRequired: string;
+      addressRequired: string;
+      categoryRequired: string;
+      documentsRequired: string;
+      duplicateEmail: string;
+      userIdMissing: string;
+      genericError: string;
+    };
+  };
+  dashboard: {
+    searchPlaceholder: string;
+    loading: string;
+    providersFound: string;
+    radius: string;
+    mapView: string;
+    listView: string;
+    yourLocation: string;
+    noProviders: string;
+    noProvidersHint: string;
+    verified: string;
+    distance: string;
+    call: string;
+    chat: string;
+    all: string;
+    emergency: string;
+    plumbing: string;
+    electric: string;
+    nanny: string;
+    cleaning: string;
+    boiler: string;
   };
   footer: {
     description: string;
@@ -97,6 +166,9 @@ const az: Dictionary = {
     login: "Daxil ol",
     signup: "Qeydiyyat",
     myBookings: "Sifarişlərim",
+    customerPanel: "Müştəri Paneli",
+    providerPanel: "Usta Rejiminə Keç",
+    logout: "Çıxış et",
   },
   hero: {
     eyebrow: "Sürətli · Etibarlı · Professional",
@@ -106,6 +178,72 @@ const az: Dictionary = {
     searchPlaceholder: "Məsələn: kondisioner işləmir, su kəsilir, rozetka yandirilmir...",
     searchButton: "Usta tap",
     popularCategories: "Məşhur kateqoriyalar",
+  },
+  auth: {
+    signIn: {
+      title: "Hesabınıza daxil olun",
+      subtitle: "Xidmətlərdən yararlanmaq üçün məlumatlarınızı daxil edin.",
+      emailLabel: "E-poçt ünvanı",
+      emailPlaceholder: "example@domain.com",
+      passwordLabel: "Şifrə",
+      passwordPlaceholder: "••••••••",
+      forgotPassword: "Şifrəni unutmusunuz?",
+      submit: "Daxil ol",
+      loading: "Giriş edilir...",
+      successTitle: "Uğurla daxil oldunuz!",
+      successSubtitle: "Yönləndirilirsiniz...",
+      noAccount: "Hesabınız yoxdur?",
+      createAccount: "Qeydiyyatdan keçin",
+      invalidEmail: "Düzgün e-poçt ünvanı daxil edin.",
+      passwordLength: "Şifrə ən azı 6 simvoldan ibarət olmalıdır.",
+      invalidCredentials: "E-poçt ünvanı və ya şifrə yanlışdır.",
+      emailNotConfirmed: "E-poçt ünvanınız təsdiqlənməyib. Zəhmət olmasa e-poçtunuza göndərilən təsdiq linkinə daxil olun.",
+      genericError: "Sistemə daxil olarkən gözlənilməz xəta baş verdi.",
+      userMissing: "Giriş zamanı istifadəçi məlumatları tapılmadı.",
+    },
+    signUp: {
+      title: "Hesab yaradın",
+      subtitle: "Müştəri və ya usta kimi bir neçə sadə addımda qeydiyyatdan keçin.",
+      next: "Davam et",
+      back: "Geri dön",
+      submit: "Qeydiyyatdan keç",
+      customer: "Müştəri",
+      provider: "Usta",
+      firstNameRequired: "Adınızı daxil edin.",
+      lastNameRequired: "Soyadınızı daxil edin.",
+      phoneRequired: "Düzgün 9 rəqəmli telefon nömrəsi daxil edin.",
+      emailRequired: "Düzgün e-poçt ünvanı daxil edin.",
+      passwordLength: "Şifrə ən azı 6 simvoldan ibarət olmalıdır.",
+      roleRequired: "Zəhmət olmasa bir rol seçin.",
+      addressRequired: "Zəhmət olmasa ünvanınızı seçin və ya daxil edin.",
+      categoryRequired: "Zəhmət olmasa kateqoriyanızı seçin.",
+      documentsRequired: "Zəhmət olmasa ən azı 1 təsdiqləyici sənəd yükləyin.",
+      duplicateEmail: "Bu e-poçt (email) ünvanı ilə artıq qeydiyyatdan keçilib. Zəhmət olmasa daxil olma bölməsinə keçin.",
+      userIdMissing: "Qeydiyyat zamanı istifadəçi ID-si tapılmadı.",
+      genericError: "Qeydiyyat zamanı gözlənilməz xəta baş verdi.",
+    },
+  },
+  dashboard: {
+    searchPlaceholder: "Usta və ya xidmət...",
+    loading: "Məhəllənizdəki ustalar axtarılır...",
+    providersFound: "Tapılan ustalar",
+    radius: "Radius",
+    mapView: "Xəritə",
+    listView: "Siyahı",
+    yourLocation: "Siz buradasınız",
+    noProviders: "Bu məsafədə usta tapılmadı.",
+    noProvidersHint: "Radius slideri çəkərək süzgəci genişləndirin.",
+    verified: "ŞV Təsdiqlənib",
+    distance: "{distance} km uzaqlıqda",
+    call: "Zəng Et",
+    chat: "Çatda Yaz",
+    all: "Hamısı",
+    emergency: "Təcili",
+    plumbing: "Santexnik",
+    electric: "Elektrik",
+    nanny: "Dayə",
+    cleaning: "Təmizlik",
+    boiler: "Kombi Ustası",
   },
   categories: {
     electric: "Elektrik",
@@ -173,6 +311,9 @@ const en: Dictionary = {
     login: "Sign in",
     signup: "Sign up",
     myBookings: "My bookings",
+    customerPanel: "Customer Dashboard",
+    providerPanel: "Switch to Provider Mode",
+    logout: "Sign out",
   },
   hero: {
     eyebrow: "Fast · Trusted · Professional",
@@ -182,6 +323,72 @@ const en: Dictionary = {
     searchPlaceholder: "e.g. AC not cooling, leaky faucet, broken socket...",
     searchButton: "Find a Pro",
     popularCategories: "Popular categories",
+  },
+  auth: {
+    signIn: {
+      title: "Sign in to your account",
+      subtitle: "Enter your details to access our services.",
+      emailLabel: "Email address",
+      emailPlaceholder: "example@domain.com",
+      passwordLabel: "Password",
+      passwordPlaceholder: "••••••••",
+      forgotPassword: "Forgot password?",
+      submit: "Sign in",
+      loading: "Signing in...",
+      successTitle: "Signed in successfully!",
+      successSubtitle: "Redirecting...",
+      noAccount: "Don't have an account?",
+      createAccount: "Create one",
+      invalidEmail: "Please enter a valid email address.",
+      passwordLength: "Password must be at least 6 characters long.",
+      invalidCredentials: "Email or password is incorrect.",
+      emailNotConfirmed: "Your email address hasn't been confirmed yet. Please follow the confirmation link in your email.",
+      genericError: "An unexpected error occurred while signing in.",
+      userMissing: "User information could not be found during sign-in.",
+    },
+    signUp: {
+      title: "Create an account",
+      subtitle: "Join as a customer or provider in a few simple steps.",
+      next: "Continue",
+      back: "Go back",
+      submit: "Create account",
+      customer: "Customer",
+      provider: "Provider",
+      firstNameRequired: "Please enter your first name.",
+      lastNameRequired: "Please enter your last name.",
+      phoneRequired: "Please enter a valid 9-digit phone number.",
+      emailRequired: "Please enter a valid email address.",
+      passwordLength: "Password must be at least 6 characters long.",
+      roleRequired: "Please select a role.",
+      addressRequired: "Please select or enter your address.",
+      categoryRequired: "Please select your category.",
+      documentsRequired: "Please upload at least one supporting document.",
+      duplicateEmail: "An account already exists with this email. Please sign in instead.",
+      userIdMissing: "The user ID could not be found during sign-up.",
+      genericError: "An unexpected error occurred during sign-up.",
+    },
+  },
+  dashboard: {
+    searchPlaceholder: "Provider or service...",
+    loading: "Searching providers in your area...",
+    providersFound: "Providers found",
+    radius: "Radius",
+    mapView: "Map",
+    listView: "List",
+    yourLocation: "You are here",
+    noProviders: "No providers were found in this range.",
+    noProvidersHint: "Increase the radius to broaden your search.",
+    verified: "Verified",
+    distance: "{distance} km away",
+    call: "Call",
+    chat: "Message",
+    all: "All",
+    emergency: "Urgent",
+    plumbing: "Plumbing",
+    electric: "Electrical",
+    nanny: "Nanny",
+    cleaning: "Cleaning",
+    boiler: "Boiler technician",
   },
   categories: {
     electric: "Electrical",
@@ -249,6 +456,9 @@ const tr: Dictionary = {
     login: "Giriş",
     signup: "Kayıt",
     myBookings: "Rezervasyonlarım",
+    customerPanel: "Müşteri Paneli",
+    providerPanel: "Usta Moduna Geç",
+    logout: "Çıkış yap",
   },
   hero: {
     eyebrow: "Hızlı · Güvenilir · Profesyonel",
@@ -258,6 +468,72 @@ const tr: Dictionary = {
     searchPlaceholder: "Örn: klima çalışmıyor, musluk damlıyor, priz çalışmıyor...",
     searchButton: "Usta bul",
     popularCategories: "Popüler kategoriler",
+  },
+  auth: {
+    signIn: {
+      title: "Hesabınıza giriş yapın",
+      subtitle: "Hizmetlere erişmek için bilgilerinizi girin.",
+      emailLabel: "E-posta adresi",
+      emailPlaceholder: "example@domain.com",
+      passwordLabel: "Şifre",
+      passwordPlaceholder: "••••••••",
+      forgotPassword: "Şifrenizi mi unuttunuz?",
+      submit: "Giriş yap",
+      loading: "Giriş yapılıyor...",
+      successTitle: "Başarıyla giriş yaptınız!",
+      successSubtitle: "Yönlendiriliyorsunuz...",
+      noAccount: "Hesabınız yok mu?",
+      createAccount: "Kayıt olun",
+      invalidEmail: "Lütfen geçerli bir e-posta adresi girin.",
+      passwordLength: "Şifre en az 6 karakter olmalıdır.",
+      invalidCredentials: "E-posta veya şifre yanlış.",
+      emailNotConfirmed: "E-posta adresiniz henüz doğrulanmadı. Lütfen e-postanızdaki doğrulama bağlantısına gidin.",
+      genericError: "Giriş sırasında beklenmeyen bir hata oluştu.",
+      userMissing: "Giriş sırasında kullanıcı bilgisi bulunamadı.",
+    },
+    signUp: {
+      title: "Bir hesap oluşturun",
+      subtitle: "Müşteri veya usta olarak birkaç basit adımda kayıt olun.",
+      next: "Devam et",
+      back: "Geri dön",
+      submit: "Kayıt ol",
+      customer: "Müşteri",
+      provider: "Usta",
+      firstNameRequired: "Lütfen adınızı girin.",
+      lastNameRequired: "Lütfen soyadınızı girin.",
+      phoneRequired: "Lütfen geçerli 9 haneli telefon numarası girin.",
+      emailRequired: "Lütfen geçerli bir e-posta adresi girin.",
+      passwordLength: "Şifre en az 6 karakter olmalıdır.",
+      roleRequired: "Lütfen bir rol seçin.",
+      addressRequired: "Lütfen adresinizi seçin veya girin.",
+      categoryRequired: "Lütfen kategorinizi seçin.",
+      documentsRequired: "Lütfen en az bir destekleyici belge yükleyin.",
+      duplicateEmail: "Bu e-posta adresiyle zaten kayıtlısınız. Lütfen giriş yapın.",
+      userIdMissing: "Kayıt sırasında kullanıcı kimliği bulunamadı.",
+      genericError: "Kayıt sırasında beklenmeyen bir hata oluştu.",
+    },
+  },
+  dashboard: {
+    searchPlaceholder: "Usta veya hizmet...",
+    loading: "Bölgenizdeki ustalar aranıyor...",
+    providersFound: "Bulunan ustalar",
+    radius: "Yarıçap",
+    mapView: "Harita",
+    listView: "Liste",
+    yourLocation: "Buradasınız",
+    noProviders: "Bu mesafede usta bulunamadı.",
+    noProvidersHint: "Aramayı genişletmek için yarıçapı artırın.",
+    verified: "SV Onaylı",
+    distance: "{distance} km uzakta",
+    call: "Ara",
+    chat: "Mesaj Gönder",
+    all: "Hepsi",
+    emergency: "Acil",
+    plumbing: "Tesisatçı",
+    electric: "Elektrikçi",
+    nanny: "Bebek Bakıcısı",
+    cleaning: "Temizlik",
+    boiler: "Kombi Teknisyeni",
   },
   categories: {
     electric: "Elektrik",

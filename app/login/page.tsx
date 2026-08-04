@@ -1,12 +1,11 @@
-import { LoginForm } from "@/components/auth/forms/login-form";
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Daxil Ol",
-  description: "UstaTap platformasında şəxsi kabinetinizə daxil olun.",
-};
+import { LoginForm } from "@/components/auth/forms/login-form";
+import { useI18n } from "@/lib/i18n/i18n-context";
 
 export default function LoginPage() {
+  const { t } = useI18n();
+
   return (
     <main className="flex-1 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden min-h-[calc(100vh-80px)] bg-slate-50/50">
       {/* Visual background enhancements */}
@@ -15,10 +14,10 @@ export default function LoginPage() {
 
       <div className="w-full max-w-md text-center mb-8 relative z-10 animate-fade-up">
         <h1 className="text-3xl font-extrabold text-foreground tracking-tight sm:text-4xl bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-          UstaTap-a Giriş
+          {t.auth.signIn.title}
         </h1>
         <p className="mt-3 text-sm sm:text-base text-muted-foreground text-balance">
-          Müştəri və ya Usta profilinizə daxil olaraq davam edin.
+          {t.auth.signIn.subtitle}
         </p>
       </div>
 

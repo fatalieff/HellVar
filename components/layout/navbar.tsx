@@ -144,7 +144,7 @@ export function Navbar() {
                   className="hidden sm:flex border-primary/30 text-primary hover:bg-primary/5 font-semibold text-xs h-9 rounded-lg space-x-1"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>Usta Rejiminə Keç</span>
+                  <span>{t.nav.providerPanel}</span>
                 </Button>
               ) : (
                 <Button
@@ -153,7 +153,7 @@ export function Navbar() {
                   size="sm"
                   className="hidden sm:flex border-border text-foreground hover:bg-accent font-semibold text-xs h-9 rounded-lg space-x-1"
                 >
-                  <span>Müştəri Paneli</span>
+                  <span>{t.nav.customerPanel}</span>
                 </Button>
               )}
 
@@ -168,7 +168,7 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 className="text-muted-foreground hover:text-red-500 h-9 w-9"
-                title="Çıxış"
+                title={t.nav.logout}
               >
                 <LogOut className="w-4.5 h-4.5" />
               </Button>
@@ -228,17 +228,17 @@ export function Navbar() {
                       {profile?.role === "PROVIDER" ? (
                         <Button onClick={() => router.push("/provider/dashboard")} className="w-full justify-start text-xs font-semibold" variant="premium">
                           <Sparkles className="w-4 h-4 mr-2" />
-                          Usta Rejiminə Keç
+                          {t.nav.providerPanel}
                         </Button>
                       ) : (
                         <Button onClick={() => router.push("/dashboard")} className="w-full justify-start text-xs font-semibold" variant="outline">
-                          Müştəri Paneli
+                          {t.nav.customerPanel}
                         </Button>
                       )}
                       
                       <Button onClick={handleSignOut} className="w-full justify-start text-red-500 hover:text-red-600 mt-2 text-xs font-semibold" variant="ghost">
                         <LogOut className="w-4 h-4 mr-2" />
-                        Çıxış et
+                        {t.nav.logout}
                       </Button>
                     </nav>
                   </div>

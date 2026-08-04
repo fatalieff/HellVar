@@ -7,6 +7,7 @@ import { ProfileRole } from "@/lib/types/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useI18n } from "@/lib/i18n/i18n-context";
 import { 
   User, 
   Briefcase, 
@@ -53,6 +54,7 @@ const PROVIDER_CATEGORIES = [
 ];
 
 export function RegisterForm() {
+  const { t } = useI18n();
   const [stage, setStage] = useState(1);
   const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
   const [loading, setLoading] = useState(false);
@@ -97,29 +99,29 @@ export function RegisterForm() {
   const validateCurrentStage = (): boolean => {
     if (stage === 1) {
       if (!firstName.trim()) {
-        setValidationError("Adınızı daxil edin.");
+        setValidationError(t.auth.signUp.firstNameRequired);
         return false;
       }
       if (!lastName.trim()) {
-        setValidationError("Soyadınızı daxil edin.");
+        setValidationError(t.auth.signUp.lastNameRequired);
         return false;
       }
       const sanitizedPhone = phone.replace(/\D/g, "");
       if (!sanitizedPhone || sanitizedPhone.length < 9) {
-        setValidationError("Düzgün 9 rəqəmli telefon nömrəsi daxil edin.");
+        setValidationError(t.auth.signUp.phoneRequired);
         return false;
       }
       if (!email.trim() || !email.includes("@")) {
-        setValidationError("Düzgün e-poçt ünvanı daxil edin.");
+        setValidationError(t.auth.signUp.emailRequired);
         return false;
       }
       if (password.length < 6) {
-        setValidationError("Şifrə ən azı 6 simvoldan ibarət olmalıdır.");
+        setValidationError(t.auth.signUp.passwordLength);
         return false;
       }
     } else if (stage === 2) {
       if (!role) {
-        setValidationError("Zəhmət olmasa bir rol seçin.");
+        setValidationError(t.auth.signUp.roleRequired);
         return false;
       }
     }
@@ -146,18 +148,18 @@ export function RegisterForm() {
 
     // Final checks
     if (role === "CUSTOMER" && !address) {
-      setError("Zəhmət olmasa ünvanınızı seçin və ya daxil edin.");
+      setError(t.auth.signUp.addressRequired);
       setLoading(false);
       return;
     }
     if (role === "PROVIDER") {
       if (!category) {
-        setError("Zəhmət olmasa kateqoriyanızı seçin.");
+        setError(t.auth.signUp.categoryRequired);
         setLoading(false);
         return;
       }
       if (selectedFiles.length === 0) {
-        setError("Zəhmət olmasa ən azı 1 təsdiqləyici sənəd yükləyin.");
+        setError(t.auth.signUp.documentsRequired);
         setLoading(false);
         return;
       }
@@ -190,12 +192,12 @@ export function RegisterForm() {
       // Check if user already exists (identities will be empty in Supabase if duplicate email)
       const userIdentities = authData.user?.identities || [];
       if (authData.user && userIdentities.length === 0) {
-        throw new Error("Bu e-poçt (email) ünvanı ilə artıq qeydiyyatdan keçilib. Zəhmət olmasa daxil olma bölməsinə keçin.");
+        throw new Error(t.auth.signUp.duplicateEmail);
       }
 
       const userId = authData.user?.id;
       if (!userId) {
-        throw new Error("Qeydiyyat zamanı istifadəçi ID-si tapılmadı.");
+        throw new Error(t.auth.signUp.userIdMissing);
       }
 
       // Profile records are created by the database trigger. This works even
@@ -204,7 +206,7 @@ export function RegisterForm() {
       setSuccess(true);
     } catch (err: unknown) {
       console.error("Qeydiyyat zamanı xəta baş verdi:", err);
-      setError(err instanceof Error ? err.message : "Qeydiyyat zamanı gözlənilməz xəta baş verdi.");
+      setError(err instanceof Error ? err.message : t.auth.signUp.genericError);
     } finally {
       setLoading(false);
     }

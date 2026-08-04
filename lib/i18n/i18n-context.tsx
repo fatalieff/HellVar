@@ -18,14 +18,22 @@ type I18nContextValue = {
 const I18nContext = React.createContext<I18nContextValue | null>(null);
 
 const STORAGE_KEY = "ustatap.locale";
+const COOKIE_NAME = "ustatap.locale";
+
+function normalizeLocale(value: string | null | undefined): Locale | null {
+  if (!value) return null;
+  return locales.includes(value as Locale) ? (value as Locale) : null;
+}
 
 function detectStoredLocale(): Locale {
   if (typeof window === "undefined") return defaultLocale;
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY) as Locale | null;
-    if (stored && (locales as readonly string[]).includes(stored)) {
-      return stored;
-    }
+    const fromStorage = normalizeLocale(window.localStorage.getItem(STORAGE_KEY));
+    if (fromStorage) return fromStorage;
+
+    const fromCookie = normalizeLocale(document.cookie.split(";").map((item) => item.trim()).find((item) => item.startsWith(`${COOKIE_NAME}=`))?.split("=")[1]);
+    if (fromCookie) return fromCookie;
+
     const nav = window.navigator.language?.toLowerCase() ?? "";
     if (nav.startsWith("az")) return "az";
     if (nav.startsWith("tr")) return "tr";
@@ -34,6 +42,19 @@ function detectStoredLocale(): Locale {
     /* ignore storage errors */
   }
   return defaultLocale;
+}
+
+function persistLocale(locale: Locale) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, locale);
+    document.cookie = `${COOKIE_NAME}=${locale}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+    if (document.documentElement) {
+      document.documentElement.setAttribute("lang", locale);
+    }
+  } catch {
+    /* ignore storage errors */
+  }
 }
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
@@ -51,14 +72,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   React.useEffect(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, locale);
-      if (typeof document !== "undefined" && document.documentElement) {
-        document.documentElement.setAttribute("lang", locale);
-      }
-    } catch {
-      /* ignore */
-    }
+    persistLocale(locale);
   }, [locale]);
 
   const value = React.useMemo<I18nContextValue>(

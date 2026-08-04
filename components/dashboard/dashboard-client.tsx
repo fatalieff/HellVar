@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
-import { Profile, ProviderDetails, ProfileRole } from "@/lib/types/database";
+import { Profile, ProviderDetails } from "@/lib/types/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/lib/i18n/i18n-context";
 import { 
   Search, 
   MapPin, 
@@ -29,10 +30,14 @@ type ProviderWithProfile = ProviderDetails & {
   coordinates?: { lat: number; lng: number };
 };
 
+type ProviderQueryRow = ProviderDetails & {
+  profiles: Profile | Profile[] | null;
+};
+
 // Baku / Yasamal User Center Coordinate
 const USER_COORDINATES = { lat: 40.3894, lng: 49.8032 };
 
-const CATEGORIES = ["Hamısı", "Təcili", "Santexnik", "Elektrik", "Dayə", "Təmizlik", "Kombi Ustası"];
+type DashboardCategory = "all" | "urgent" | "plumbing" | "electric" | "nanny" | "cleaning" | "boiler";
 
 // Realistic seed data to show if DB is empty or during local tests
 const MOCK_PROVIDERS: ProviderWithProfile[] = [
@@ -159,14 +164,16 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 
 export function DashboardClient() {
   const router = useRouter();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [providers, setProviders] = useState<ProviderWithProfile[]>([]);
   const [userAddress, setUserAddress] = useState("Yasamal, İnşaatçılar m/s");
 
   // Filtering state
   const [searchQuery, setSearchQuery] = useState("");
   const [radius, setRadius] = useState(3); // default 3 km
-  const [selectedCategory, setSelectedCategory] = useState("Hamısı");
+  const [selectedCategory, setSelectedCategory] = useState<DashboardCategory>("all");
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
 
   // Active selected provider on Map
@@ -180,6 +187,8 @@ export function DashboardClient() {
         // 1. Get authenticated user and address
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
+          setCurrentUserId(user.id);
+
           const { data: profile } = await supabase
             .from("profiles")
             .select("address")
@@ -193,7 +202,7 @@ export function DashboardClient() {
 
         // 2. Fetch every real registered provider. Pending providers are
         // visible on the map but cannot receive work until approved.
-        const { data: dbProviders, error: dbError } = await supabase
+        let providersQuery = supabase
           .from("provider_details")
           .select(`
             user_id,
@@ -213,10 +222,16 @@ export function DashboardClient() {
             )
           `);
 
+        if (user) {
+          providersQuery = providersQuery.neq("user_id", user.id);
+        }
+
+        const { data: dbProviders, error: dbError } = await providersQuery;
+
         if (dbError) throw dbError;
 
         // Parse and calculate distances
-        const formattedDbProviders = (dbProviders || []).map((p: any) => {
+        const formattedDbProviders = (dbProviders || []).map((p: ProviderQueryRow) => {
           const coords = getStableCoordinates(p.user_id);
           const distance = calculateDistance(
             USER_COORDINATES.lat,
@@ -256,16 +271,38 @@ export function DashboardClient() {
     };
   }, []);
 
+  const categoryOptions: Array<{ key: DashboardCategory; label: string }> = [
+    { key: "all", label: t.dashboard.all },
+    { key: "urgent", label: t.dashboard.emergency },
+    { key: "plumbing", label: t.dashboard.plumbing },
+    { key: "electric", label: t.dashboard.electric },
+    { key: "nanny", label: t.dashboard.nanny },
+    { key: "cleaning", label: t.dashboard.cleaning },
+    { key: "boiler", label: t.dashboard.boiler },
+  ];
+
+  const categoryLookup: Record<Exclude<DashboardCategory, "all">, string> = {
+    urgent: "",
+    plumbing: "Santexnik",
+    electric: "Elektrik",
+    nanny: "Dayə",
+    cleaning: "Təmizlik",
+    boiler: "Kombi Ustası",
+  };
+
   // Filter logic
   const filteredProviders = providers.filter((p) => {
+    // Never show the currently authenticated provider in customer mode.
+    if (currentUserId && p.user_id === currentUserId) return false;
+
     // 1. Radius filter
     if (p.distance && p.distance > radius) return false;
 
     // 2. Category filter
-    if (selectedCategory !== "Hamısı") {
-      if (selectedCategory === "Təcili") {
+    if (selectedCategory !== "all") {
+      if (selectedCategory === "urgent") {
         if ((p.rating || 0) < 4.8) return false;
-      } else if (p.category !== selectedCategory) {
+      } else if (p.category !== categoryLookup[selectedCategory]) {
         return false;
       }
     }
@@ -299,13 +336,13 @@ export function DashboardClient() {
 
             {/* Categories list badges - Balanced wrapping */}
             <div className="flex flex-wrap items-center gap-1.5 py-1">
-              {CATEGORIES.map((cat) => {
-                const isActive = selectedCategory === cat;
+              {categoryOptions.map((cat) => {
+                const isActive = selectedCategory === cat.key;
                 return (
                   <button
-                    key={cat}
+                    key={cat.key}
                     onClick={() => {
-                      setSelectedCategory(cat);
+                      setSelectedCategory(cat.key);
                       setActiveProvider(null);
                     }}
                     className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 ${
@@ -314,7 +351,7 @@ export function DashboardClient() {
                         : "bg-muted/65 text-muted-foreground hover:bg-muted hover:text-foreground"
                     }`}
                   >
-                    {cat === "Təcili" ? "⚡ Təcili" : cat}
+                    {cat.key === "urgent" ? `⚡ ${cat.label}` : cat.label}
                   </button>
                 );
               })}
@@ -328,7 +365,7 @@ export function DashboardClient() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 type="text"
-                placeholder="Usta və ya xidmət..."
+                placeholder={t.dashboard.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 bg-muted/40 border-border focus-visible:ring-primary text-xs h-9.5"
@@ -367,7 +404,7 @@ export function DashboardClient() {
                 }`}
               >
                 <MapIcon className="w-3.5 h-3.5" />
-                <span>Xəritə</span>
+                <span>{t.dashboard.mapView}</span>
               </button>
               <button
                 onClick={() => setViewMode("list")}
@@ -378,7 +415,7 @@ export function DashboardClient() {
                 }`}
               >
                 <List className="w-3.5 h-3.5" />
-                <span>Siyahı</span>
+                <span>{t.dashboard.listView}</span>
               </button>
             </div>
           </div>
@@ -389,7 +426,7 @@ export function DashboardClient() {
       {loading ? (
         <div className="flex-1 flex flex-col items-center justify-center p-12 space-y-4">
           <Loader2 className="w-8 h-8 text-primary animate-spin" />
-          <p className="text-sm text-muted-foreground">Məhəllənizdəki ustalar axtarılır...</p>
+          <p className="text-sm text-muted-foreground">{t.dashboard.loading}</p>
         </div>
       ) : (
         <div className="flex-1 flex flex-col md:flex-row relative bg-slate-50/30">
@@ -407,10 +444,10 @@ export function DashboardClient() {
                 <div className="hidden md:flex flex-col w-80 lg:w-96 border-r border-border bg-white h-full overflow-y-auto shrink-0 shadow-sm">
                   <div className="p-4 border-b border-border bg-slate-50/50 flex justify-between items-center shrink-0">
                     <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                      Tapılan ustalar ({filteredProviders.length})
+                      {t.dashboard.providersFound} ({filteredProviders.length})
                     </span>
                     <span className="text-[10px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full">
-                      Radius: {radius} km
+                      {t.dashboard.radius}: {radius} km
                     </span>
                   </div>
 
@@ -418,8 +455,8 @@ export function DashboardClient() {
                     {filteredProviders.length === 0 ? (
                       <div className="text-center py-12 text-muted-foreground space-y-2">
                         <MapPin className="w-8 h-8 mx-auto text-muted-foreground/50" />
-                        <p className="text-sm font-medium">Bu məsafədə usta tapılmadı.</p>
-                        <p className="text-xs">Radius slideri çəkərək süzgəci genişləndirin.</p>
+                        <p className="text-sm font-medium">{t.dashboard.noProviders}</p>
+                        <p className="text-xs">{t.dashboard.noProvidersHint}</p>
                       </div>
                     ) : (
                       filteredProviders.map((p) => {
@@ -460,11 +497,11 @@ export function DashboardClient() {
                                 <div className="flex items-center space-x-1.5 mt-2.5">
                                   <span className="text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded-full flex items-center space-x-0.5">
                                     <ShieldCheck className="w-3 h-3 shrink-0" />
-                                    <span>ŞV Təsdiqlənib</span>
+                                    <span>{t.dashboard.verified}</span>
                                   </span>
                                   <span className="text-[10px] text-muted-foreground font-medium flex items-center space-x-0.5">
                                     <Compass className="w-3 h-3 shrink-0" />
-                                    <span>{p.distance} km uzaqlıqda</span>
+                                    <span>{t.dashboard.distance.replace("{distance}", String(p.distance))}</span>
                                   </span>
                                 </div>
                               </div>
@@ -512,7 +549,7 @@ export function DashboardClient() {
                       <User className="w-4 h-4" />
                     </div>
                     <span className="bg-primary text-[9px] font-bold text-white px-2 py-0.5 rounded-full shadow-sm mt-1 z-10 whitespace-nowrap">
-                      Siz buradasınız
+                      {t.dashboard.yourLocation}
                     </span>
                   </div>
 
@@ -617,7 +654,7 @@ export function DashboardClient() {
                             >
                               <a href={`tel:${activeProvider.profiles?.phone}`}>
                                 <Phone className="w-3.5 h-3.5 mr-1 text-emerald-500" />
-                                Zəng Et
+                                {t.dashboard.call}
                               </a>
                             </Button>
                             <Button 
@@ -627,7 +664,7 @@ export function DashboardClient() {
                               className="w-full text-xs font-semibold h-8.5 rounded-lg text-white shadow-glow-primary"
                             >
                               <MessageSquare className="w-3.5 h-3.5 mr-1" />
-                              Çatda Yaz
+                              {t.dashboard.chat}
                             </Button>
                           </div>
                         </div>
@@ -652,8 +689,8 @@ export function DashboardClient() {
                       <Search className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-foreground">Axtarışa uyğun usta tapılmadı</h3>
-                      <p className="text-xs mt-1">Süzgəc parametrlərini (radius, kateqoriya) dəyişərək yenidən axtarmağa çalışın.</p>
+                      <h3 className="font-bold text-foreground">{t.dashboard.noProviders}</h3>
+                      <p className="text-xs mt-1">{t.dashboard.noProvidersHint}</p>
                     </div>
                   </div>
                 ) : (
