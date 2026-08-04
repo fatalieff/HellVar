@@ -191,7 +191,8 @@ export function DashboardClient() {
           }
         }
 
-        // 2. Fetch approved providers and join their profiles
+        // 2. Fetch every real registered provider. Pending providers are
+        // visible on the map but cannot receive work until approved.
         const { data: dbProviders, error: dbError } = await supabase
           .from("provider_details")
           .select(`
@@ -201,6 +202,7 @@ export function DashboardClient() {
             profile_status,
             rating,
             hourly_rate,
+            is_online,
             profiles:user_id (
               id,
               first_name,
@@ -209,8 +211,7 @@ export function DashboardClient() {
               role,
               address
             )
-          `)
-          .eq("profile_status", "APPROVED");
+          `);
 
         if (dbError) throw dbError;
 
@@ -232,51 +233,27 @@ export function DashboardClient() {
           };
         });
 
-        // 3. Fallback to mock data if DB is empty
-        if (formattedDbProviders.length === 0) {
-          const seededMocks = MOCK_PROVIDERS.map((p) => {
-            const coords = getStableCoordinates(p.user_id);
-            const distance = calculateDistance(
-              USER_COORDINATES.lat,
-              USER_COORDINATES.lng,
-              coords.lat,
-              coords.lng
-            );
-            return {
-              ...p,
-              coordinates: coords,
-              distance: Number(distance.toFixed(1))
-            };
-          });
-          setProviders(seededMocks);
-        } else {
-          setProviders(formattedDbProviders);
-        }
+        setProviders(formattedDbProviders);
 
       } catch (err) {
         console.error("Dashboard məlumatları yüklənərkən xəta:", err);
-        // Fallback to mock data on error so page is usable
-        const seededMocks = MOCK_PROVIDERS.map((p) => {
-          const coords = getStableCoordinates(p.user_id);
-          const distance = calculateDistance(
-            USER_COORDINATES.lat,
-            USER_COORDINATES.lng,
-            coords.lat,
-            coords.lng
-          );
-          return {
-            ...p,
-            coordinates: coords,
-            distance: Number(distance.toFixed(1))
-          };
-        });
-        setProviders(seededMocks);
+        setProviders([]);
       } finally {
         setLoading(false);
       }
     }
 
-    initDashboard();
+    void initDashboard();
+
+    const channel = supabase
+      .channel("customer-provider-map")
+      .on("postgres_changes", { event: "*", schema: "public", table: "provider_details" }, () => void initDashboard())
+      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => void initDashboard())
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
   }, []);
 
   // Filter logic
