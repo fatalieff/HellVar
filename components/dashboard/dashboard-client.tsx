@@ -1,12 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
-import { Profile, ProviderDetails } from "@/lib/types/database";
+import { Profile, ProviderDetails, ProviderReview } from "@/lib/types/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { 
   Search, 
@@ -20,7 +27,10 @@ import {
   User, 
   Loader2,
   ShieldCheck,
-  Compass
+  Compass,
+  Activity,
+  BriefcaseBusiness,
+  Clock3
 } from "lucide-react";
 
 // Types
@@ -30,108 +40,16 @@ type ProviderWithProfile = ProviderDetails & {
   coordinates?: { lat: number; lng: number };
 };
 
-type ProviderQueryRow = ProviderDetails & {
-  profiles: Profile | Profile[] | null;
+type ReviewAuthor = Pick<Profile, "id" | "first_name" | "last_name">;
+
+type ProviderReviewWithCustomer = ProviderReview & {
+  customer: ReviewAuthor | null;
 };
 
 // Baku / Yasamal User Center Coordinate
 const USER_COORDINATES = { lat: 40.3894, lng: 49.8032 };
 
 type DashboardCategory = "all" | "urgent" | "plumbing" | "electric" | "nanny" | "cleaning" | "boiler";
-
-// Realistic seed data to show if DB is empty or during local tests
-const MOCK_PROVIDERS: ProviderWithProfile[] = [
-  {
-    user_id: "mock-provider-1",
-    category: "Santexnik",
-    working_radius_km: 10,
-    profile_status: "APPROVED",
-    rating: 4.9,
-    hourly_rate: 15,
-    documents_uploaded: true,
-    is_online: true,
-    profiles: {
-      id: "mock-provider-1",
-      first_name: "Murad",
-      last_name: "Fataliyev",
-      phone: "+994501112233",
-      role: "PROVIDER",
-      address: "Yasamal rayonu, Yeni Yasamal"
-    }
-  },
-  {
-    user_id: "mock-provider-2",
-    category: "Elektrik",
-    working_radius_km: 5,
-    profile_status: "APPROVED",
-    rating: 4.8,
-    hourly_rate: 18,
-    documents_uploaded: true,
-    is_online: true,
-    profiles: {
-      id: "mock-provider-2",
-      first_name: "Elnur",
-      last_name: "Qasımov",
-      phone: "+994553334455",
-      role: "PROVIDER",
-      address: "Yasamal rayonu, İnşaatçılar"
-    }
-  },
-  {
-    user_id: "mock-provider-3",
-    category: "Dayə",
-    working_radius_km: 7,
-    profile_status: "APPROVED",
-    rating: 4.7,
-    hourly_rate: 10,
-    documents_uploaded: true,
-    is_online: true,
-    profiles: {
-      id: "mock-provider-3",
-      first_name: "Leyla",
-      last_name: "Məmmədova",
-      phone: "+994705556677",
-      role: "PROVIDER",
-      address: "Yasamal rayonu, Elmlər Akademiyası"
-    }
-  },
-  {
-    user_id: "mock-provider-4",
-    category: "Təmizlik",
-    working_radius_km: 15,
-    profile_status: "APPROVED",
-    rating: 4.6,
-    hourly_rate: 12,
-    documents_uploaded: true,
-    is_online: true,
-    profiles: {
-      id: "mock-provider-4",
-      first_name: "Günel",
-      last_name: "Əliyeva",
-      phone: "+994508889900",
-      role: "PROVIDER",
-      address: "Nəsimi rayonu, 28 May"
-    }
-  },
-  {
-    user_id: "mock-provider-5",
-    category: "Kombi Ustası",
-    working_radius_km: 8,
-    profile_status: "APPROVED",
-    rating: 4.9,
-    hourly_rate: 22,
-    documents_uploaded: true,
-    is_online: true,
-    profiles: {
-      id: "mock-provider-5",
-      first_name: "Rəşad",
-      last_name: "Baxşəliyev",
-      phone: "+994552223344",
-      role: "PROVIDER",
-      address: "Yasamal rayonu, 20 Yanvar"
-    }
-  }
-];
 
 // Helper: Stable mock coordinate generator based on User ID
 const getStableCoordinates = (userId: string) => {
@@ -167,7 +85,9 @@ export function DashboardClient() {
   const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [currentUserRole, setCurrentUserRole] = useState<Profile["role"] | null>(null);
   const [providers, setProviders] = useState<ProviderWithProfile[]>([]);
+  const [reviewCounts, setReviewCounts] = useState<Record<string, number>>({});
   const [userAddress, setUserAddress] = useState("Yasamal, İnşaatçılar m/s");
 
   // Filtering state
@@ -177,99 +97,217 @@ export function DashboardClient() {
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
 
   // Active selected provider on Map
-  const [activeProvider, setActiveProvider] = useState<ProviderWithProfile | null>(null);
+  const [activeProviderId, setActiveProviderId] = useState<string | null>(null);
+  const [activeProviderReviews, setActiveProviderReviews] = useState<ProviderReviewWithCustomer[]>([]);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState<string | null>(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [savingReview, setSavingReview] = useState(false);
+
+  const loadReviewCounts = useCallback(async (providerIds: string[]) => {
+    if (providerIds.length === 0) {
+      setReviewCounts({});
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("provider_reviews")
+      .select("provider_id")
+      .in("provider_id", providerIds);
+
+    if (error) {
+      console.error("Rəy sayı yüklənmədi:", error);
+      setReviewCounts({});
+      return;
+    }
+
+    const counts = (data || []).reduce<Record<string, number>>((acc, row) => {
+      acc[row.provider_id] = (acc[row.provider_id] || 0) + 1;
+      return acc;
+    }, {});
+
+    setReviewCounts(counts);
+  }, []);
+
+  const loadProviderReviews = useCallback(async (providerId: string) => {
+    setReviewLoading(true);
+    setReviewError(null);
+
+    try {
+      const { data, error } = await supabase
+        .from("provider_reviews")
+        .select(`
+          id,
+          provider_id,
+          customer_id,
+          rating,
+          comment,
+          created_at,
+          updated_at
+        `)
+        .eq("provider_id", providerId)
+        .order("updated_at", { ascending: false });
+
+      if (error) throw error;
+
+      const customerIds = Array.from(new Set((data || []).map((review) => review.customer_id).filter(Boolean))) as string[];
+      let customerProfiles: Record<string, ReviewAuthor> = {};
+
+      if (customerIds.length > 0) {
+        const { data: profileRows, error: profileError } = await supabase
+          .from("profiles")
+          .select("id, first_name, last_name")
+          .in("id", customerIds);
+
+        if (!profileError) {
+          customerProfiles = Object.fromEntries(
+            (profileRows || []).map((profile) => [profile.id, {
+              id: profile.id,
+              first_name: profile.first_name,
+              last_name: profile.last_name,
+            }])
+          );
+        }
+      }
+
+      const reviews = ((data || []) as Array<ProviderReview & { customer_id: string }>).map((review) => ({
+        ...review,
+        customer: customerProfiles[review.customer_id] ?? null,
+      }));
+
+      setActiveProviderReviews(reviews as ProviderReviewWithCustomer[]);
+      return reviews as ProviderReviewWithCustomer[];
+    } catch (error) {
+      console.error("Usta rəyləri yüklənmədi:", error);
+      setReviewError("Rəylər hazırda yüklənmir. Bir az sonra yenidən yoxlayın.");
+      setActiveProviderReviews([]);
+      return [];
+    } finally {
+      setReviewLoading(false);
+    }
+  }, []);
+
+  const loadDashboard = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setCurrentUserId(user.id);
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("address, role")
+          .eq("id", user.id)
+          .single();
+
+        if (profile?.address) {
+          setUserAddress(profile.address);
+        }
+
+        if (profile?.role) {
+          setCurrentUserRole(profile.role);
+        }
+      }
+
+      let providersQuery = supabase
+        .from("provider_details")
+        .select(`
+          user_id,
+          category,
+          working_radius_km,
+          profile_status,
+          documents_uploaded,
+          rating,
+          hourly_rate,
+          is_online
+        `);
+
+      if (user) {
+        providersQuery = providersQuery.neq("user_id", user.id);
+      }
+
+      const { data: dbProviders, error: dbError } = await providersQuery;
+
+      if (dbError) throw dbError;
+
+      const providerIds = (dbProviders || []).map((provider) => provider.user_id);
+      let profilesById: Record<string, Profile> = {};
+
+      if (providerIds.length > 0) {
+        const { data: profileRows, error: profileError } = await supabase
+          .from("profiles")
+          .select("id, first_name, last_name, phone, role, address")
+          .in("id", providerIds);
+
+        if (profileError) throw profileError;
+
+        profilesById = Object.fromEntries(
+          (profileRows || []).map((profile) => [profile.id, profile])
+        );
+      }
+
+      const formattedDbProviders = ((dbProviders || []) as ProviderDetails[]).map((provider) => {
+        const coords = getStableCoordinates(provider.user_id);
+        const distance = calculateDistance(
+          USER_COORDINATES.lat,
+          USER_COORDINATES.lng,
+          coords.lat,
+          coords.lng
+        );
+
+        return {
+          ...provider,
+          profiles: profilesById[provider.user_id] ?? null,
+          coordinates: coords,
+          distance: Number(distance.toFixed(1))
+        } as ProviderWithProfile;
+      });
+
+      setProviders(formattedDbProviders);
+      await loadReviewCounts(formattedDbProviders.map((provider) => provider.user_id));
+    } catch (err) {
+      console.error("Dashboard məlumatları yüklənərkən xəta:", err);
+      setProviders([]);
+      setReviewCounts({});
+    } finally {
+      setLoading(false);
+    }
+  }, [loadReviewCounts]);
 
   // Fetch Session & Approved Providers
   useEffect(() => {
-    async function initDashboard() {
-      setLoading(true);
-      try {
-        // 1. Get authenticated user and address
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          setCurrentUserId(user.id);
-
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("address")
-            .eq("id", user.id)
-            .single();
-
-          if (profile && profile.address) {
-            setUserAddress(profile.address);
-          }
-        }
-
-        // 2. Fetch every real registered provider. Pending providers are
-        // visible on the map but cannot receive work until approved.
-        let providersQuery = supabase
-          .from("provider_details")
-          .select(`
-            user_id,
-            category,
-            working_radius_km,
-            profile_status,
-            rating,
-            hourly_rate,
-            is_online,
-            profiles:user_id (
-              id,
-              first_name,
-              last_name,
-              phone,
-              role,
-              address
-            )
-          `);
-
-        if (user) {
-          providersQuery = providersQuery.neq("user_id", user.id);
-        }
-
-        const { data: dbProviders, error: dbError } = await providersQuery;
-
-        if (dbError) throw dbError;
-
-        // Parse and calculate distances
-        const formattedDbProviders = (dbProviders || []).map((p: ProviderQueryRow) => {
-          const coords = getStableCoordinates(p.user_id);
-          const distance = calculateDistance(
-            USER_COORDINATES.lat,
-            USER_COORDINATES.lng,
-            coords.lat,
-            coords.lng
-          );
-          
-          return {
-            ...p,
-            profiles: Array.isArray(p.profiles) ? p.profiles[0] : p.profiles,
-            coordinates: coords,
-            distance: Number(distance.toFixed(1))
-          };
-        });
-
-        setProviders(formattedDbProviders);
-
-      } catch (err) {
-        console.error("Dashboard məlumatları yüklənərkən xəta:", err);
-        setProviders([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    void initDashboard();
+    const timeoutId = window.setTimeout(() => {
+      void loadDashboard();
+    }, 0);
 
     const channel = supabase
       .channel("customer-provider-map")
-      .on("postgres_changes", { event: "*", schema: "public", table: "provider_details" }, () => void initDashboard())
-      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => void initDashboard())
+      .on("postgres_changes", { event: "*", schema: "public", table: "provider_details" }, () => void loadDashboard())
+      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => void loadDashboard())
+      .on("postgres_changes", { event: "*", schema: "public", table: "provider_reviews" }, () => {
+        void loadDashboard();
+        if (activeProviderId) {
+          void loadProviderReviews(activeProviderId);
+        }
+      })
       .subscribe();
 
     return () => {
+      window.clearTimeout(timeoutId);
       void supabase.removeChannel(channel);
     };
-  }, []);
+  }, [activeProviderId, loadDashboard, loadProviderReviews]);
+
+  const currentUserReview = useMemo(
+    () => activeProviderReviews.find((review) => review.customer_id === currentUserId) || null,
+    [activeProviderReviews, currentUserId]
+  );
+
+  const activeProvider = useMemo(
+    () => providers.find((provider) => provider.user_id === activeProviderId) ?? null,
+    [activeProviderId, providers]
+  );
 
   const categoryOptions: Array<{ key: DashboardCategory; label: string }> = [
     { key: "all", label: t.dashboard.all },
@@ -319,6 +357,88 @@ export function DashboardClient() {
     return true;
   });
 
+  const activeProviderReviewCount = activeProvider ? (reviewCounts[activeProvider.user_id] || 0) : 0;
+  const activeProviderRating = activeProvider?.rating ?? 0;
+  const canReview = Boolean(currentUserId && currentUserRole === "CUSTOMER");
+  const activeProviderFullName = activeProvider
+    ? `${activeProvider.profiles?.first_name || ""} ${activeProvider.profiles?.last_name || ""}`.trim()
+    : "";
+
+  const resetReviewComposer = () => {
+    setActiveProviderReviews([]);
+    setReviewComment("");
+    setReviewRating(5);
+    setReviewError(null);
+  };
+
+  const closeProviderProfile = () => {
+    setActiveProviderId(null);
+    resetReviewComposer();
+  };
+
+  const openProviderProfile = async (provider: ProviderWithProfile) => {
+    setActiveProviderId(provider.user_id);
+    resetReviewComposer();
+
+    const reviews = await loadProviderReviews(provider.user_id);
+    const ownReview = reviews.find((review) => review.customer_id === currentUserId) || null;
+
+    setReviewRating(ownReview?.rating ?? 5);
+    setReviewComment(ownReview?.comment || "");
+  };
+
+  const handleReviewSubmit = async () => {
+    if (!activeProvider || !currentUserId || currentUserRole !== "CUSTOMER") {
+      setReviewError(t.dashboard.reviewRequiredRole);
+      return;
+    }
+
+    const trimmedComment = reviewComment.trim();
+    if (trimmedComment.length < 3) {
+      setReviewError(t.dashboard.reviewMinLength);
+      return;
+    }
+
+    setSavingReview(true);
+    setReviewError(null);
+
+    try {
+      if (currentUserReview) {
+        const { error } = await supabase
+          .from("provider_reviews")
+          .update({
+            rating: reviewRating,
+            comment: trimmedComment,
+          })
+          .eq("id", currentUserReview.id);
+
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("provider_reviews")
+          .insert({
+            provider_id: activeProvider.user_id,
+            customer_id: currentUserId,
+            rating: reviewRating,
+            comment: trimmedComment,
+          });
+
+        if (error) throw error;
+      }
+
+      await loadDashboard();
+      const refreshedReviews = await loadProviderReviews(activeProvider.user_id);
+      const ownReview = refreshedReviews.find((review) => review.customer_id === currentUserId) || null;
+      setReviewRating(ownReview?.rating ?? reviewRating);
+      setReviewComment(ownReview?.comment || trimmedComment);
+    } catch (error) {
+      console.error("Rəy göndərilərkən xəta baş verdi:", error);
+      setReviewError(t.dashboard.reviewSaveError);
+    } finally {
+      setSavingReview(false);
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col w-full">
       {/* FILTER & SEARCH PANEL */}
@@ -343,7 +463,7 @@ export function DashboardClient() {
                     key={cat.key}
                     onClick={() => {
                       setSelectedCategory(cat.key);
-                      setActiveProvider(null);
+                      closeProviderProfile();
                     }}
                     className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 ${
                       isActive
@@ -383,7 +503,7 @@ export function DashboardClient() {
                   value={radius}
                   onChange={(e) => {
                     setRadius(Number(e.target.value));
-                    setActiveProvider(null);
+                    setActiveProviderId(null);
                   }}
                   className="w-full accent-primary h-1.5 bg-muted rounded-lg appearance-none cursor-pointer"
                 />
@@ -464,7 +584,7 @@ export function DashboardClient() {
                         return (
                           <div
                             key={p.user_id}
-                            onClick={() => setActiveProvider(p)}
+                            onClick={() => openProviderProfile(p)}
                             className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer hover:shadow-premium group bg-white ${
                               isActive
                                 ? "border-primary ring-2 ring-primary/20 shadow-glow-primary"
@@ -570,7 +690,7 @@ export function DashboardClient() {
                         style={{
                           transform: `translate(${xOffset}px, ${yOffset}px)`
                         }}
-                        onClick={() => setActiveProvider(p)}
+                        onClick={() => openProviderProfile(p)}
                       >
                         <div className="relative flex flex-col items-center group">
                           <div className={`absolute bottom-full mb-1.5 px-2 py-1 bg-slate-800 text-white rounded-lg flex items-center space-x-1.5 shadow-lg scale-90 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 pointer-events-none whitespace-nowrap z-30`}>
@@ -595,82 +715,6 @@ export function DashboardClient() {
                     );
                   })}
 
-                  {/* ACTIVE PROVIDER POPUP CARD OVERLAY */}
-                  <AnimatePresence>
-                    {activeProvider && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 50, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 50, scale: 0.95 }}
-                        className="absolute bottom-6 left-6 right-6 md:left-auto md:right-6 md:w-80 bg-white rounded-xl border border-border shadow-premium-lg overflow-hidden z-30"
-                      >
-                        <div className="p-4 flex flex-col space-y-3.5">
-                          <div className="flex justify-between items-start">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-muted-foreground border border-border">
-                                <User className="w-5 h-5" />
-                              </div>
-                              <div>
-                                <h4 className="font-bold text-foreground text-sm">
-                                  {activeProvider.profiles?.first_name} {activeProvider.profiles?.last_name}
-                                </h4>
-                                <span className="text-[10px] font-semibold text-muted-foreground uppercase">
-                                  {activeProvider.category}
-                                </span>
-                              </div>
-                            </div>
-                            <button
-                              onClick={() => setActiveProvider(null)}
-                              className="text-muted-foreground hover:text-foreground text-sm font-semibold"
-                            >
-                              ✕
-                            </button>
-                          </div>
-
-                          <div className="flex items-center justify-between text-xs border-y border-border/60 py-2 bg-slate-50/50 px-2 rounded-lg">
-                            <span className="font-medium text-muted-foreground flex items-center space-x-1">
-                              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                              <span className="text-foreground font-semibold">{activeProvider.rating}</span>
-                              <span className="text-muted-foreground">(24 rəy)</span>
-                            </span>
-                            <span className="font-bold text-primary">
-                              {activeProvider.hourly_rate} ₼/saat
-                            </span>
-                          </div>
-
-                          <div className="text-xs text-muted-foreground flex items-center space-x-1.5">
-                            <MapPin className="w-3.5 h-3.5 text-primary" />
-                            <span className="truncate max-w-[150px]">{activeProvider.profiles?.address || "Yasamal rayonu"}</span>
-                            <span>•</span>
-                            <span className="font-medium text-foreground whitespace-nowrap">{activeProvider.distance} km uzaqlıqda</span>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-2 pt-1.5">
-                            <Button 
-                              asChild 
-                              variant="outline" 
-                              size="sm" 
-                              className="w-full text-xs font-semibold h-8.5 rounded-lg border-border hover:bg-muted text-foreground"
-                            >
-                              <a href={`tel:${activeProvider.profiles?.phone}`}>
-                                <Phone className="w-3.5 h-3.5 mr-1 text-emerald-500" />
-                                {t.dashboard.call}
-                              </a>
-                            </Button>
-                            <Button 
-                              onClick={() => router.push(`/chat?recipient=${activeProvider.user_id}`)}
-                              variant="premium" 
-                              size="sm" 
-                              className="w-full text-xs font-semibold h-8.5 rounded-lg text-white shadow-glow-primary"
-                            >
-                              <MessageSquare className="w-3.5 h-3.5 mr-1" />
-                              {t.dashboard.chat}
-                            </Button>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </div>
               </motion.div>
             ) : (
@@ -698,7 +742,8 @@ export function DashboardClient() {
                     {filteredProviders.map((p) => (
                       <div
                         key={p.user_id}
-                        className="bg-card border border-border shadow-premium hover:shadow-premium-lg rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col justify-between bg-white"
+                        onClick={() => openProviderProfile(p)}
+                        className="border border-border shadow-premium hover:shadow-premium-lg rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col justify-between bg-white"
                       >
                         <div className="p-5 space-y-4">
                           <div className="flex justify-between items-start">
@@ -735,17 +780,20 @@ export function DashboardClient() {
                             <div className="flex items-center text-amber-400">
                               <Star className="w-3.5 h-3.5 fill-amber-400" />
                             </div>
-                            <span className="text-xs font-bold text-foreground">{p.rating}</span>
-                            <span className="text-xs text-muted-foreground">(18 rəy)</span>
+                            <span className="text-xs font-bold text-foreground">{p.rating || "0.0"}</span>
+                            <span className="text-xs text-muted-foreground">({reviewCounts[p.user_id] || 0} {t.common.reviews})</span>
 
                             <span className="ml-auto text-[10px] font-bold bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded-full flex items-center space-x-0.5">
                               <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
-                              <span>ŞV Təsdiqlənib</span>
+                              <span>{t.dashboard.verified}</span>
                             </span>
                           </div>
                         </div>
 
-                        <div className="bg-slate-50/50 p-4 border-t border-border flex space-x-2.5">
+                        <div
+                          className="bg-slate-50/50 p-4 border-t border-border flex space-x-2.5"
+                          onClick={(event) => event.stopPropagation()}
+                        >
                           <Button 
                             asChild 
                             variant="outline" 
@@ -754,7 +802,7 @@ export function DashboardClient() {
                           >
                             <a href={`tel:${p.profiles?.phone}`}>
                               <Phone className="w-3.5 h-3.5 mr-1.5 text-emerald-500" />
-                              Zəng Et
+                              {t.dashboard.call}
                             </a>
                           </Button>
                           <Button 
@@ -764,7 +812,7 @@ export function DashboardClient() {
                             className="w-full text-xs font-semibold h-9 rounded-lg text-white shadow-glow-primary"
                           >
                             <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
-                            Çatda Yaz
+                            {t.dashboard.chat}
                           </Button>
                         </div>
                       </div>
@@ -776,6 +824,262 @@ export function DashboardClient() {
           </AnimatePresence>
         </div>
       )}
+
+      <Dialog open={Boolean(activeProvider)} onOpenChange={(open) => !open && closeProviderProfile()}>
+        <DialogContent className="max-w-3xl p-0 overflow-hidden">
+          {activeProvider ? (
+            <div className="max-h-[85vh] overflow-y-auto">
+              <DialogHeader className="border-b border-border bg-slate-50/80 px-6 py-5 pr-14">
+                <DialogTitle className="text-xl font-bold">
+                  {activeProviderFullName || t.dashboard.viewProfile}
+                </DialogTitle>
+                <DialogDescription>{t.dashboard.profileSubtitle}</DialogDescription>
+              </DialogHeader>
+
+              <div className="grid gap-6 px-6 py-6 md:grid-cols-[1.1fr_0.9fr]">
+                <div className="space-y-5">
+                  <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full border border-border bg-slate-100 text-muted-foreground">
+                        <User className="h-7 w-7" />
+                      </div>
+                      <div className="min-w-0 flex-1 space-y-2">
+                        <div>
+                          <h3 className="text-lg font-bold text-foreground">
+                            {activeProviderFullName}
+                          </h3>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {activeProvider.category}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2 text-sm">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 font-semibold text-amber-700">
+                            <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                            {activeProviderRating.toFixed(1)}
+                          </span>
+                          <span className="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-700">
+                            {activeProviderReviewCount} {t.common.reviews}
+                          </span>
+                          <span className="rounded-full bg-emerald-50 px-2.5 py-1 font-medium text-emerald-700">
+                            {t.dashboard.distance.replace("{distance}", String(activeProvider.distance ?? 0))}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+                      <div className="rounded-xl border border-border bg-slate-50 px-4 py-3">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          {t.dashboard.phoneLabel}
+                        </p>
+                        <a
+                          href={`tel:${activeProvider.profiles?.phone}`}
+                          className="mt-1 inline-flex items-center gap-2 font-semibold text-foreground hover:text-primary"
+                        >
+                          <Phone className="h-4 w-4 text-emerald-500" />
+                          <span>{activeProvider.profiles?.phone}</span>
+                        </a>
+                      </div>
+
+                      <div className="rounded-xl border border-border bg-slate-50 px-4 py-3">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          {t.dashboard.priceLabel}
+                        </p>
+                        <p className="mt-1 font-semibold text-foreground">
+                          {activeProvider.hourly_rate ? `${activeProvider.hourly_rate} ₼/saat` : "-"}
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border border-border bg-slate-50 px-4 py-3 sm:col-span-2">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          {t.dashboard.addressLabel}
+                        </p>
+                        <p className="mt-1 inline-flex items-start gap-2 font-medium text-foreground">
+                          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                          <span>{activeProvider.profiles?.address || t.dashboard.unknownAddress}</span>
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border border-border bg-slate-50 px-4 py-3 sm:col-span-2">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          {t.dashboard.categoryLabel}
+                        </p>
+                        <p className="mt-1 font-medium text-foreground">{activeProvider.category}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 rounded-xl border border-border bg-slate-50 p-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          {t.dashboard.aboutLabel}
+                        </p>
+                        <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${activeProvider.is_online ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-700"}`}>
+                          <Activity className="h-3.5 w-3.5" />
+                          {activeProvider.is_online ? t.dashboard.onlineNow : t.dashboard.offlineNow}
+                        </span>
+                      </div>
+                      <p className="mt-3 text-sm leading-6 text-foreground/85">
+                        {activeProvider.bio || t.dashboard.noBio}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                      <div className="rounded-xl border border-border bg-white px-4 py-3">
+                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          <Clock3 className="h-4 w-4 text-primary" />
+                          <span>{t.dashboard.experienceLabel}</span>
+                        </div>
+                        <p className="mt-2 font-semibold text-foreground">
+                          {activeProvider.years_experience ? `${activeProvider.years_experience} il` : "—"}
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border border-border bg-white px-4 py-3">
+                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          <BriefcaseBusiness className="h-4 w-4 text-primary" />
+                          <span>{t.dashboard.completedJobsLabel}</span>
+                        </div>
+                        <p className="mt-2 font-semibold text-foreground">
+                          {activeProvider.completed_jobs ? `${activeProvider.completed_jobs}` : "—"}
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border border-border bg-white px-4 py-3">
+                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                          <span>{t.dashboard.availabilityLabel}</span>
+                        </div>
+                        <p className="mt-2 font-semibold text-foreground">
+                          {activeProvider.is_online ? t.dashboard.onlineNow : t.dashboard.offlineNow}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 grid grid-cols-2 gap-3">
+                      <Button asChild variant="outline" className="h-10">
+                        <a href={`tel:${activeProvider.profiles?.phone}`}>
+                          <Phone className="mr-2 h-4 w-4 text-emerald-500" />
+                          {t.dashboard.call}
+                        </a>
+                      </Button>
+                      <Button
+                        variant="premium"
+                        className="h-10"
+                        onClick={() => router.push(`/chat?recipient=${activeProvider.user_id}`)}
+                      >
+                        <MessageSquare className="mr-2 h-4 w-4" />
+                        {t.dashboard.chat}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-5">
+                  <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="text-base font-bold text-foreground">{t.dashboard.customerReviews}</h3>
+                      <span className="text-sm font-medium text-muted-foreground">
+                        {activeProviderReviewCount} {t.common.reviews}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 space-y-3">
+                      {reviewLoading ? (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>{t.common.loading}</span>
+                        </div>
+                      ) : activeProviderReviews.length === 0 ? (
+                        <p className="rounded-xl border border-dashed border-border bg-slate-50 px-4 py-5 text-sm text-muted-foreground">
+                          {t.dashboard.noReviewsYet}
+                        </p>
+                      ) : (
+                        activeProviderReviews.map((review) => (
+                          <div key={review.id} className="rounded-xl border border-border bg-slate-50 px-4 py-3">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <p className="font-semibold text-foreground">
+                                  {review.customer
+                                    ? `${review.customer.first_name} ${review.customer.last_name}`.trim()
+                                    : "Anonim"}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {new Date(review.updated_at).toLocaleDateString()}
+                                </p>
+                              </div>
+                              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-xs font-semibold text-amber-700">
+                                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                                {review.rating}
+                              </span>
+                            </div>
+                            <p className="mt-3 text-sm leading-6 text-foreground/85">{review.comment}</p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+                    <h3 className="text-base font-bold text-foreground">{t.dashboard.yourReview}</h3>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setReviewRating(value)}
+                          disabled={!canReview || savingReview}
+                          className={`inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-medium transition ${
+                            value <= reviewRating
+                              ? "border-amber-200 bg-amber-50 text-amber-700"
+                              : "border-border bg-white text-muted-foreground"
+                          } disabled:cursor-not-allowed disabled:opacity-60`}
+                        >
+                          <Star className={`h-4 w-4 ${value <= reviewRating ? "fill-amber-400 text-amber-400" : "text-muted-foreground"}`} />
+                          {value}
+                        </button>
+                      ))}
+                    </div>
+
+                    <textarea
+                      value={reviewComment}
+                      onChange={(event) => setReviewComment(event.target.value)}
+                      placeholder={t.dashboard.reviewPlaceholder}
+                      disabled={!canReview || savingReview}
+                      className="mt-4 min-h-28 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none transition placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-60"
+                    />
+
+                    {reviewError ? (
+                      <p className="mt-3 text-sm font-medium text-red-600">{reviewError}</p>
+                    ) : !canReview ? (
+                      <p className="mt-3 text-sm text-muted-foreground">{t.dashboard.reviewAuthHint}</p>
+                    ) : null}
+
+                    <Button
+                      type="button"
+                      className="mt-4 w-full"
+                      variant="premium"
+                      onClick={handleReviewSubmit}
+                      disabled={!canReview || savingReview}
+                    >
+                      {savingReview ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {t.common.loading}
+                        </>
+                      ) : currentUserReview ? (
+                        t.dashboard.updateReview
+                      ) : (
+                        t.dashboard.submitReview
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

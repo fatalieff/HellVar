@@ -118,6 +118,30 @@ export type Dictionary = {
     nanny: string;
     cleaning: string;
     boiler: string;
+    viewProfile: string;
+    profileSubtitle: string;
+    phoneLabel: string;
+    addressLabel: string;
+    categoryLabel: string;
+    priceLabel: string;
+    aboutLabel: string;
+    experienceLabel: string;
+    completedJobsLabel: string;
+    availabilityLabel: string;
+    onlineNow: string;
+    offlineNow: string;
+    noBio: string;
+    customerReviews: string;
+    noReviewsYet: string;
+    yourReview: string;
+    reviewPlaceholder: string;
+    submitReview: string;
+    updateReview: string;
+    reviewAuthHint: string;
+    reviewMinLength: string;
+    reviewRequiredRole: string;
+    reviewSaveError: string;
+    unknownAddress: string;
   };
   footer: {
     description: string;
@@ -244,6 +268,30 @@ const az: Dictionary = {
     nanny: "Dayə",
     cleaning: "Təmizlik",
     boiler: "Kombi Ustası",
+    viewProfile: "Profilə bax",
+    profileSubtitle: "Ustanın əlaqə və rəy məlumatları",
+    phoneLabel: "Telefon",
+    addressLabel: "Ünvan",
+    categoryLabel: "Kateqoriya",
+    priceLabel: "Qiymət",
+    aboutLabel: "Haqqında",
+    experienceLabel: "Təcrübə",
+    completedJobsLabel: "Tamamlanmış işlər",
+    availabilityLabel: "Status",
+    onlineNow: "İndi online",
+    offlineNow: "Hazırda offline",
+    noBio: "Bu usta hələ bio əlavə etməyib.",
+    customerReviews: "Müştəri rəyləri",
+    noReviewsYet: "Bu usta üçün hələ rəy yoxdur.",
+    yourReview: "Sizin rəyiniz",
+    reviewPlaceholder: "Usta haqqında qısa rəyinizi yazın...",
+    submitReview: "Rəy göndər",
+    updateReview: "Rəyi yenilə",
+    reviewAuthHint: "Rəy yazmaq üçün müştəri kimi daxil olun.",
+    reviewMinLength: "Rəy mətni minimum 3 simvol olmalıdır.",
+    reviewRequiredRole: "Rəy yazmaq üçün müştəri kimi daxil olmalısınız.",
+    reviewSaveError: "Rəyi yadda saxlamaq olmadı. Yenidən cəhd edin.",
+    unknownAddress: "Ünvan qeyd edilməyib",
   },
   categories: {
     electric: "Elektrik",
@@ -389,6 +437,30 @@ const en: Dictionary = {
     nanny: "Nanny",
     cleaning: "Cleaning",
     boiler: "Boiler technician",
+    viewProfile: "View profile",
+    profileSubtitle: "Provider contact and review details",
+    phoneLabel: "Phone",
+    addressLabel: "Address",
+    categoryLabel: "Category",
+    priceLabel: "Price",
+    aboutLabel: "About",
+    experienceLabel: "Experience",
+    completedJobsLabel: "Completed jobs",
+    availabilityLabel: "Status",
+    onlineNow: "Online now",
+    offlineNow: "Offline now",
+    noBio: "This provider has not added a bio yet.",
+    customerReviews: "Customer reviews",
+    noReviewsYet: "No reviews for this provider yet.",
+    yourReview: "Your review",
+    reviewPlaceholder: "Write a short review about this provider...",
+    submitReview: "Submit review",
+    updateReview: "Update review",
+    reviewAuthHint: "Sign in as a customer to leave a review.",
+    reviewMinLength: "Review text must be at least 3 characters long.",
+    reviewRequiredRole: "You must be signed in as a customer to leave a review.",
+    reviewSaveError: "The review could not be saved. Please try again.",
+    unknownAddress: "Address not provided",
   },
   categories: {
     electric: "Electrical",
@@ -534,6 +606,30 @@ const tr: Dictionary = {
     nanny: "Bebek Bakıcısı",
     cleaning: "Temizlik",
     boiler: "Kombi Teknisyeni",
+    viewProfile: "Profili gör",
+    profileSubtitle: "Ustanın iletişim ve yorum bilgileri",
+    phoneLabel: "Telefon",
+    addressLabel: "Adres",
+    categoryLabel: "Kategori",
+    priceLabel: "Fiyat",
+    aboutLabel: "Hakkında",
+    experienceLabel: "Tecrübe",
+    completedJobsLabel: "Tamamlanan işler",
+    availabilityLabel: "Durum",
+    onlineNow: "Şu anda çevrimiçi",
+    offlineNow: "Şu anda çevrimdışı",
+    noBio: "Bu usta henüz bir bio eklemedi.",
+    customerReviews: "Müşteri yorumları",
+    noReviewsYet: "Bu usta için henüz yorum yok.",
+    yourReview: "Yorumunuz",
+    reviewPlaceholder: "Usta hakkında kısa bir yorum yazın...",
+    submitReview: "Yorum gönder",
+    updateReview: "Yorumu güncelle",
+    reviewAuthHint: "Yorum yazmak için müşteri olarak giriş yapın.",
+    reviewMinLength: "Yorum metni en az 3 karakter olmalıdır.",
+    reviewRequiredRole: "Yorum yazmak için müşteri olarak giriş yapmalısınız.",
+    reviewSaveError: "Yorum kaydedilemedi. Lütfen tekrar deneyin.",
+    unknownAddress: "Adres belirtilmemiş",
   },
   categories: {
     electric: "Elektrik",

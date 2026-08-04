@@ -19,7 +19,20 @@ export type ProviderDetails = {
   profile_status: ProfileStatus;
   rating?: number | null;
   hourly_rate?: number | null;
+  bio?: string | null;
+  years_experience?: number | null;
+  completed_jobs?: number | null;
   is_online: boolean;
+};
+
+export type ProviderReview = {
+  id: string;
+  provider_id: string;
+  customer_id: string;
+  rating: number;
+  comment?: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 export type ServiceRequest = {
@@ -69,6 +82,16 @@ export interface Database {
         Row: ProviderDetails;
         Insert: ProviderDetails;
         Update: Partial<ProviderDetails>;
+        Relationships: [];
+      };
+      provider_reviews: {
+        Row: ProviderReview;
+        Insert: Omit<ProviderReview, 'id' | 'created_at' | 'updated_at'> & {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Pick<ProviderReview, 'rating' | 'comment' | 'updated_at'>>;
         Relationships: [];
       };
       service_requests: {
