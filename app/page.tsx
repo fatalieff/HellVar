@@ -18,6 +18,8 @@ import {
   Truck,
   ChevronRight,
   Star,
+  Loader2,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,6 +69,21 @@ export default function Home() {
   const { t } = useI18n();
   const cats = t.categories;
   const [query, setQuery] = React.useState("");
+  const [advice, setAdvice] = React.useState<{ category: string; advice: string; urgent: boolean } | null>(null);
+  const [adviceError, setAdviceError] = React.useState<string | null>(null);
+  const [adviceLoading, setAdviceLoading] = React.useState(false);
+
+  const getAdvice = async () => {
+    if (query.trim().length < 3) { setAdviceError("Problemi bir az daha ətraflı yazın."); return; }
+    setAdviceLoading(true); setAdvice(null); setAdviceError(null);
+    try {
+      const response = await fetch("/api/ai-advice", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ problem: query }) });
+      const result = await response.json() as { category?: string; advice?: string; urgent?: boolean; error?: string };
+      if (!response.ok || !result.category || !result.advice) throw new Error(result.error ?? "Məsləhət alınmadı.");
+      setAdvice({ category: result.category, advice: result.advice, urgent: Boolean(result.urgent) });
+    } catch (error) { setAdviceError(error instanceof Error ? error.message : "Məsləhət alınmadı."); }
+    finally { setAdviceLoading(false); }
+  };
 
   return (
     <div className="flex flex-col">
@@ -117,7 +134,7 @@ export default function Home() {
             {/* Search bar */}
             <form
               role="search"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={(e) => { e.preventDefault(); void getAdvice(); }}
               className="mt-3 w-full max-w-2xl mx-auto animate-lift [animation-delay:240ms]"
             >
               <div className="group relative flex items-center rounded-2xl border border-border/80 bg-card shadow-premium-lg p-1.5 transition-all duration-300 hover:shadow-[0_20px_60px_-20px_oklch(0.6231_0.1880_41.11_/_0.35)] focus-within:shadow-[0_0_0_4px_oklch(0.6231_0.1880_41.11_/_0.12)] focus-within:border-primary/40">
@@ -138,11 +155,12 @@ export default function Home() {
                   className="h-12 shrink-0 rounded-xl px-5 gap-1.5"
                 >
                   <Zap className="size-4" data-icon="inline-start" />
-                  {t.hero.searchButton}
+                  {adviceLoading ? <Loader2 className="size-4 animate-spin" /> : t.hero.searchButton}
                   <ArrowRight className="size-4" data-icon="inline-end" />
                 </Button>
               </div>
             </form>
+            {(advice || adviceError) && <div className={`mx-auto w-full max-w-2xl rounded-2xl border p-4 text-left shadow-sm ${advice?.urgent ? "border-red-200 bg-red-50" : "border-primary/15 bg-white"}`}><div className="flex items-start gap-3">{advice?.urgent ? <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-600" /> : <Sparkles className="mt-0.5 size-5 shrink-0 text-primary" />}<div className="min-w-0 flex-1">{advice ? <><div className="flex flex-wrap items-center gap-2"><p className="font-semibold text-foreground">AI məsləhəti</p><Badge variant={advice.urgent ? "destructive" : "accent"}>{advice.category}</Badge></div><p className="mt-1 text-sm leading-6 text-foreground/75">{advice.advice}</p><Link href="/dashboard" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">Uyğun ustaları göstər <ArrowRight className="size-4" /></Link></> : <p className="text-sm text-red-700">{adviceError}</p>}</div></div></div>}
           </div>
 
           {/* ===== CATEGORIES ===== */}
