@@ -36,6 +36,22 @@ export type ServiceRequest = {
   updated_at: string;
 };
 
+export type ChatConversation = {
+  id: string;
+  participant_low: string;
+  participant_high: string;
+  last_message_at: string;
+  created_at: string;
+};
+
+export type ChatMessage = {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  body: string;
+  created_at: string;
+};
+
 export type ProviderWithProfile = ProviderDetails & {
   profiles: Profile | null;
 };
@@ -64,6 +80,18 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<ServiceRequest>;
+        Relationships: [];
+      };
+      chat_conversations: {
+        Row: ChatConversation;
+        Insert: Omit<ChatConversation, 'id' | 'created_at' | 'last_message_at'> & { id?: string; created_at?: string; last_message_at?: string };
+        Update: Partial<ChatConversation>;
+        Relationships: [];
+      };
+      chat_messages: {
+        Row: ChatMessage;
+        Insert: Omit<ChatMessage, 'id' | 'created_at'> & { id?: string; created_at?: string };
+        Update: never;
         Relationships: [];
       };
     };
