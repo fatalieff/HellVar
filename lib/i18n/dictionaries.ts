@@ -48,6 +48,12 @@ export type Dictionary = {
     furniture_desc: string;
     cleaning: string;
     cleaning_desc: string;
+    nanny: string;
+    nanny_desc: string;
+    boiler: string;
+    boiler_desc: string;
+    it_tech: string;
+    it_tech_desc: string;
     repair: string;
     repair_desc: string;
     moving: string;
@@ -394,8 +400,14 @@ const az: Dictionary = {
     furniture_desc: "Şkaf, masa, stul yığılması, qapı bərpası",
     cleaning: "Təmizlik",
     cleaning_desc: "Ev/ofis, pərdə, mətbəx təmizliyi",
-    repair: "Bərpa",
-    repair_desc: "Dəmir, ağac, şüşə, divar, qapı, qarderob, süs işləri",
+    nanny: "Dayə",
+    nanny_desc: "Peşəkar dayə xidməti və uşaq baxımı",
+    boiler: "Kombi Ustası",
+    boiler_desc: "Kombi və isitmə sistemlərinin quraşdırılması və təmiri",
+    it_tech: "İT / Texniki yardım",
+    it_tech_desc: "Kompüter, proqram, internet şəbəkəsi və texniki kömək",
+    repair: "Ev təmiri",
+    repair_desc: "Dəmir, ağac, şüşə, divar, qapı, qarderob, rəngsaz və alçipan işləri",
     moving: "Daşınma",
     moving_desc: "Ev/ofis daşınması, yük kəmər, mebel sökülməsi, yükləmə",
   },
@@ -607,8 +619,14 @@ const en: Dictionary = {
     furniture_desc: "Assembly, repair, moving",
     cleaning: "Cleaning",
     cleaning_desc: "Home, office, deep clean",
-    repair: "Handyman",
-    repair_desc: "All types of repairs",
+    nanny: "Nanny",
+    nanny_desc: "Professional child care and nanny services",
+    boiler: "Boiler Service",
+    boiler_desc: "Boiler and heating systems installation and repair",
+    it_tech: "IT / Technical Support",
+    it_tech_desc: "Computer, software, network setup and tech help",
+    repair: "Home Renovation",
+    repair_desc: "Handyman, painting, drywall, door, window and home repairs",
     moving: "Moving",
     moving_desc: "Home, office, cargo",
   },
@@ -820,8 +838,14 @@ const tr: Dictionary = {
     furniture_desc: "Montaj, onarım, taşıma",
     cleaning: "Temizlik",
     cleaning_desc: "Ev, ofis, derinlemesine",
-    repair: "Onarım",
-    repair_desc: "Her türlü onarım",
+    nanny: "Bebek Bakıcısı",
+    nanny_desc: "Profesyonel bebek bakımı ve eğitmen hizmetleri",
+    boiler: "Kombi Ustası",
+    boiler_desc: "Kombi ve ısıtma sistemleri tamir, bakım ve montajı",
+    it_tech: "IT / Teknik Destek",
+    it_tech_desc: "Bilgisayar, yazılım, internet kurulumu ve teknik yardım",
+    repair: "Ev Tadilatı",
+    repair_desc: "Boya, alçıpan, kapı, mobilya montajı ve ev onarım işleri",
     moving: "Nakliye",
     moving_desc: "Ev, ofis, yük",
   },

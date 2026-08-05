@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import {
   ArrowRight,
   BadgeCheck,
@@ -17,6 +18,57 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { cn } from "@/lib/utils";
+
+// Animation Variants for a cohesive premium look
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const fadeUpVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 90,
+      damping: 14,
+    },
+  },
+};
+
+const scaleInVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      type: "spring" as const,
+      stiffness: 80,
+      damping: 15,
+    },
+  },
+};
+
+const slideInRightVariants: Variants = {
+  hidden: { opacity: 0, x: 40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 85,
+      damping: 14,
+    },
+  },
+};
 
 export default function AboutPage() {
   const { t } = useI18n();
@@ -63,7 +115,8 @@ export default function AboutPage() {
   );
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-hidden">
+      {/* Hero Section */}
       <section className="relative overflow-hidden bg-[linear-gradient(135deg,oklch(0.99_0.004_85)_0%,oklch(0.985_0.006_75)_100%)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,oklch(0.6231_0.1880_41.11_/_0.12),transparent_35%),radial-gradient(circle_at_bottom_right,oklch(0.79_0.14_70_/_0.12),transparent_38%)]" />
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -71,75 +124,107 @@ export default function AboutPage() {
           <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-amber-400/15 blur-3xl" />
           <div className="absolute bottom-0 left-1/3 h-48 w-48 rounded-full bg-sky-400/10 blur-3xl" />
         </div>
+        
         <Container size="xl" className="relative py-18 sm:py-24 lg:py-28">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"
+          >
+            {/* Left Content (Hero text & actions) */}
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/80 px-3.5 py-2 text-sm font-semibold text-primary shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-white">
-                <Sparkles className="size-4" />
+              <motion.div 
+                variants={fadeUpVariants}
+                className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/80 px-3.5 py-2 text-sm font-semibold text-primary shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-white"
+              >
+                <Sparkles className="size-4 animate-pulse" />
                 {t.aboutPage.badge}
-              </div>
+              </motion.div>
+              
               <div className="space-y-4">
-                <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl [text-wrap:balance]">
+                <motion.h1 
+                  variants={fadeUpVariants}
+                  className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl [text-wrap:balance]"
+                >
                   {t.aboutPage.heroTitle}
-                </h1>
-                <p className="max-w-2xl text-lg leading-8 text-foreground/75">
+                </motion.h1>
+                
+                <motion.p 
+                  variants={fadeUpVariants}
+                  className="max-w-2xl text-lg leading-8 text-foreground/75"
+                >
                   {t.aboutPage.heroSubtitle}
-                </p>
+                </motion.p>
               </div>
-              <div className="flex flex-wrap gap-3">
-                <Button asChild variant="premium" size="lg" className="rounded-2xl px-5">
+              
+              <motion.div 
+                variants={fadeUpVariants}
+                className="flex flex-wrap gap-3"
+              >
+                <Button asChild variant="premium" size="lg" className="rounded-2xl px-5 hover:scale-102 transition-transform duration-200">
                   <Link href="/signup">
                     {t.aboutPage.ctaStart}
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="rounded-2xl px-5">
+                <Button asChild variant="outline" size="lg" className="rounded-2xl px-5 hover:scale-102 transition-transform duration-200">
                   <Link href="/dashboard">
                     {t.aboutPage.ctaViewProviders}
                   </Link>
                 </Button>
-              </div>
+              </motion.div>
             </div>
 
-            <Card className="border border-white/70 bg-white/80 shadow-[0_24px_70px_-30px_oklch(0.2_0.02_250_/_0.35)] backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_90px_-32px_oklch(0.2_0.02_250_/_0.45)]">
-              <CardContent className="space-y-5 p-6 sm:p-8">
-                <div className="rounded-2xl bg-gradient-primary p-5 text-white shadow-glow-primary transition-transform duration-500 hover:scale-[1.01]">
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-2xl bg-white/20 p-2.5">
-                      <ShieldCheck className="size-6" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">{t.aboutPage.trustTitle}</p>
-                      <p className="text-xl font-semibold">{t.aboutPage.trustSubtitle}</p>
+            {/* Right Card (Stats card) */}
+            <motion.div variants={slideInRightVariants}>
+              <Card className="border border-white/70 bg-white/80 shadow-[0_24px_70px_-30px_oklch(0.2_0.02_250_/_0.35)] backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_90px_-32px_oklch(0.2_0.02_250_/_0.45)]">
+                <CardContent className="space-y-5 p-6 sm:p-8">
+                  <div className="rounded-2xl bg-gradient-primary p-5 text-white shadow-glow-primary transition-transform duration-500 hover:scale-[1.02]">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-2xl bg-white/20 p-2.5">
+                        <ShieldCheck className="size-6" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">{t.aboutPage.trustTitle}</p>
+                        <p className="text-xl font-semibold">{t.aboutPage.trustSubtitle}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-border bg-slate-50 p-4">
-                    <div className="flex items-center gap-2 text-primary">
-                      <Users className="size-4" />
-                      <span className="text-sm font-semibold">{t.aboutPage.statProviders}</span>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-border bg-slate-50 p-4 transition-all duration-300 hover:bg-slate-100/80">
+                      <div className="flex items-center gap-2 text-primary">
+                        <Users className="size-4" />
+                        <span className="text-sm font-semibold">{t.aboutPage.statProviders}</span>
+                      </div>
+                      <p className="mt-2 text-sm text-foreground/70">{t.aboutPage.statProvidersText}</p>
                     </div>
-                    <p className="mt-2 text-sm text-foreground/70">{t.aboutPage.statProvidersText}</p>
-                  </div>
-                  <div className="rounded-2xl border border-border bg-slate-50 p-4">
-                    <div className="flex items-center gap-2 text-primary">
-                      <Clock3 className="size-4" />
-                      <span className="text-sm font-semibold">{t.aboutPage.statSpeed}</span>
+                    <div className="rounded-2xl border border-border bg-slate-50 p-4 transition-all duration-300 hover:bg-slate-100/80">
+                      <div className="flex items-center gap-2 text-primary">
+                        <Clock3 className="size-4" />
+                        <span className="text-sm font-semibold">{t.aboutPage.statSpeed}</span>
+                      </div>
+                      <p className="mt-2 text-sm text-foreground/70">{t.aboutPage.statSpeedText}</p>
                     </div>
-                    <p className="mt-2 text-sm text-foreground/70">{t.aboutPage.statSpeedText}</p>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
         </Container>
       </section>
 
+      {/* Highlights Section */}
       <section className="border-b border-border/60 bg-white/70">
         <Container size="xl" className="py-16 sm:py-20">
-          <div className="grid gap-4 md:grid-cols-3">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid gap-4 md:grid-cols-3"
+          >
             {[
               {
                 title: t.aboutPage.highlights.trustedChoice.title,
@@ -157,23 +242,32 @@ export default function AboutPage() {
                 icon: CircleCheckBig,
               },
             ].map(({ title, text, icon: Icon }) => (
-              <Card key={title} className="group border-border/70 bg-background/80 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-premium-lg hover:bg-white/90">
-                <CardContent className="p-6">
-                  <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/15">
-                    <Icon className="size-5" />
-                  </div>
-                  <h3 className="mt-4 text-lg font-semibold text-foreground">{title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-foreground/70">{text}</p>
-                </CardContent>
-              </Card>
+              <motion.div key={title} variants={fadeUpVariants}>
+                <Card className="group border-border/70 bg-background/80 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/25 hover:shadow-premium-lg hover:bg-white/90">
+                  <CardContent className="p-6">
+                    <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/15">
+                      <Icon className="size-5" />
+                    </div>
+                    <h3 className="mt-4 text-lg font-semibold text-foreground">{title}</h3>
+                    <p className="mt-2 text-sm leading-7 text-foreground/70">{text}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </Container>
       </section>
 
+      {/* Mission Section */}
       <section className="bg-background">
         <Container size="xl" className="py-16 sm:py-20">
-          <div className="max-w-3xl">
+          <motion.div 
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5 }}
+            className="max-w-3xl"
+          >
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{t.aboutPage.missionEyebrow}</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               {t.aboutPage.missionTitle}
@@ -181,23 +275,38 @@ export default function AboutPage() {
             <p className="mt-4 text-lg leading-8 text-foreground/70">
               {t.aboutPage.missionText}
             </p>
-          </div>
+          </motion.div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="mt-10 grid gap-6 lg:grid-cols-3"
+          >
             {benefits.map((item) => (
-              <div key={item.title} className="rounded-3xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-premium-lg hover:bg-gradient-to-br hover:from-white hover:to-amber-50/70">
-                <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-foreground/70">{item.text}</p>
-              </div>
+              <motion.div key={item.title} variants={fadeUpVariants}>
+                <div className="rounded-3xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/20 hover:shadow-premium-lg hover:bg-gradient-to-br hover:from-white hover:to-amber-50/70 h-full">
+                  <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-foreground/70">{item.text}</p>
+                </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </Container>
       </section>
 
+      {/* FAQ Section */}
       <section className="border-t border-border/60 bg-slate-50/70">
         <Container size="xl" className="py-16 sm:py-20">
           <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="space-y-4">
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="space-y-4"
+            >
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{t.aboutPage.faqEyebrow}</p>
               <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
                 {t.aboutPage.faqTitle}
@@ -205,65 +314,100 @@ export default function AboutPage() {
               <p className="text-lg leading-8 text-foreground/70">
                 {t.aboutPage.faqText}
               </p>
-            </div>
+            </motion.div>
 
-            <div className="space-y-3">
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="space-y-3"
+            >
               {faqs.map((faq, index) => {
                 const isOpen = openFaq === index;
 
                 return (
-                  <div key={faq.question} className="overflow-hidden rounded-2xl border border-border/70 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-premium">
+                  <motion.div 
+                    key={faq.question} 
+                    variants={fadeUpVariants}
+                    className="overflow-hidden rounded-2xl border border-border/70 bg-white shadow-sm transition-all duration-300 hover:shadow-premium"
+                  >
                     <button
                       type="button"
                       onClick={() => setOpenFaq(isOpen ? -1 : index)}
-                      className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                      className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-semibold text-foreground hover:bg-slate-50/50 transition-colors"
                     >
-                      <span className="font-semibold text-foreground">{faq.question}</span>
-                      <span className={cn("text-xl text-muted-foreground transition-transform", isOpen && "rotate-45")}>
+                      <span>{faq.question}</span>
+                      <span className={cn("text-xl text-muted-foreground transition-transform duration-200", isOpen && "rotate-45 text-primary")}>
                         +
                       </span>
                     </button>
-                    {isOpen ? <p className="border-t border-border/60 px-5 py-4 text-sm leading-7 text-foreground/70">{faq.answer}</p> : null}
-                  </div>
+                    
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: "easeInOut" }}
+                          className="overflow-hidden"
+                        >
+                          <p className="border-t border-border/60 px-5 py-4 text-sm leading-7 text-foreground/70 bg-slate-50/20">
+                            {faq.answer}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
           </div>
         </Container>
       </section>
 
+      {/* CTA Contact Section */}
       <section className="bg-background">
         <Container size="xl" className="py-16 sm:py-20">
-          <Card className="overflow-hidden border border-white/80 bg-gradient-to-br from-primary/10 via-white to-amber-50 shadow-[0_20px_60px_-30px_oklch(0.2_0.02_250_/_0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_-28px_oklch(0.2_0.02_250_/_0.4)]">
-            <CardContent className="grid gap-8 p-8 sm:p-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{t.aboutPage.contactEyebrow}</p>
-                <h3 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
-                  {t.aboutPage.contactTitle}
-                </h3>
-                <p className="mt-4 text-lg leading-8 text-foreground/70">
-                  {t.aboutPage.contactText}
-                </p>
-              </div>
-              <div className="rounded-3xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-premium">
-                <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3 text-sm text-foreground/80">
-                  <MessageCircleQuestion className="size-5 text-primary" />
-                  <span>{t.aboutPage.contactEmail}</span>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ type: "spring", stiffness: 80, damping: 15 }}
+          >
+            <Card className="overflow-hidden border border-white/80 bg-gradient-to-br from-primary/10 via-white to-amber-50 shadow-[0_20px_60px_-30px_oklch(0.2_0.02_250_/_0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_-28px_oklch(0.2_0.02_250_/_0.4)]">
+              <CardContent className="grid gap-8 p-8 sm:p-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{t.aboutPage.contactEyebrow}</p>
+                  <h3 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+                    {t.aboutPage.contactTitle}
+                  </h3>
+                  <p className="mt-4 text-lg leading-8 text-foreground/70">
+                    {t.aboutPage.contactText}
+                  </p>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-3">
-                  <Button asChild variant="premium" className="rounded-2xl px-5">
-                    <a href="mailto:support@ustatap.az">
-                      {t.aboutPage.contactButton}
-                      <ArrowRight className="size-4" />
-                    </a>
-                  </Button>
-                  <Button asChild variant="outline" className="rounded-2xl px-5">
-                    <Link href="/signup">{t.aboutPage.signupButton}</Link>
-                  </Button>
+                
+                <div className="rounded-3xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-premium">
+                  <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3 text-sm text-foreground/80 hover:bg-slate-100 transition-colors duration-200">
+                    <MessageCircleQuestion className="size-5 text-primary" />
+                    <span>{t.aboutPage.contactEmail}</span>
+                  </div>
+                  
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <Button asChild variant="premium" className="rounded-2xl px-5 hover:scale-102 transition-transform duration-200">
+                      <a href="mailto:support@ustatap.az">
+                        {t.aboutPage.contactButton}
+                        <ArrowRight className="size-4" />
+                      </a>
+                    </Button>
+                    <Button asChild variant="outline" className="rounded-2xl px-5 hover:scale-102 transition-transform duration-200">
+                      <Link href="/signup">{t.aboutPage.signupButton}</Link>
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
         </Container>
       </section>
     </div>

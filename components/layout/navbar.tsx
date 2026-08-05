@@ -108,26 +108,24 @@ export function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop nav links - hide if user is logged in to keep a clean admin style, or keep them */}
-        {!user && (
-          <nav className="hidden md:flex items-center gap-1 ml-6">
-            {NAV_LINKS.map((k) => {
-              const href =
-                k === "home"
-                  ? "/"
-                  : `/${String(k).replace(/^./, (c) => c.toLowerCase())}`;
-              return (
-                <Link
-                  key={k}
-                  href={href}
-                  className="relative px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground rounded-md hover:bg-accent/40"
-                >
-                  {t.nav[k]}
-                </Link>
-              );
-            })}
-          </nav>
-        )}
+        {/* Desktop nav links */}
+        <nav className="hidden md:flex items-center gap-1 ml-6">
+          {NAV_LINKS.map((k) => {
+            const href =
+              k === "home"
+                ? "/"
+                : `/${String(k).replace(/^./, (c) => c.toLowerCase())}`;
+            return (
+              <Link
+                key={k}
+                href={href}
+                className="relative px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground rounded-md hover:bg-accent/40"
+              >
+                {t.nav[k]}
+              </Link>
+            );
+          })}
+        </nav>
 
         <div className="ml-auto flex items-center gap-2">
           <LanguageSwitcher />
@@ -207,6 +205,27 @@ export function Navbar() {
                 </div>
                 <Separator />
                 
+                {/* Navigation Links - Always visible on mobile */}
+                <nav className="flex flex-col gap-1">
+                  {NAV_LINKS.map((k) => {
+                    const href =
+                      k === "home"
+                        ? "/"
+                        : `/${String(k).replace(/^./, (c) => c.toLowerCase())}`;
+                    return (
+                      <Link
+                        key={k}
+                        href={href}
+                        className="px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-accent/50 transition-colors"
+                      >
+                        {t.nav[k]}
+                      </Link>
+                    );
+                  })}
+                </nav>
+
+                <Separator />
+                
                 {user ? (
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-3">
@@ -243,25 +262,7 @@ export function Navbar() {
                     </nav>
                   </div>
                 ) : (
-                  <>
-                    <nav className="flex flex-col gap-1">
-                      {NAV_LINKS.map((k) => {
-                        const href =
-                          k === "home"
-                            ? "/"
-                            : `/${String(k).replace(/^./, (c) => c.toLowerCase())}`;
-                        return (
-                          <Link
-                            key={k}
-                            href={href}
-                            className="px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-accent/50 transition-colors"
-                          >
-                            {t.nav[k]}
-                          </Link>
-                        );
-                      })}
-                    </nav>
-                    <Separator />
+                  <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
                       <Button asChild variant="outline" className="w-full">
                         <Link href="/become-technician">{t.nav.becomeTechnician}</Link>
@@ -275,7 +276,7 @@ export function Navbar() {
                         <Link href="/signup">{t.nav.signup}</Link>
                       </Button>
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
             </SheetContent>

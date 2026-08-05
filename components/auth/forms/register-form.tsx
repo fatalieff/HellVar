@@ -43,11 +43,14 @@ const BAKU_DISTRICTS = [
 const PROVIDER_CATEGORIES = [
   "Elektrik",
   "Santexnik",
-  "Kondisioner Ustası",
+  "Təmizlik xidməti",
+  "Dayə",
   "Kombi Ustası",
+  "İT / Texniki yardım",
+  "Ev təmiri",
+  "Kondisioner Ustası",
   "Mebel Ustası",
   "Rəngsaz",
-  "Təmizlik xidməti",
   "Alçipan Ustası",
   "Kafel-Metlax Ustası",
   "Digər"

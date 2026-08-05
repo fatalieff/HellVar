@@ -20,6 +20,9 @@ import {
   Star,
   Loader2,
   AlertTriangle,
+  Heart,
+  Laptop,
+  LayoutGrid,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,36 +36,61 @@ import { cn } from "@/lib/utils";
 type CategoryKey =
   | "electric"
   | "plumbing"
-  | "ac"
-  | "appliance"
-  | "furniture"
   | "cleaning"
-  | "repair"
-  | "moving";
+  | "nanny"
+  | "boiler"
+  | "it_tech"
+  | "repair";
 
 const CATEGORY_META: Record<
   CategoryKey,
-  { Icon: React.ComponentType<{ className?: string }>; tone: string }
+  { Icon: React.ComponentType<{ className?: string }>; tone: string; image: string }
 > = {
-  electric: { Icon: Bolt, tone: "from-amber-400/20 to-yellow-500/10 text-amber-600" },
-  plumbing: { Icon: Droplets, tone: "from-sky-400/20 to-blue-500/10 text-sky-600" },
-  ac: { Icon: Wind, tone: "from-cyan-400/20 to-teal-500/10 text-cyan-600" },
-  appliance: { Icon: Refrigerator, tone: "from-indigo-400/20 to-violet-500/10 text-indigo-600" },
-  furniture: { Icon: Sofa, tone: "from-rose-400/20 to-pink-500/10 text-rose-600" },
-  cleaning: { Icon: CleaningIcon, tone: "from-emerald-400/20 to-green-500/10 text-emerald-600" },
-  repair: { Icon: Wrench, tone: "from-orange-400/20 to-red-500/10 text-orange-600" },
-  moving: { Icon: Truck, tone: "from-fuchsia-400/20 to-purple-500/10 text-fuchsia-600" },
+  electric: {
+    Icon: Bolt,
+    tone: "from-amber-400/20 to-yellow-500/10 text-amber-600",
+    image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=400&auto=format&fit=crop",
+  },
+  plumbing: {
+    Icon: Droplets,
+    tone: "from-sky-400/20 to-blue-500/10 text-sky-600",
+    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400&auto=format&fit=crop",
+  },
+  cleaning: {
+    Icon: CleaningIcon,
+    tone: "from-emerald-400/20 to-green-500/10 text-emerald-600",
+    image: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?q=80&w=400&auto=format&fit=crop",
+  },
+  nanny: {
+    Icon: Heart,
+    tone: "from-pink-400/20 to-rose-500/10 text-pink-600",
+    image: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=400&auto=format&fit=crop",
+  },
+  boiler: {
+    Icon: Flame,
+    tone: "from-orange-400/20 to-red-500/10 text-orange-600",
+    image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?q=80&w=400&auto=format&fit=crop",
+  },
+  it_tech: {
+    Icon: Laptop,
+    tone: "from-indigo-400/20 to-violet-500/10 text-indigo-600",
+    image: "https://images.unsplash.com/photo-1588508065123-287b28e013da?q=80&w=400&auto=format&fit=crop",
+  },
+  repair: {
+    Icon: Wrench,
+    tone: "from-amber-500/20 to-orange-500/10 text-orange-600",
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=400&auto=format&fit=crop",
+  },
 };
 
 const CATEGORIES: CategoryKey[] = [
   "electric",
   "plumbing",
-  "ac",
-  "appliance",
-  "furniture",
   "cleaning",
+  "nanny",
+  "boiler",
+  "it_tech",
   "repair",
-  "moving",
 ];
 
 export default function Home() {
@@ -291,47 +319,109 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {CATEGORIES.map((k, i) => {
-                const { Icon, tone } = CATEGORY_META[k];
+                const { Icon, tone, image } = CATEGORY_META[k];
                 return (
-                  <Link
+                  <Card
                     key={k}
-                    href={`/categories/${k}`}
-                    className="group relative"
+                    className="group flex flex-col h-full overflow-hidden border border-border/60 bg-card shadow-sm transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/20 animate-lift"
+                    style={{ animationDelay: `${420 + i * 50}ms` }}
                   >
-                    <Card
-                      className={cn(
-                        "h-full overflow-hidden border-border/60 p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30"
-                      )}
-                      style={{ animationDelay: `${420 + i * 60}ms` }}
-                    >
-                      <CardContent className="p-0 flex flex-col gap-3">
-                        <div
-                          className={cn(
-                            "size-12 rounded-xl grid place-items-center bg-gradient-to-br transition-transform duration-300 group-hover:scale-110",
-                            tone
-                          )}
+                    {/* Image Header */}
+                    <div className="relative h-44 w-full overflow-hidden bg-slate-100/50">
+                      <img
+                        src={image}
+                        alt={cats[k as keyof typeof cats] as string}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                      
+                      {/* Icon Badge */}
+                      <div
+                        className={cn(
+                          "absolute top-3 right-3 size-10 rounded-xl grid place-items-center bg-white/95 shadow-sm transition-transform duration-300 group-hover:rotate-6",
+                          tone.split(" ").pop()
+                        )}
+                      >
+                        <Icon className="size-5" />
+                      </div>
+
+                      {/* Title Overlay */}
+                      <div className="absolute bottom-3 left-4 right-4 text-white">
+                        <h3 className="text-[17px] font-bold tracking-tight">
+                          {cats[k as keyof typeof cats] as string}
+                        </h3>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <CardContent className="p-4 flex-1 flex flex-col justify-between gap-4">
+                      <p className="text-sm text-muted-foreground leading-snug line-clamp-2">
+                        {cats[`${k}_desc` as keyof Dictionary["categories"]] as string}
+                      </p>
+                      
+                      {/* Action Buttons */}
+                      <div className="grid grid-cols-2 gap-2 mt-auto">
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="h-9 rounded-lg text-xs font-semibold border-border hover:bg-slate-50 transition-colors cursor-pointer"
                         >
-                          <Icon className="size-6" />
-                        </div>
-                        <div className="flex flex-col gap-0.5">
-                          <h3 className="text-[15px] font-semibold tracking-tight text-foreground">
-                            {cats[k as keyof typeof cats] as string}
-                          </h3>
-                          <p className="text-xs text-muted-foreground leading-snug line-clamp-2">
-                            {cats[`${k}_desc` as keyof Dictionary["categories"]] as string}
-                          </p>
-                        </div>
-                        <div className="mt-auto pt-1 flex items-center gap-1 text-xs font-medium text-primary/90 opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
-                          {t.common.viewAll}
-                          <ArrowRight className="size-3.5" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                          <Link href={`/categories/${k}`}>
+                            Bax
+                          </Link>
+                        </Button>
+                        <Button
+                          asChild
+                          variant="premium"
+                          size="sm"
+                          className="h-9 rounded-lg text-xs font-semibold transition-transform duration-200 hover:scale-[1.02] cursor-pointer"
+                        >
+                          <Link href={`/categories/${k}?action=request`}>
+                            İstəmək
+                          </Link>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
                 );
               })}
+
+              {/* View All Categories Card */}
+              <Card
+                className="group flex flex-col h-full overflow-hidden border border-dashed border-primary/40 bg-gradient-to-b from-primary/5 to-transparent transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/60 animate-lift"
+                style={{ animationDelay: `${420 + CATEGORIES.length * 50}ms` }}
+              >
+                <div className="relative h-44 w-full overflow-hidden bg-primary/5 flex items-center justify-center">
+                  <div className="size-16 rounded-2xl bg-gradient-primary text-white flex items-center justify-center shadow-glow-primary transition-transform duration-300 group-hover:scale-110">
+                    <LayoutGrid className="size-7" />
+                  </div>
+                </div>
+                <CardContent className="p-4 flex-1 flex flex-col justify-between gap-4">
+                  <div className="space-y-1">
+                    <h3 className="text-[17px] font-bold tracking-tight text-foreground">
+                      Bütün Kateqoriyalar
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-snug">
+                      Digər bütün xidmətlər və peşəkar ustaları kəşf edin.
+                    </p>
+                  </div>
+                  <Button
+                    asChild
+                    variant="premium"
+                    size="sm"
+                    className="w-full h-9 rounded-lg text-xs font-semibold mt-auto gap-1.5 cursor-pointer"
+                  >
+                    <Link href="/categories">
+                      Hamısını Gör
+                      <ArrowRight className="size-3.5" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </Container>

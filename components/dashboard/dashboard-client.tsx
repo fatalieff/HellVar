@@ -49,7 +49,7 @@ type ProviderReviewWithCustomer = ProviderReview & {
 // Baku / Yasamal User Center Coordinate
 const USER_COORDINATES = { lat: 40.3894, lng: 49.8032 };
 
-type DashboardCategory = "all" | "urgent" | "plumbing" | "electric" | "nanny" | "cleaning" | "boiler";
+type DashboardCategory = "all" | "urgent" | "plumbing" | "electric" | "nanny" | "cleaning" | "boiler" | "it_tech" | "repair";
 
 // Helper: Stable mock coordinate generator based on User ID
 const getStableCoordinates = (userId: string) => {
@@ -312,11 +312,13 @@ export function DashboardClient() {
   const categoryOptions: Array<{ key: DashboardCategory; label: string }> = [
     { key: "all", label: t.dashboard.all },
     { key: "urgent", label: t.dashboard.emergency },
-    { key: "plumbing", label: t.dashboard.plumbing },
-    { key: "electric", label: t.dashboard.electric },
-    { key: "nanny", label: t.dashboard.nanny },
-    { key: "cleaning", label: t.dashboard.cleaning },
-    { key: "boiler", label: t.dashboard.boiler },
+    { key: "plumbing", label: t.categories.plumbing },
+    { key: "electric", label: t.categories.electric },
+    { key: "nanny", label: t.categories.nanny },
+    { key: "cleaning", label: t.categories.cleaning },
+    { key: "boiler", label: t.categories.boiler },
+    { key: "it_tech", label: t.categories.it_tech },
+    { key: "repair", label: t.categories.repair },
   ];
 
   const categoryLookup: Record<Exclude<DashboardCategory, "all">, string> = {
@@ -324,8 +326,10 @@ export function DashboardClient() {
     plumbing: "Santexnik",
     electric: "Elektrik",
     nanny: "Dayə",
-    cleaning: "Təmizlik",
+    cleaning: "Təmizlik xidməti",
     boiler: "Kombi Ustası",
+    it_tech: "İT / Texniki yardım",
+    repair: "Ev təmiri",
   };
 
   // Filter logic
@@ -340,6 +344,11 @@ export function DashboardClient() {
     if (selectedCategory !== "all") {
       if (selectedCategory === "urgent") {
         if ((p.rating || 0) < 4.8) return false;
+      } else if (selectedCategory === "cleaning") {
+        if (p.category !== "Təmizlik" && p.category !== "Təmizlik xidməti") return false;
+      } else if (selectedCategory === "repair") {
+        const repairCats = ["Ev təmiri", "Mebel Ustası", "Rəngsaz", "Alçipan Ustası", "Kafel-Metlax Ustası", "Kondisioner Ustası"];
+        if (!repairCats.includes(p.category)) return false;
       } else if (p.category !== categoryLookup[selectedCategory]) {
         return false;
       }
