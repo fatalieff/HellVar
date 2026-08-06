@@ -87,6 +87,9 @@ export type Dictionary = {
       onlineNow: string;
     };
     podiumTitle: string;
+    podium: {
+      rankLabel: string;
+    };
     loading: string;
     emptyFavoritesTitle: string;
     emptyNoMatchTitle: string;
