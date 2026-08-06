@@ -164,6 +164,45 @@ export function WriteReviewDialog({
       setSuccess(true);
       const saved = result.data as ProviderReview;
       setExistingReview(saved);
+
+      // Client-side notification fallback (only for new reviews, not updates).
+      // The DB trigger should also fire, but if the migration hasn't been
+      // applied yet this guarantees the provider still gets notified.
+      if (!existingReview) {
+        try {
+          const { data: myProfile } = await supabase
+            .from("profiles")
+            .select("first_name, last_name")
+            .eq("id", authState.uid!)
+            .single();
+
+          const customerName = myProfile
+            ? `${myProfile.first_name} ${myProfile.last_name}`
+            : "Müştəri";
+
+          // Check if the trigger already created a notification for this review
+          const { data: existingNotif } = await supabase
+            .from("notifications")
+            .select("id")
+            .eq("related_id", saved.id)
+            .eq("type", "new_review")
+            .maybeSingle();
+
+          if (!existingNotif) {
+            await supabase.from("notifications").insert({
+              user_id: providerId,
+              type: "new_review" as const,
+              title: `${customerName} sizə rəy yazdı`,
+              body: trimmed.length > 0 ? trimmed : `Yeni rəy: ${rating} ulduz`,
+              related_id: saved.id,
+            });
+          }
+        } catch (notifErr) {
+          // Non-critical — don't block the success flow
+          console.warn("Bildiriş yaradılarkən xəta (kritik deyil):", notifErr);
+        }
+      }
+
       setTimeout(() => {
         onSuccess?.(saved);
         onOpenChange(false);
