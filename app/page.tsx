@@ -40,7 +40,8 @@ type CategoryKey =
   | "nanny"
   | "boiler"
   | "it_tech"
-  | "repair";
+  | "repair"
+  | "moving";
 
 const CATEGORY_META: Record<
   CategoryKey,
@@ -81,6 +82,11 @@ const CATEGORY_META: Record<
     tone: "from-amber-500/20 to-orange-500/10 text-orange-600",
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=400&auto=format&fit=crop",
   },
+  moving: {
+    Icon: Truck,
+    tone: "from-purple-400/20 to-indigo-500/10 text-indigo-600",
+    image: "https://images.unsplash.com/photo-1600518464441-9154a4dea21b?q=80&w=400&auto=format&fit=crop",
+  },
 };
 
 const CATEGORIES: CategoryKey[] = [
@@ -91,6 +97,7 @@ const CATEGORIES: CategoryKey[] = [
   "boiler",
   "it_tech",
   "repair",
+  "moving",
 ];
 
 export default function Home() {

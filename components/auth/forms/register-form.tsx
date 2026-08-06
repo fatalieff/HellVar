@@ -50,6 +50,7 @@ const PROVIDER_CATEGORIES = [
   "Ev təmiri",
   "Kondisioner Ustası",
   "Mebel Ustası",
+  "Daşınma xidməti",
   "Rəngsaz",
   "Alçipan Ustası",
   "Kafel-Metlax Ustası",

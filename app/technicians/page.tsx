@@ -85,7 +85,8 @@ type CategoryKey =
   | "nanny"
   | "boiler"
   | "it_tech"
-  | "repair";
+  | "repair"
+  | "moving";
 
 const CATEGORY_LOOKUP: Record<Exclude<CategoryKey, "all">, string[]> = {
   electric: ["Elektrik", "elektrik"],
@@ -101,6 +102,17 @@ const CATEGORY_LOOKUP: Record<Exclude<CategoryKey, "all">, string[]> = {
     "Rəngsaz",
     "Alçipan Ustası",
     "Kafel-Metlax Ustası",
+  ],
+  moving: [
+    "Daşınma xidməti",
+    "Daşınma xidmətləri",
+    "Daşınma",
+    "daşınma",
+    "Ev daşınması",
+    "Ofis daşınması",
+    "Bağ daşınması",
+    "Nakliye",
+    "Moving",
   ],
 };
 
@@ -437,6 +449,7 @@ export default function TechniciansPage() {
     { key: "boiler", label: cats.boiler as string },
     { key: "it_tech", label: cats.it_tech as string },
     { key: "repair", label: cats.repair as string },
+    { key: "moving", label: cats.moving as string },
   ];
 
   return (
@@ -587,7 +600,7 @@ export default function TechniciansPage() {
           <div className="flex flex-col lg:flex-row lg:items-center gap-4">
             {/* Tabs */}
             <div className="flex flex-wrap items-center gap-1.5 bg-muted/40 p-1 rounded-2xl border border-border/60 w-fit">
-              {TABS.map(({ key, label, Icon, tone }) => {
+              {tabs.map(({ key, label, Icon, tone }) => {
                 const count =
                   key === "favorites"
                     ? providers.filter((p) => isFavorite(p.user_id)).length

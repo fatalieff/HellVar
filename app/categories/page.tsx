@@ -15,6 +15,7 @@ import {
   Flame,
   Laptop,
   Wrench,
+  Truck,
   ArrowRight,
   Loader2,
   Users,
@@ -29,7 +30,8 @@ type CategoryKey =
   | "nanny"
   | "boiler"
   | "it_tech"
-  | "repair";
+  | "repair"
+  | "moving";
 
 const CATEGORY_META: Record<
   CategoryKey,
@@ -81,6 +83,12 @@ const CATEGORY_META: Record<
     image:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=400&auto=format&fit=crop",
   },
+  moving: {
+    Icon: Truck,
+    tone: "from-purple-400/20 to-indigo-500/10 text-indigo-600",
+    image:
+      "https://images.unsplash.com/photo-1600518464441-9154a4dea21b?q=80&w=400&auto=format&fit=crop",
+  },
 };
 
 const CATEGORIES: CategoryKey[] = [
@@ -91,6 +99,7 @@ const CATEGORIES: CategoryKey[] = [
   "boiler",
   "it_tech",
   "repair",
+  "moving",
 ];
 
 const getDatabaseCategoriesForCategory = (categoryKey: string): string[] => {
@@ -115,6 +124,8 @@ const getDatabaseCategoriesForCategory = (categoryKey: string): string[] => {
         "Alçipan Ustası",
         "Kafel-Metlax Ustası",
       ];
+    case "moving":
+      return ["Daşınma xidməti", "Daşınma", "daşınma", "Ev daşınması", "Ofis daşınması", "Bağ daşınması", "Nakliye"];
     default:
       return [];
   }
@@ -131,6 +142,7 @@ export default function CategoriesPage() {
     boiler: 0,
     it_tech: 0,
     repair: 0,
+    moving: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -150,6 +162,7 @@ export default function CategoriesPage() {
           boiler: 0,
           it_tech: 0,
           repair: 0,
+          moving: 0,
         };
 
         if (data) {

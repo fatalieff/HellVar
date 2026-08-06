@@ -26,6 +26,7 @@ import {
   Flame,
   Laptop,
   Wrench,
+  Truck,
   Search,
   Star,
   MapPin,
@@ -52,7 +53,8 @@ type CategoryKey =
   | "nanny"
   | "boiler"
   | "it_tech"
-  | "repair";
+  | "repair"
+  | "moving";
 
 type Profile = {
   id: string;
@@ -146,6 +148,12 @@ const CATEGORY_META: Record<
     image:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=400&auto=format&fit=crop",
   },
+  moving: {
+    Icon: Truck,
+    tone: "from-purple-400/20 to-indigo-500/10 text-indigo-600",
+    image:
+      "https://images.unsplash.com/photo-1600518464441-9154a4dea21b?q=80&w=400&auto=format&fit=crop",
+  },
 };
 
 const USER_COORDINATES = { lat: 40.3894, lng: 49.8032 };
@@ -236,6 +244,19 @@ const getDatabaseCategoriesForCategory = (categoryKey: string): string[] => {
         "Kafel-Metlax Ustası",
         "Bərpa",
         "bərpa",
+      ];
+    case "moving":
+      return [
+        "Daşınma xidməti",
+        "Daşınma xidmətləri",
+        "Daşınma",
+        "daşınma",
+        "moving",
+        "Moving",
+        "Ev daşınması",
+        "Ofis daşınması",
+        "Bağ daşınması",
+        "Nakliye",
       ];
     default:
       return [

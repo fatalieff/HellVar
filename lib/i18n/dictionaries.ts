@@ -66,8 +66,26 @@ export type Dictionary = {
     technicianCount: string;
     detail: {
       searchPlaceholder: string;
-      experienceLabel: string;
-      ratingLabel: string;
+      titleTemplate: string;
+      filtersTitle: string;
+      clearFilters: string;
+      sortingLabel: string;
+      sortOptions: {
+        ratingDesc: string;
+        priceAsc: string;
+        priceDesc: string;
+        experience: string;
+        completedJobs: string;
+      };
+      searchRadiusLabel: string;
+      hourlyRateLabel: string;
+      minPricePlaceholder: string;
+      maxPricePlaceholder: string;
+      minExperienceLabel: string;
+      minRatingLabel: string;
+      radiusLabel?: string;
+      verificationLabel?: string;
+      activeStatus?: string;
       allLabel: string;
       onlineOnlyLabel: string;
       loading: string;
@@ -87,6 +105,23 @@ export type Dictionary = {
       onlineNow: string;
     };
     podiumTitle: string;
+    podium: {
+      rankLabel: string;
+    };
+    card: {
+      ratingLabel: string;
+      jobsLabel: string;
+      distanceLabel: string;
+      radiusLabel: string;
+      hourlyLabel: string;
+      priceLabel: string;
+      negotiable: string;
+      addressNotProvided: string;
+      profileButton: string;
+      reviewButton: string;
+      writeButton: string;
+      favoriteButtonTitle: string;
+    };
     loading: string;
     emptyFavoritesTitle: string;
     emptyNoMatchTitle: string;
@@ -268,6 +303,8 @@ export type Dictionary = {
   };
   common: {
     loading: string;
+    error?: string;
+    active?: string;
     search: string;
     viewAll: string;
     bookNow: string;
@@ -461,8 +498,8 @@ const az: Dictionary = {
     it_tech_desc: "Kompüter, proqram, internet şəbəkəsi və texniki kömək",
     repair: "Ev təmiri",
     repair_desc: "Dəmir, ağac, şüşə, divar, qapı, qarderob, rəngsaz və alçipan işləri",
-    moving: "Daşınma",
-    moving_desc: "Ev/ofis daşınması, yük kəmər, mebel sökülməsi, yükləmə",
+    moving: "Daşınma Xidmətləri",
+    moving_desc: "Ev, ofis, bağ evi və yük daşınması, mebel sökülməsi və yüklənməsi",
   },
   categoriesPage: {
     heroSubtitle: "UstaTap-da təklif olunan bütün xidmət kateqoriyaları. Sizə uyğun olan sahəni seçin və peşəkar ustaları kəşf edin.",
@@ -771,8 +808,8 @@ const en: Dictionary = {
     it_tech_desc: "Computer, software, network setup and tech help",
     repair: "Home Renovation",
     repair_desc: "Handyman, painting, drywall, door, window and home repairs",
-    moving: "Moving",
-    moving_desc: "Home, office, cargo",
+    moving: "Relocation & Cargo",
+    moving_desc: "Home, office, villa & cargo moving, furniture disassembly and loading",
   },
   categoriesPage: {
     heroSubtitle: "All service categories offered on UstaTap. Pick the area that fits you and discover expert pros.",
@@ -1084,8 +1121,8 @@ const tr: Dictionary = {
     it_tech_desc: "Bilgisayar, yazılım, internet kurulumu ve teknik yardım",
     repair: "Ev Tadilatı",
     repair_desc: "Boya, alçıpan, kapı, mobilya montajı ve ev onarım işleri",
-    moving: "Nakliye",
-    moving_desc: "Ev, ofis, yük",
+    moving: "Nakliye & Taşıma",
+    moving_desc: "Ev, ofis, yazlık ve yük taşıma, mobilya söküm ve yükleme",
   },
   categoriesPage: {
     heroSubtitle: "UstaTap'ta sunulan tüm hizmet kategorileri. Size uygun alanı seçin ve profesyonel ustaları keşfedin.",

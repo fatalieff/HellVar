@@ -49,7 +49,7 @@ type ProviderReviewWithCustomer = ProviderReview & {
 // Baku / Yasamal User Center Coordinate
 const USER_COORDINATES = { lat: 40.3894, lng: 49.8032 };
 
-type DashboardCategory = "all" | "urgent" | "plumbing" | "electric" | "nanny" | "cleaning" | "boiler" | "it_tech" | "repair";
+type DashboardCategory = "all" | "urgent" | "plumbing" | "electric" | "nanny" | "cleaning" | "boiler" | "it_tech" | "repair" | "moving";
 
 // Helper: Stable mock coordinate generator based on User ID
 const getStableCoordinates = (userId: string) => {
@@ -319,6 +319,7 @@ export function DashboardClient() {
     { key: "boiler", label: t.categories.boiler },
     { key: "it_tech", label: t.categories.it_tech },
     { key: "repair", label: t.categories.repair },
+    { key: "moving", label: t.categories.moving },
   ];
 
   const categoryLookup: Record<Exclude<DashboardCategory, "all">, string> = {
@@ -330,6 +331,7 @@ export function DashboardClient() {
     boiler: "Kombi Ustası",
     it_tech: "İT / Texniki yardım",
     repair: "Ev təmiri",
+    moving: "Daşınma xidməti",
   };
 
   // Filter logic
