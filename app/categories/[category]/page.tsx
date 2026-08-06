@@ -40,7 +40,7 @@ import {
   AlertCircle,
   SlidersHorizontal,
   X,
-  Users
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -98,42 +98,53 @@ type ProviderReviewWithCustomer = {
 
 const CATEGORY_META: Record<
   CategoryKey,
-  { Icon: React.ComponentType<{ className?: string }>; tone: string; image: string }
+  {
+    Icon: React.ComponentType<{ className?: string }>;
+    tone: string;
+    image: string;
+  }
 > = {
   electric: {
     Icon: Bolt,
     tone: "from-amber-400/20 to-yellow-500/10 text-amber-600",
-    image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=400&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=400&auto=format&fit=crop",
   },
   plumbing: {
     Icon: Droplets,
     tone: "from-sky-400/20 to-blue-500/10 text-sky-600",
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400&auto=format&fit=crop",
   },
   cleaning: {
     Icon: CleaningIcon,
     tone: "from-emerald-400/20 to-green-500/10 text-emerald-600",
-    image: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?q=80&w=400&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?q=80&w=400&auto=format&fit=crop",
   },
   nanny: {
     Icon: Heart,
     tone: "from-pink-400/20 to-rose-500/10 text-pink-600",
-    image: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=400&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=400&auto=format&fit=crop",
   },
   boiler: {
     Icon: Flame,
     tone: "from-orange-400/20 to-red-500/10 text-orange-600",
-    image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?q=80&w=400&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1585338107529-13afc5f02586?q=80&w=400&auto=format&fit=crop",
   },
   it_tech: {
     Icon: Laptop,
     tone: "from-indigo-400/20 to-violet-500/10 text-indigo-600",
-    image: "https://images.unsplash.com/photo-1588508065123-287b28e013da?q=80&w=400&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1588508065123-287b28e013da?q=80&w=400&auto=format&fit=crop",
   },
   repair: {
     Icon: Wrench,
     tone: "from-amber-500/20 to-orange-500/10 text-orange-600",
-    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=400&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=400&auto=format&fit=crop",
   },
 };
 
@@ -148,11 +159,16 @@ const getStableCoordinates = (userId: string) => {
   const lngOffset = ((Math.abs(hash >> 8) % 100) / 100) * 0.05 - 0.025;
   return {
     lat: USER_COORDINATES.lat + latOffset,
-    lng: USER_COORDINATES.lng + lngOffset
+    lng: USER_COORDINATES.lng + lngOffset,
   };
 };
 
-const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+const calculateDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+) => {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
@@ -168,25 +184,80 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 
 const getDatabaseCategoriesForCategory = (categoryKey: string): string[] => {
   switch (categoryKey) {
-    case "electric": return ["Elektrik", "elektrik", "electric", "Electric"];
-    case "plumbing": return ["Santexnik", "santexnik", "plumbing", "Plumbing", "Santexnika", "santexnika"];
-    case "cleaning": return ["Təmizlik xidməti", "təmizlik xidməti", "cleaning", "Cleaning", "Təmizlik", "təmizlik"];
-    case "nanny": return ["Dayə", "dayə", "nanny", "Nanny"];
-    case "boiler": return ["Kombi Ustası", "kombi ustası", "boiler", "Boiler", "Kombi", "kombi"];
-    case "it_tech": return ["İT / Texniki yardım", "it / texniki yardım", "it_tech", "IT Support", "Digər", "digər"];
-    case "repair": return ["Ev təmiri", "ev təmiri", "repair", "Repair", "Mebel Ustası", "Rəngsaz", "Alçipan Ustası", "Kafel-Metlax Ustası", "Bərpa", "bərpa"];
-    default: return [categoryKey, categoryKey.toLowerCase(), categoryKey.toUpperCase()];
+    case "electric":
+      return ["Elektrik", "elektrik", "electric", "Electric"];
+    case "plumbing":
+      return [
+        "Santexnik",
+        "santexnik",
+        "plumbing",
+        "Plumbing",
+        "Santexnika",
+        "santexnika",
+      ];
+    case "cleaning":
+      return [
+        "Təmizlik xidməti",
+        "təmizlik xidməti",
+        "cleaning",
+        "Cleaning",
+        "Təmizlik",
+        "təmizlik",
+      ];
+    case "nanny":
+      return ["Dayə", "dayə", "nanny", "Nanny"];
+    case "boiler":
+      return [
+        "Kombi Ustası",
+        "kombi ustası",
+        "boiler",
+        "Boiler",
+        "Kombi",
+        "kombi",
+      ];
+    case "it_tech":
+      return [
+        "İT / Texniki yardım",
+        "it / texniki yardım",
+        "it_tech",
+        "IT Support",
+        "Digər",
+        "digər",
+      ];
+    case "repair":
+      return [
+        "Ev təmiri",
+        "ev təmiri",
+        "repair",
+        "Repair",
+        "Mebel Ustası",
+        "Rəngsaz",
+        "Alçipan Ustası",
+        "Kafel-Metlax Ustası",
+        "Bərpa",
+        "bərpa",
+      ];
+    default:
+      return [
+        categoryKey,
+        categoryKey.toLowerCase(),
+        categoryKey.toUpperCase(),
+      ];
   }
 };
 
-export default function CategoryDetailPage({ params }: { params: Promise<{ category: string }> }) {
+export default function CategoryDetailPage({
+  params,
+}: {
+  params: Promise<{ category: string }>;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isRequestAction = searchParams.get("action") === "request";
-  
+
   const resolvedParams = React.use(params);
   const categoryKey = resolvedParams.category as CategoryKey;
-  
+
   const { t } = useI18n();
   const cats = t.categories;
 
@@ -207,7 +278,9 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
   const [sortBy, setSortBy] = useState<string>("rating");
 
   // Selected Provider Details Modal
-  const [selectedProviderId, setSelectedProviderId] = useState<string | null>(null);
+  const [selectedProviderId, setSelectedProviderId] = useState<string | null>(
+    null,
+  );
   const [reviews, setReviews] = useState<ProviderReviewWithCustomer[]>([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
 
@@ -221,18 +294,21 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
       setLoading(true);
       setError(null);
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (user) setCurrentUserId(user.id);
 
         const dbCategories = getDatabaseCategoriesForCategory(categoryKey);
-        
+
         let dbProviders: any[] = [];
         let dbError: any = null;
 
         // Try querying all fields (real migrations)
         const primaryQuery = await supabase
           .from("provider_details")
-          .select(`
+          .select(
+            `
             user_id,
             category,
             working_radius_km,
@@ -244,18 +320,22 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
             years_experience,
             completed_jobs,
             is_online
-          `)
+          `,
+          )
           .in("category", dbCategories);
-        
+
         dbProviders = primaryQuery.data || [];
         dbError = primaryQuery.error;
 
         // If column does not exist (error 42703), retry with baseline fields
         if (dbError && dbError.code === "42703") {
-          console.warn("New provider details columns do not exist. Retrying with baseline fields...");
+          console.warn(
+            "New provider details columns do not exist. Retrying with baseline fields...",
+          );
           const fallbackQuery = await supabase
             .from("provider_details")
-            .select(`
+            .select(
+              `
               user_id,
               category,
               working_radius_km,
@@ -264,9 +344,10 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
               rating,
               hourly_rate,
               is_online
-            `)
+            `,
+            )
             .in("category", dbCategories);
-          
+
           if (fallbackQuery.error) {
             throw fallbackQuery.error;
           }
@@ -274,7 +355,7 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
             ...provider,
             bio: null,
             years_experience: null,
-            completed_jobs: 0
+            completed_jobs: 0,
           }));
           dbError = null;
         } else if (dbError) {
@@ -292,11 +373,11 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
           .from("profiles")
           .select("id, first_name, last_name, phone, role, address")
           .in("id", providerIds);
-        
+
         if (profileError) throw profileError;
 
         const profilesById = Object.fromEntries(
-          (profileRows || []).map((p) => [p.id, p])
+          (profileRows || []).map((p) => [p.id, p]),
         );
 
         const formatted = dbProviders.map((provider) => {
@@ -305,7 +386,7 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
             USER_COORDINATES.lat,
             USER_COORDINATES.lng,
             coords.lat,
-            coords.lng
+            coords.lng,
           );
           return {
             ...provider,
@@ -333,13 +414,14 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
       setReviews([]);
       return;
     }
-    
+
     async function fetchReviews(targetProviderId: string) {
       setReviewsLoading(true);
       try {
         const { data: reviewRows, error: reviewError } = await supabase
           .from("provider_reviews")
-          .select(`
+          .select(
+            `
             id,
             provider_id,
             customer_id,
@@ -347,23 +429,27 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
             comment,
             created_at,
             updated_at
-          `)
+          `,
+          )
           .eq("provider_id", targetProviderId)
           .order("created_at", { ascending: false });
-        
+
         if (reviewError) {
           const missingTable =
             reviewError.code === "42P01" ||
             reviewError.code === "PGRST205" ||
-            (typeof reviewError.message === "string" && reviewError.message.includes("Could not find the table"));
+            (typeof reviewError.message === "string" &&
+              reviewError.message.includes("Could not find the table"));
           if (missingTable) {
-            console.warn("provider_reviews table does not exist. Gracefully ignoring reviews...");
+            console.warn(
+              "provider_reviews table does not exist. Gracefully ignoring reviews...",
+            );
             setReviews([]);
             return;
           }
           throw reviewError;
         }
-        
+
         if (!reviewRows || reviewRows.length === 0) {
           setReviews([]);
           return;
@@ -374,16 +460,16 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
           .from("profiles")
           .select("id, first_name, last_name")
           .in("id", customerIds);
-        
+
         if (customerError) throw customerError;
 
         const customersById = Object.fromEntries(
-          (customerRows || []).map((c) => [c.id, c])
+          (customerRows || []).map((c) => [c.id, c]),
         );
 
         const formattedReviews = reviewRows.map((r) => ({
           ...r,
-          customer: customersById[r.customer_id] ?? null
+          customer: customersById[r.customer_id] ?? null,
         })) as ProviderReviewWithCustomer[];
 
         setReviews(formattedReviews);
@@ -409,7 +495,8 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
     if (searchQuery.trim() !== "") {
       const q = searchQuery.toLowerCase();
       result = result.filter((p) => {
-        const fullName = `${p.profiles?.first_name} ${p.profiles?.last_name}`.toLowerCase();
+        const fullName =
+          `${p.profiles?.first_name} ${p.profiles?.last_name}`.toLowerCase();
         const address = (p.profiles?.address || "").toLowerCase();
         return fullName.includes(q) || address.includes(q);
       });
@@ -462,7 +549,18 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
     });
 
     return result;
-  }, [providers, currentUserId, searchQuery, radiusFilter, minPrice, maxPrice, minExperience, minRating, onlineOnly, sortBy]);
+  }, [
+    providers,
+    currentUserId,
+    searchQuery,
+    radiusFilter,
+    minPrice,
+    maxPrice,
+    minExperience,
+    minRating,
+    onlineOnly,
+    sortBy,
+  ]);
 
   const activeCategoryMeta = CATEGORY_META[categoryKey];
 
@@ -470,7 +568,9 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
     return (
       <div className="py-20 text-center">
         <Loader2 className="size-10 animate-spin mx-auto text-primary" />
-        <p className="mt-4 text-muted-foreground">Kateqoriya yüklənir...</p>
+        <p className="mt-4 text-muted-foreground">
+          {t.categoriesPage.detail.loading}
+        </p>
       </div>
     );
   }
@@ -496,7 +596,7 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="size-4" />
-              Bütün kateqoriyalar
+              {t.nav.categories}
             </Link>
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -505,7 +605,7 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                   <div
                     className={cn(
                       "size-14 rounded-2xl grid place-items-center bg-gradient-to-br shadow-premium shrink-0",
-                      activeCategoryMeta.tone
+                      activeCategoryMeta.tone,
                     )}
                   >
                     <activeCategoryMeta.Icon className="size-7" />
@@ -513,7 +613,10 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                 )}
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                    {cats[categoryKey]} ustaları
+                    {t.categoriesPage.detail.titleTemplate.replace(
+                      "{category}",
+                      cats[categoryKey] as string,
+                    )}
                   </h1>
                   <p className="text-sm text-muted-foreground mt-1 max-w-xl">
                     {(cats as Record<string, string>)[`${categoryKey}_desc`]}
@@ -522,7 +625,7 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
               </div>
               <div className="flex items-center gap-2 text-xs font-semibold bg-primary/10 text-primary px-3 py-1.5 rounded-full self-start md:self-auto">
                 <Users className="size-3.5" />
-                {providers.length} aktiv usta
+                {providers.length} {t.techniciansPage.stats.activeProviders}
               </div>
             </div>
 
@@ -531,9 +634,13 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
               <div className="mt-4 flex items-start gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 animate-fade-in shadow-sm">
                 <AlertCircle className="size-5 text-primary shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-foreground">Xidmət Sifarişi</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    Xidmət Sifarişi
+                  </p>
                   <p className="text-xs text-muted-foreground leading-normal">
-                    Hörmətli müştəri, xidmət almaq üçün aşağıdakı peşəkar ustalardan birini seçib <strong>"İstəmək"</strong> düyməsinə klikləyərək söhbətə başlaya bilərsiniz.
+                    Hörmətli müştəri, xidmət almaq üçün aşağıdakı peşəkar
+                    ustalardan birini seçib <strong>"İstəmək"</strong> düyməsinə
+                    klikləyərək söhbətə başlaya bilərsiniz.
                   </p>
                 </div>
               </div>
@@ -553,7 +660,13 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                   <SlidersHorizontal className="size-4 text-muted-foreground" />
                   Filtr və sıralama
                 </h2>
-                {(searchQuery || minPrice || maxPrice || minExperience > 0 || minRating > 0 || onlineOnly || radiusFilter !== 10) && (
+                {(searchQuery ||
+                  minPrice ||
+                  maxPrice ||
+                  minExperience > 0 ||
+                  minRating > 0 ||
+                  onlineOnly ||
+                  radiusFilter !== 10) && (
                   <button
                     onClick={() => {
                       setSearchQuery("");
@@ -573,7 +686,9 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
 
               {/* Sorting */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Sıralama</label>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  Sıralama
+                </label>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
@@ -583,15 +698,21 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                   <option value="price_asc">Qiymət: Artan sıra</option>
                   <option value="price_desc">Qiymət: Azalan sıra</option>
                   <option value="experience">Təcrübə: Ən çox</option>
-                  <option value="completed_jobs">Görülən iş sayı: Ən çox</option>
+                  <option value="completed_jobs">
+                    Görülən iş sayı: Ən çox
+                  </option>
                 </select>
               </div>
 
               {/* Radius filter */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Axtarış radiusu</label>
-                  <span className="text-xs font-semibold text-primary">{radiusFilter} km</span>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    Axtarış radiusu
+                  </label>
+                  <span className="text-xs font-semibold text-primary">
+                    {radiusFilter} km
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -605,7 +726,9 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
 
               {/* Hourly rate range */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Saatlıq ödəniş (AZN)</label>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  Saatlıq ödəniş (AZN)
+                </label>
                 <div className="grid grid-cols-2 gap-2">
                   <Input
                     placeholder="Min"
@@ -627,8 +750,12 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
               {/* Experience */}
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Minimum Təcrübə</label>
-                  <span className="text-xs font-semibold text-primary">{minExperience ? `${minExperience} il` : "Hamısı"}</span>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    Minimum Təcrübə
+                  </label>
+                  <span className="text-xs font-semibold text-primary">
+                    {minExperience ? `${minExperience} il` : "Hamısı"}
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -642,7 +769,9 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
 
               {/* Rating */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Minimum Reytinq</label>
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  Minimum Reytinq
+                </label>
                 <div className="flex gap-2">
                   {[0, 4.0, 4.5, 4.8].map((ratingVal) => (
                     <button
@@ -652,7 +781,7 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                         "flex-1 py-1.5 rounded-xl border text-[10px] font-bold transition-all cursor-pointer",
                         minRating === ratingVal
                           ? "border-primary bg-primary/10 text-primary"
-                          : "border-border bg-slate-50 text-foreground hover:bg-slate-100"
+                          : "border-border bg-slate-50 text-foreground hover:bg-slate-100",
                       )}
                     >
                       {ratingVal === 0 ? "Hamısı" : `${ratingVal} ★`}
@@ -663,19 +792,24 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
 
               {/* Online toggle */}
               <div className="flex items-center justify-between border-t border-border/80 pt-4">
-                <label htmlFor="online-filter-toggle" className="text-xs font-bold text-muted-foreground uppercase tracking-wider cursor-pointer">İndi Online</label>
+                <label
+                  htmlFor="online-filter-toggle"
+                  className="text-xs font-bold text-muted-foreground uppercase tracking-wider cursor-pointer"
+                >
+                  İndi Online
+                </label>
                 <button
                   id="online-filter-toggle"
                   onClick={() => setOnlineOnly(!onlineOnly)}
                   className={cn(
                     "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out outline-none",
-                    onlineOnly ? "bg-primary" : "bg-slate-200"
+                    onlineOnly ? "bg-primary" : "bg-slate-200",
                   )}
                 >
                   <span
                     className={cn(
                       "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out",
-                      onlineOnly ? "translate-x-5" : "translate-x-0"
+                      onlineOnly ? "translate-x-5" : "translate-x-0",
                     )}
                   />
                 </button>
@@ -708,16 +842,22 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
               ) : loading ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
                   <Loader2 className="size-10 animate-spin text-primary" />
-                  <p className="mt-4 text-sm font-semibold text-muted-foreground">Ustalar yüklənir, zəhmət olmasa gözləyin...</p>
+                  <p className="mt-4 text-sm font-semibold text-muted-foreground">
+                    Ustalar yüklənir, zəhmət olmasa gözləyin...
+                  </p>
                 </div>
               ) : filteredAndSortedProviders.length === 0 ? (
                 <div className="flex flex-col items-center justify-center border border-dashed border-border rounded-3xl bg-white p-12 text-center shadow-sm">
                   <div className="size-16 rounded-2xl bg-slate-50 text-muted-foreground flex items-center justify-center mb-4">
                     <Search className="size-7" />
                   </div>
-                  <h3 className="text-base font-bold text-foreground">Uyğun usta tapılmadı</h3>
+                  <h3 className="text-base font-bold text-foreground">
+                    Uyğun usta tapılmadı
+                  </h3>
                   <p className="text-sm text-muted-foreground mt-2 max-w-sm">
-                    Seçdiyiniz süzgəc parametrlərinə uyğun usta yoxdur. Süzgəcləri təmizləyərək və ya axtarış məsafəsini genişləndirərək yenidən yoxlayın.
+                    Seçdiyiniz süzgəc parametrlərinə uyğun usta yoxdur.
+                    Süzgəcləri təmizləyərək və ya axtarış məsafəsini
+                    genişləndirərək yenidən yoxlayın.
                   </p>
                 </div>
               ) : (
@@ -734,16 +874,21 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                             <div className="relative size-12 rounded-xl bg-gradient-primary text-white flex items-center justify-center font-bold text-base shadow-sm">
                               {provider.profiles?.first_name?.[0]}
                               {provider.profiles?.last_name?.[0]}
-                              
+
                               {/* Online Status Dot Badge */}
-                              <span className={cn(
-                                "absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-white shadow-sm",
-                                provider.is_online ? "bg-emerald-500" : "bg-slate-350"
-                              )} />
+                              <span
+                                className={cn(
+                                  "absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-white shadow-sm",
+                                  provider.is_online
+                                    ? "bg-emerald-500"
+                                    : "bg-slate-350",
+                                )}
+                              />
                             </div>
                             <div>
                               <h3 className="text-sm font-bold text-foreground tracking-tight group-hover:text-primary transition-colors">
-                                {provider.profiles?.first_name} {provider.profiles?.last_name}
+                                {provider.profiles?.first_name}{" "}
+                                {provider.profiles?.last_name}
                               </h3>
                               <span className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-semibold border mt-0.5 inline-block">
                                 {provider.category}
@@ -753,7 +898,11 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
 
                           <div className="flex items-center gap-1 bg-amber-50 text-amber-600 px-2 py-1 rounded-xl text-xs font-bold shadow-sm/5">
                             <Star className="size-3.5 fill-amber-500 text-amber-500" />
-                            <span>{provider.rating ? provider.rating.toFixed(1) : "5.0"}</span>
+                            <span>
+                              {provider.rating
+                                ? provider.rating.toFixed(1)
+                                : "5.0"}
+                            </span>
                           </div>
                         </div>
 
@@ -766,28 +915,49 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                         <div className="grid grid-cols-2 gap-3 border-t border-b border-border/60 py-3 text-[11px] font-semibold text-muted-foreground">
                           <div className="flex items-center gap-1.5">
                             <Clock3 className="size-3.5 text-primary" />
-                            <span>Təcrübə: {provider.years_experience ? `${provider.years_experience} il` : "—"}</span>
+                            <span>
+                              Təcrübə:{" "}
+                              {provider.years_experience
+                                ? `${provider.years_experience} il`
+                                : "—"}
+                            </span>
                           </div>
                           <div className="flex items-center gap-1.5">
                             <BriefcaseBusiness className="size-3.5 text-primary" />
-                            <span>İşlər: {provider.completed_jobs ? `${provider.completed_jobs}` : "—"}</span>
+                            <span>
+                              İşlər:{" "}
+                              {provider.completed_jobs
+                                ? `${provider.completed_jobs}`
+                                : "—"}
+                            </span>
                           </div>
                           <div className="flex items-center gap-1.5 col-span-2">
                             <MapPin className="size-3.5 text-primary shrink-0" />
-                            <span className="truncate">{provider.profiles?.address || "Ünvan qeyd edilməyib"}</span>
+                            <span className="truncate">
+                              {provider.profiles?.address ||
+                                "Ünvan qeyd edilməyib"}
+                            </span>
                           </div>
                         </div>
 
                         {/* Price & Actions row */}
                         <div className="flex items-center justify-between gap-4 mt-auto pt-2">
                           <div>
-                            <span className="text-[10px] text-muted-foreground block font-semibold uppercase tracking-wider">Saatlıq Qiymət</span>
-                            <span className="text-base font-extrabold text-foreground">{provider.hourly_rate ? `${provider.hourly_rate} AZN` : "Danışıqla"}</span>
+                            <span className="text-[10px] text-muted-foreground block font-semibold uppercase tracking-wider">
+                              Saatlıq Qiymət
+                            </span>
+                            <span className="text-base font-extrabold text-foreground">
+                              {provider.hourly_rate
+                                ? `${provider.hourly_rate} AZN`
+                                : "Danışıqla"}
+                            </span>
                           </div>
 
                           <div className="flex gap-2">
                             <Button
-                              onClick={() => setSelectedProviderId(provider.user_id)}
+                              onClick={() =>
+                                setSelectedProviderId(provider.user_id)
+                              }
                               variant="outline"
                               size="sm"
                               className="h-9 px-3 rounded-lg text-xs font-bold border-border hover:bg-slate-50 cursor-pointer"
@@ -795,7 +965,11 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                               Bax
                             </Button>
                             <Button
-                              onClick={() => router.push(`/chat?recipient=${provider.user_id}`)}
+                              onClick={() =>
+                                router.push(
+                                  `/chat?recipient=${provider.user_id}`,
+                                )
+                              }
                               variant="premium"
                               size="sm"
                               className="h-9 px-3 rounded-lg text-xs font-bold gap-1 cursor-pointer"
@@ -816,7 +990,12 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
       </section>
 
       {/* Provider Details Dialog Modal */}
-      <Dialog open={selectedProviderId !== null} onOpenChange={(open) => { if (!open) setSelectedProviderId(null); }}>
+      <Dialog
+        open={selectedProviderId !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedProviderId(null);
+        }}
+      >
         <DialogContent className="max-w-2xl overflow-y-auto max-h-[90vh] rounded-3xl p-6 border-border shadow-premium-lg">
           {selectedProvider && (
             <div className="flex flex-col gap-6">
@@ -827,38 +1006,56 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                     <div className="relative size-14 rounded-2xl bg-gradient-primary text-white flex items-center justify-center font-bold text-xl shadow-glow-primary">
                       {selectedProvider.profiles?.first_name?.[0]}
                       {selectedProvider.profiles?.last_name?.[0]}
-                      
-                      <span className={cn(
-                        "absolute -bottom-0.5 -right-0.5 size-4 rounded-full border-2 border-white shadow-sm",
-                        selectedProvider.is_online ? "bg-emerald-500" : "bg-slate-350"
-                      )} />
+
+                      <span
+                        className={cn(
+                          "absolute -bottom-0.5 -right-0.5 size-4 rounded-full border-2 border-white shadow-sm",
+                          selectedProvider.is_online
+                            ? "bg-emerald-500"
+                            : "bg-slate-350",
+                        )}
+                      />
                     </div>
                     <div>
                       <DialogTitle className="text-lg font-bold text-foreground">
-                        {selectedProvider.profiles?.first_name} {selectedProvider.profiles?.last_name}
+                        {selectedProvider.profiles?.first_name}{" "}
+                        {selectedProvider.profiles?.last_name}
                       </DialogTitle>
                       <DialogDescription className="text-xs font-semibold text-muted-foreground mt-0.5">
-                        {selectedProvider.category} · {selectedProvider.distance ? `${selectedProvider.distance} km məsafədə` : "Baku"}
+                        {selectedProvider.category} ·{" "}
+                        {selectedProvider.distance
+                          ? `${selectedProvider.distance} km məsafədə`
+                          : "Baku"}
                       </DialogDescription>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-100 text-amber-600 px-3 py-1 rounded-2xl text-sm font-extrabold shadow-sm/5">
                     <Star className="size-4 fill-amber-500 text-amber-500" />
-                    <span>{selectedProvider.rating ? selectedProvider.rating.toFixed(1) : "5.0"}</span>
+                    <span>
+                      {selectedProvider.rating
+                        ? selectedProvider.rating.toFixed(1)
+                        : "5.0"}
+                    </span>
                   </div>
                 </div>
 
                 {/* Call/Message quick CTA buttons */}
                 <div className="grid grid-cols-2 gap-3 pt-2">
-                  <Button asChild variant="outline" className="h-10 rounded-xl font-bold cursor-pointer">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-10 rounded-xl font-bold cursor-pointer"
+                  >
                     <a href={`tel:${selectedProvider.profiles?.phone}`}>
                       <Phone className="mr-2 size-4 text-emerald-500" />
                       {t.dashboard.call}
                     </a>
                   </Button>
                   <Button
-                    onClick={() => router.push(`/chat?recipient=${selectedProvider.user_id}`)}
+                    onClick={() =>
+                      router.push(`/chat?recipient=${selectedProvider.user_id}`)
+                    }
                     variant="premium"
                     className="h-10 rounded-xl font-bold cursor-pointer"
                   >
@@ -873,16 +1070,20 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                 {/* About & Bio */}
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t.dashboard.aboutLabel}</h4>
+                    <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      {t.dashboard.aboutLabel}
+                    </h4>
                     <p className="text-sm leading-relaxed text-foreground/80">
                       {selectedProvider.bio || t.dashboard.noBio}
                     </p>
                   </div>
-                  
+
                   {/* Real reviews listing */}
                   <div className="space-y-3 pt-2">
-                    <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Müştəri Rəyləri ({reviews.length})</h4>
-                    
+                    <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      Müştəri Rəyləri ({reviews.length})
+                    </h4>
+
                     {reviewsLoading ? (
                       <div className="flex items-center gap-2 text-xs text-muted-foreground py-4">
                         <Loader2 className="size-4 animate-spin text-primary" />
@@ -895,10 +1096,15 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                     ) : (
                       <div className="space-y-2.5 max-h-[220px] overflow-y-auto pr-1">
                         {reviews.map((review) => (
-                          <div key={review.id} className="rounded-xl border border-border bg-slate-50/50 p-3 flex flex-col gap-1.5">
+                          <div
+                            key={review.id}
+                            className="rounded-xl border border-border bg-slate-50/50 p-3 flex flex-col gap-1.5"
+                          >
                             <div className="flex justify-between items-center">
                               <span className="text-xs font-bold text-foreground">
-                                {review.customer ? `${review.customer.first_name} ${review.customer.last_name}` : "Müştəri"}
+                                {review.customer
+                                  ? `${review.customer.first_name} ${review.customer.last_name}`
+                                  : "Müştəri"}
                               </span>
                               <div className="flex items-center gap-0.5 text-amber-500 font-bold text-xs">
                                 <Star className="size-3 fill-amber-500 text-amber-500" />
@@ -911,7 +1117,9 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                               </p>
                             )}
                             <span className="text-[9px] text-muted-foreground text-right block">
-                              {new Date(review.created_at).toLocaleDateString("az-AZ")}
+                              {new Date(review.created_at).toLocaleDateString(
+                                "az-AZ",
+                              )}
                             </span>
                           </div>
                         ))}
@@ -923,27 +1131,49 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                 {/* Sidebar details info box */}
                 <div className="space-y-4 bg-slate-50 border border-border/80 rounded-2xl p-4 self-start">
                   <div className="space-y-1">
-                    <span className="text-[10px] text-muted-foreground block font-bold uppercase tracking-wider">Saatlıq Qiymət</span>
-                    <span className="text-lg font-black text-foreground">{selectedProvider.hourly_rate ? `${selectedProvider.hourly_rate} AZN` : "Danışıqla"}</span>
+                    <span className="text-[10px] text-muted-foreground block font-bold uppercase tracking-wider">
+                      Saatlıq Qiymət
+                    </span>
+                    <span className="text-lg font-black text-foreground">
+                      {selectedProvider.hourly_rate
+                        ? `${selectedProvider.hourly_rate} AZN`
+                        : "Danışıqla"}
+                    </span>
                   </div>
 
                   <div className="h-px bg-border/60" />
 
                   <div className="space-y-2 text-xs font-semibold text-foreground/80">
                     <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">İş radiusu:</span>
+                      <span className="text-muted-foreground font-medium">
+                        İş radiusu:
+                      </span>
                       <span>{selectedProvider.working_radius_km} km</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Təcrübə:</span>
-                      <span>{selectedProvider.years_experience ? `${selectedProvider.years_experience} il` : "—"}</span>
+                      <span className="text-muted-foreground font-medium">
+                        Təcrübə:
+                      </span>
+                      <span>
+                        {selectedProvider.years_experience
+                          ? `${selectedProvider.years_experience} il`
+                          : "—"}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Tamamlanmış iş:</span>
-                      <span>{selectedProvider.completed_jobs ? `${selectedProvider.completed_jobs}` : "—"}</span>
+                      <span className="text-muted-foreground font-medium">
+                        Tamamlanmış iş:
+                      </span>
+                      <span>
+                        {selectedProvider.completed_jobs
+                          ? `${selectedProvider.completed_jobs}`
+                          : "—"}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Təsdiqlənmə:</span>
+                      <span className="text-muted-foreground font-medium">
+                        Təsdiqlənmə:
+                      </span>
                       <span className="text-emerald-600 font-bold flex items-center gap-0.5">
                         <ShieldCheck className="size-3.5 fill-emerald-100" />
                         Aktiv
@@ -954,7 +1184,9 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
                   <div className="h-px bg-border/60" />
 
                   <div className="space-y-1">
-                    <span className="text-[10px] text-muted-foreground block font-bold uppercase tracking-wider">Ünvan</span>
+                    <span className="text-[10px] text-muted-foreground block font-bold uppercase tracking-wider">
+                      Ünvan
+                    </span>
                     <p className="text-xs leading-normal font-semibold text-foreground/85">
                       {selectedProvider.profiles?.address || "Məlumat yoxdur"}
                     </p>

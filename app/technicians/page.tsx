@@ -587,7 +587,7 @@ export default function TechniciansPage() {
           <div className="flex flex-col lg:flex-row lg:items-center gap-4">
             {/* Tabs */}
             <div className="flex flex-wrap items-center gap-1.5 bg-muted/40 p-1 rounded-2xl border border-border/60 w-fit">
-              {tabs.map(({ key, label, Icon, tone }) => {
+              {TABS.map(({ key, label, Icon, tone }) => {
                 const count =
                   key === "favorites"
                     ? providers.filter((p) => isFavorite(p.user_id)).length

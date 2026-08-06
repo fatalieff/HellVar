@@ -66,25 +66,8 @@ export type Dictionary = {
     technicianCount: string;
     detail: {
       searchPlaceholder: string;
-      filtersTitle: string;
-      clearFilters: string;
-      sortingLabel: string;
-      sortOptions: {
-        ratingDesc: string;
-        priceAsc: string;
-        priceDesc: string;
-        experience: string;
-        completedJobs: string;
-      };
-      searchRadiusLabel: string;
-      hourlyRateLabel: string;
-      minPricePlaceholder: string;
-      maxPricePlaceholder: string;
-      minExperienceLabel: string;
-      minRatingLabel: string;
-      radiusLabel?: string;
-      verificationLabel?: string;
-      activeStatus?: string;
+      experienceLabel: string;
+      ratingLabel: string;
       allLabel: string;
       onlineOnlyLabel: string;
       loading: string;
@@ -104,23 +87,6 @@ export type Dictionary = {
       onlineNow: string;
     };
     podiumTitle: string;
-    podium: {
-      rankLabel: string;
-    };
-    card: {
-      ratingLabel: string;
-      jobsLabel: string;
-      distanceLabel: string;
-      radiusLabel: string;
-      hourlyLabel: string;
-      priceLabel: string;
-      negotiable: string;
-      addressNotProvided: string;
-      profileButton: string;
-      reviewButton: string;
-      writeButton: string;
-      favoriteButtonTitle: string;
-    };
     loading: string;
     emptyFavoritesTitle: string;
     emptyNoMatchTitle: string;
@@ -302,8 +268,6 @@ export type Dictionary = {
   };
   common: {
     loading: string;
-    error: string;
-    active: string;
     search: string;
     viewAll: string;
     bookNow: string;
@@ -506,6 +470,7 @@ const az: Dictionary = {
     requestButton: "İstəmək",
     technicianCount: "usta",
     detail: {
+      titleTemplate: "{category} ustaları",
       searchPlaceholder: "Usta adı və ya ünvanı ilə axtar...",
       filtersTitle: "Filtr və sıralama",
       clearFilters: "Təmizlə",
@@ -551,7 +516,6 @@ const az: Dictionary = {
       ratingLabel: "Reytinq",
       jobsLabel: "İşlər",
       distanceLabel: "Uzaqlıq",
-      radiusLabel: "Radius",
       hourlyLabel: "Saatlıq",
       priceLabel: "Qiymət",
       negotiable: "Danışıqla",
@@ -816,6 +780,7 @@ const en: Dictionary = {
     requestButton: "Request",
     technicianCount: "pro",
     detail: {
+      titleTemplate: "{category} technicians",
       searchPlaceholder: "Search by technician name or address...",
       filtersTitle: "Filters & sorting",
       clearFilters: "Clear",
@@ -864,7 +829,6 @@ const en: Dictionary = {
       ratingLabel: "Rating",
       jobsLabel: "Jobs",
       distanceLabel: "Distance",
-      radiusLabel: "Radius",
       hourlyLabel: "Hourly",
       priceLabel: "Price",
       negotiable: "Negotiable",
@@ -1129,26 +1093,10 @@ const tr: Dictionary = {
     requestButton: "Talep et",
     technicianCount: "usta",
     detail: {
+      titleTemplate: "{category} ustalar",
       searchPlaceholder: "Usta adı veya adres ile ara...",
-      filtersTitle: "Filtre ve sıralama",
-      clearFilters: "Temizle",
-      sortingLabel: "Sıralama",
-      sortOptions: {
-        ratingDesc: "Puan: Yüksekten Düşüğe",
-        priceAsc: "Fiyat: Düşükten Yükseğe",
-        priceDesc: "Fiyat: Yüksekten Düşüğe",
-        experience: "Tecrübe: En Çok",
-        completedJobs: "Tamamlanan İş: En Çok",
-      },
-      searchRadiusLabel: "Arama yarıçapı",
-      hourlyRateLabel: "Saatlik ücret (AZN)",
-      minPricePlaceholder: "Min",
-      maxPricePlaceholder: "Max",
-      minExperienceLabel: "Minimum Tecrübe",
-      minRatingLabel: "Minimum Puan",
-      radiusLabel: "Mesafe",
-      verificationLabel: "Doğrulama",
-      activeStatus: "Aktif",
+      experienceLabel: "Minimum Deneyim",
+      ratingLabel: "Minimum Puan",
       allLabel: "Hepsi",
       onlineOnlyLabel: "Şu anda Çevrimiçi",
       loading: "Ustalar yükleniyor, lütfen bekleyin...",
@@ -1177,7 +1125,6 @@ const tr: Dictionary = {
       ratingLabel: "Puan",
       jobsLabel: "İşler",
       distanceLabel: "Mesafe",
-      radiusLabel: "Yarıçap",
       hourlyLabel: "Saatlik",
       priceLabel: "Fiyat",
       negotiable: "Pazarlığa açık",
