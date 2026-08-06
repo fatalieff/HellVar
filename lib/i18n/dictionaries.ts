@@ -66,8 +66,25 @@ export type Dictionary = {
     technicianCount: string;
     detail: {
       searchPlaceholder: string;
-      experienceLabel: string;
-      ratingLabel: string;
+      filtersTitle: string;
+      clearFilters: string;
+      sortingLabel: string;
+      sortOptions: {
+        ratingDesc: string;
+        priceAsc: string;
+        priceDesc: string;
+        experience: string;
+        completedJobs: string;
+      };
+      searchRadiusLabel: string;
+      hourlyRateLabel: string;
+      minPricePlaceholder: string;
+      maxPricePlaceholder: string;
+      minExperienceLabel: string;
+      minRatingLabel: string;
+      radiusLabel?: string;
+      verificationLabel?: string;
+      activeStatus?: string;
       allLabel: string;
       onlineOnlyLabel: string;
       loading: string;
@@ -89,6 +106,20 @@ export type Dictionary = {
     podiumTitle: string;
     podium: {
       rankLabel: string;
+    };
+    card: {
+      ratingLabel: string;
+      jobsLabel: string;
+      distanceLabel: string;
+      radiusLabel: string;
+      hourlyLabel: string;
+      priceLabel: string;
+      negotiable: string;
+      addressNotProvided: string;
+      profileButton: string;
+      reviewButton: string;
+      writeButton: string;
+      favoriteButtonTitle: string;
     };
     loading: string;
     emptyFavoritesTitle: string;
@@ -271,6 +302,8 @@ export type Dictionary = {
   };
   common: {
     loading: string;
+    error: string;
+    active: string;
     search: string;
     viewAll: string;
     bookNow: string;
@@ -518,6 +551,7 @@ const az: Dictionary = {
       ratingLabel: "Reytinq",
       jobsLabel: "İşlər",
       distanceLabel: "Uzaqlıq",
+      radiusLabel: "Radius",
       hourlyLabel: "Saatlıq",
       priceLabel: "Qiymət",
       negotiable: "Danışıqla",
@@ -830,6 +864,7 @@ const en: Dictionary = {
       ratingLabel: "Rating",
       jobsLabel: "Jobs",
       distanceLabel: "Distance",
+      radiusLabel: "Radius",
       hourlyLabel: "Hourly",
       priceLabel: "Price",
       negotiable: "Negotiable",
@@ -1095,8 +1130,25 @@ const tr: Dictionary = {
     technicianCount: "usta",
     detail: {
       searchPlaceholder: "Usta adı veya adres ile ara...",
-      experienceLabel: "Minimum Deneyim",
-      ratingLabel: "Minimum Puan",
+      filtersTitle: "Filtre ve sıralama",
+      clearFilters: "Temizle",
+      sortingLabel: "Sıralama",
+      sortOptions: {
+        ratingDesc: "Puan: Yüksekten Düşüğe",
+        priceAsc: "Fiyat: Düşükten Yükseğe",
+        priceDesc: "Fiyat: Yüksekten Düşüğe",
+        experience: "Tecrübe: En Çok",
+        completedJobs: "Tamamlanan İş: En Çok",
+      },
+      searchRadiusLabel: "Arama yarıçapı",
+      hourlyRateLabel: "Saatlik ücret (AZN)",
+      minPricePlaceholder: "Min",
+      maxPricePlaceholder: "Max",
+      minExperienceLabel: "Minimum Tecrübe",
+      minRatingLabel: "Minimum Puan",
+      radiusLabel: "Mesafe",
+      verificationLabel: "Doğrulama",
+      activeStatus: "Aktif",
       allLabel: "Hepsi",
       onlineOnlyLabel: "Şu anda Çevrimiçi",
       loading: "Ustalar yükleniyor, lütfen bekleyin...",
@@ -1125,6 +1177,7 @@ const tr: Dictionary = {
       ratingLabel: "Puan",
       jobsLabel: "İşler",
       distanceLabel: "Mesafe",
+      radiusLabel: "Yarıçap",
       hourlyLabel: "Saatlik",
       priceLabel: "Fiyat",
       negotiable: "Pazarlığa açık",
