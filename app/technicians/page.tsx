@@ -58,7 +58,12 @@ const getStableCoordinates = (userId: string) => {
   };
 };
 
-const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+const calculateDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+) => {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
@@ -72,7 +77,15 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * c;
 };
 
-type CategoryKey = "all" | "electric" | "plumbing" | "cleaning" | "nanny" | "boiler" | "it_tech" | "repair";
+type CategoryKey =
+  | "all"
+  | "electric"
+  | "plumbing"
+  | "cleaning"
+  | "nanny"
+  | "boiler"
+  | "it_tech"
+  | "repair";
 
 const CATEGORY_LOOKUP: Record<Exclude<CategoryKey, "all">, string[]> = {
   electric: ["Elektrik", "elektrik"],
@@ -81,14 +94,37 @@ const CATEGORY_LOOKUP: Record<Exclude<CategoryKey, "all">, string[]> = {
   nanny: ["Dayə", "dayə"],
   boiler: ["Kombi Ustası", "kombi ustası", "Kombi", "kombi"],
   it_tech: ["İT / Texniki yardım", "it / texniki yardım", "Digər", "digər"],
-  repair: ["Ev təmiri", "ev təmiri", "Mebel Ustası", "Rəngsaz", "Alçipan Ustası", "Kafel-Metlax Ustası"],
+  repair: [
+    "Ev təmiri",
+    "ev təmiri",
+    "Mebel Ustası",
+    "Rəngsaz",
+    "Alçipan Ustası",
+    "Kafel-Metlax Ustası",
+  ],
 };
 
 const TABS = [
-  { key: "top", Icon: Trophy, tone: "from-amber-400/20 to-yellow-500/10 text-amber-600" },
-  { key: "nearby", Icon: Compass, tone: "from-sky-400/20 to-blue-500/10 text-sky-600" },
-  { key: "new", Icon: Sparkles, tone: "from-violet-400/20 to-purple-500/10 text-violet-600" },
-  { key: "favorites", Icon: Heart, tone: "from-rose-400/20 to-pink-500/10 text-rose-600" },
+  {
+    key: "top",
+    Icon: Trophy,
+    tone: "from-amber-400/20 to-yellow-500/10 text-amber-600",
+  },
+  {
+    key: "nearby",
+    Icon: Compass,
+    tone: "from-sky-400/20 to-blue-500/10 text-sky-600",
+  },
+  {
+    key: "new",
+    Icon: Sparkles,
+    tone: "from-violet-400/20 to-purple-500/10 text-violet-600",
+  },
+  {
+    key: "favorites",
+    Icon: Heart,
+    tone: "from-rose-400/20 to-pink-500/10 text-rose-600",
+  },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -112,7 +148,7 @@ export default function TechniciansPage() {
         tone,
         label: t.techniciansPage.tabs[key],
       })),
-    [t]
+    [t],
   );
 
   const [loading, setLoading] = useState(true);
@@ -133,26 +169,69 @@ export default function TechniciansPage() {
     initialRating: number;
   }>({ open: false, providerId: "", name: "", category: "", initialRating: 5 });
 
-  const { favorites, toggleFavorite, isFavorite, clearFavorites } = useFavoritesStore();
+  const { favorites, toggleFavorite, isFavorite, clearFavorites } =
+    useFavoritesStore();
 
   // Demo/fallback ustalar - DB boş olduqda göstərilir
   const DEMO_PROVIDERS: ProviderWithProfile[] = useMemo(() => {
     const cats = [
-      "Elektrik", "Santexnik", "Təmizlik xidməti", "Dayə", "Kombi Ustası",
-      "İT / Texniki yardım", "Ev təmiri", "Mebel Ustası", "Rəngsaz",
+      "Elektrik",
+      "Santexnik",
+      "Təmizlik xidməti",
+      "Dayə",
+      "Kombi Ustası",
+      "İT / Texniki yardım",
+      "Ev təmiri",
+      "Mebel Ustası",
+      "Rəngsaz",
     ];
-    const firstNames = ["Elçin", "Elxan", "Sərxan", "Leyla", "Tural", "Mətanət", "Rəşad", "Aysel", "Pərviz", "Sevda", "Vüqar", "Elmurad"];
-    const lastNames = ["Məmmədov", "Hüseynov", "Kazımlı", "Əliyev", "Qurbanov", "Mustafayev", "Həsənli", "Quliyeva", "Babayev", "Rüstəmov", "Vəliyev", "Əsgərov"];
+    const firstNames = [
+      "Elçin",
+      "Elxan",
+      "Sərxan",
+      "Leyla",
+      "Tural",
+      "Mətanət",
+      "Rəşad",
+      "Aysel",
+      "Pərviz",
+      "Sevda",
+      "Vüqar",
+      "Elmurad",
+    ];
+    const lastNames = [
+      "Məmmədov",
+      "Hüseynov",
+      "Kazımlı",
+      "Əliyev",
+      "Qurbanov",
+      "Mustafayev",
+      "Həsənli",
+      "Quliyeva",
+      "Babayev",
+      "Rüstəmov",
+      "Vəliyev",
+      "Əsgərov",
+    ];
     const addresses = [
-      "Bakı, Nəsimi r.", "Bakı, Xətai r.", "Bakı, Nərimanov r.", "Bakı, Səbail r.",
-      "Bakı, Binəqədi r.", "Bakı, Yasamal r.", "Bakı, Pirşağı", "Bakı, Xırdalan",
+      "Bakı, Nəsimi r.",
+      "Bakı, Xətai r.",
+      "Bakı, Nərimanov r.",
+      "Bakı, Səbail r.",
+      "Bakı, Binəqədi r.",
+      "Bakı, Yasamal r.",
+      "Bakı, Pirşağı",
+      "Bakı, Xırdalan",
     ];
 
     const list: ProviderWithProfile[] = Array.from({ length: 12 }, (_, i) => {
       const uid = `demo-provider-${i + 1}`;
       const coords = getStableCoordinates(uid);
       const distance = calculateDistance(
-        USER_COORDINATES.lat, USER_COORDINATES.lng, coords.lat, coords.lng
+        USER_COORDINATES.lat,
+        USER_COORDINATES.lng,
+        coords.lat,
+        coords.lng,
       );
       const cat = cats[i % cats.length];
       return {
@@ -165,7 +244,9 @@ export default function TechniciansPage() {
         hourly_rate: [25, 30, 35, 20, 40, 50, 30, 45, 15, 80, 35, 40][i],
         bio: `${cat} sahəsində ${[3, 5, 8, 10, 12, 15, 2, 7][i % 8]} il peşəkar təcrübə. Müştəri məmnuniyyəti əsas hədəfdir. Vaxtında və keyfiyyətli iş!`,
         years_experience: [3, 5, 8, 10, 12, 15, 2, 7, 20, 14, 6, 11][i],
-        completed_jobs: [42, 88, 120, 35, 210, 156, 18, 74, 305, 192, 61, 275][i],
+        completed_jobs: [42, 88, 120, 35, 210, 156, 18, 74, 305, 192, 61, 275][
+          i
+        ],
         is_online: i % 3 !== 2,
         profiles: {
           id: uid,
@@ -189,12 +270,14 @@ export default function TechniciansPage() {
     setLoading(true);
     setDbError(null);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) setCurrentUserId(user.id);
 
-      const { data: dbProviders, error: dbError } = await supabase
-        .from("provider_details")
-        .select(`
+      const { data: dbProviders, error: dbError } = await supabase.from(
+        "provider_details",
+      ).select(`
           user_id,
           category,
           working_radius_km,
@@ -234,7 +317,7 @@ export default function TechniciansPage() {
             .in("id", providerIds);
           if (!profileError && profileRows) {
             profilesById = Object.fromEntries(
-              profileRows.map((p) => [p.id, p as Profile])
+              profileRows.map((p) => [p.id, p as Profile]),
             );
           }
         } catch (profileErr) {
@@ -245,7 +328,10 @@ export default function TechniciansPage() {
       const formatted = (dbProviders as ProviderDetails[]).map((provider) => {
         const coords = getStableCoordinates(provider.user_id);
         const distance = calculateDistance(
-          USER_COORDINATES.lat, USER_COORDINATES.lng, coords.lat, coords.lng
+          USER_COORDINATES.lat,
+          USER_COORDINATES.lng,
+          coords.lat,
+          coords.lng,
         );
         return {
           ...provider,
@@ -273,9 +359,12 @@ export default function TechniciansPage() {
   const stats = useMemo(() => {
     const total = providers.length;
     const verified = providers.filter((p) => p.documents_uploaded).length;
-    const avgRating = total > 0
-      ? (providers.reduce((acc, p) => acc + (p.rating || 0), 0) / total).toFixed(1)
-      : "0.0";
+    const avgRating =
+      total > 0
+        ? (
+            providers.reduce((acc, p) => acc + (p.rating || 0), 0) / total
+          ).toFixed(1)
+        : "0.0";
     const online = providers.filter((p) => p.is_online).length;
     return { total, verified, avgRating, online };
   }, [providers]);
@@ -295,7 +384,8 @@ export default function TechniciansPage() {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter((p) => {
-        const fullName = `${p.profiles?.first_name} ${p.profiles?.last_name}`.toLowerCase();
+        const fullName =
+          `${p.profiles?.first_name} ${p.profiles?.last_name}`.toLowerCase();
         const address = (p.profiles?.address || "").toLowerCase();
         const cat = p.category.toLowerCase();
         return fullName.includes(q) || address.includes(q) || cat.includes(q);
@@ -322,7 +412,14 @@ export default function TechniciansPage() {
     }
 
     return result;
-  }, [providers, currentUserId, activeCategory, searchQuery, activeTab, isFavorite]);
+  }, [
+    providers,
+    currentUserId,
+    activeCategory,
+    searchQuery,
+    activeTab,
+    isFavorite,
+  ]);
 
   const heroProviders = useMemo(() => {
     return [...providers]
@@ -378,7 +475,10 @@ export default function TechniciansPage() {
           </div>
 
           {/* Stats strip */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-10 sm:mt-14 animate-lift" style={{ animationDelay: "120ms" }}>
+          <div
+            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-10 sm:mt-14 animate-lift"
+            style={{ animationDelay: "120ms" }}
+          >
             <StatCard
               Icon={Users}
               tone="from-orange-400/20 to-amber-500/10 text-orange-600"
@@ -407,11 +507,16 @@ export default function TechniciansPage() {
 
           {/* Top 3 Masters Podium */}
           {!loading && heroProviders.length >= 3 && (
-            <div className="mt-12 sm:mt-16 animate-lift" style={{ animationDelay: "240ms" }}>
+            <div
+              className="mt-12 sm:mt-16 animate-lift"
+              style={{ animationDelay: "240ms" }}
+            >
               <div className="flex items-end justify-between gap-4 mb-6">
                 <div className="flex items-center gap-2">
                   <Award className="size-5 text-amber-500" />
-                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight">{t.techniciansPage.podiumTitle}</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
+                    {t.techniciansPage.podiumTitle}
+                  </h2>
                 </div>
                 <Link
                   href="#all"
@@ -474,16 +579,21 @@ export default function TechniciansPage() {
       </section>
 
       {/* ============ TABS + SEARCH + FILTERS ============ */}
-      <section id="all" className="border-y border-border/60 bg-white/70 backdrop-blur-md sticky top-16 z-30">
+      <section
+        id="all"
+        className="border-y border-border/60 bg-white/70 backdrop-blur-md sticky top-16 z-30"
+      >
         <Container size="xl" className="py-4">
           <div className="flex flex-col lg:flex-row lg:items-center gap-4">
             {/* Tabs */}
             <div className="flex flex-wrap items-center gap-1.5 bg-muted/40 p-1 rounded-2xl border border-border/60 w-fit">
-              {TABS.map(({ key, label, Icon, tone }) => {
+              {tabs.map(({ key, label, Icon, tone }) => {
                 const count =
                   key === "favorites"
                     ? providers.filter((p) => isFavorite(p.user_id)).length
-                    : providers.filter((p) => !currentUserId || p.user_id !== currentUserId).length;
+                    : providers.filter(
+                        (p) => !currentUserId || p.user_id !== currentUserId,
+                      ).length;
                 const isActive = activeTab === key;
                 return (
                   <button
@@ -493,13 +603,15 @@ export default function TechniciansPage() {
                       "group inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-300",
                       isActive
                         ? "bg-white text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/50"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/50",
                     )}
                   >
                     <span
                       className={cn(
                         "size-4 rounded-md grid place-items-center transition-colors",
-                        isActive ? tone : "text-muted-foreground group-hover:text-foreground"
+                        isActive
+                          ? tone
+                          : "text-muted-foreground group-hover:text-foreground",
                       )}
                     >
                       <Icon className="size-3.5" />
@@ -512,7 +624,7 @@ export default function TechniciansPage() {
                           ? key === "favorites"
                             ? "bg-rose-100 text-rose-600"
                             : "bg-primary/10 text-primary"
-                          : "bg-muted text-muted-foreground"
+                          : "bg-muted text-muted-foreground",
                       )}
                     >
                       {count}
@@ -546,7 +658,7 @@ export default function TechniciansPage() {
                         "shrink-0 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-300",
                         isActive
                           ? "bg-gradient-primary text-white shadow-glow-primary"
-                          : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                          : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground",
                       )}
                     >
                       {cat.label}
@@ -601,7 +713,7 @@ export default function TechniciansPage() {
                     "size-20 rounded-3xl grid place-items-center mb-5",
                     activeTab === "favorites"
                       ? "bg-rose-50 text-rose-500"
-                      : "bg-slate-50 text-muted-foreground"
+                      : "bg-slate-50 text-muted-foreground",
                   )}
                 >
                   {activeTab === "favorites" ? (
@@ -667,8 +779,12 @@ export default function TechniciansPage() {
                       provider={provider}
                       isFavorite={isFavorite(provider.user_id)}
                       onToggleFavorite={() => toggleFavorite(provider.user_id)}
-                      onViewProfile={() => router.push(`/technicians/${provider.user_id}`)}
-                      onChat={() => router.push(`/chat?recipient=${provider.user_id}`)}
+                      onViewProfile={() =>
+                        router.push(`/technicians/${provider.user_id}`)
+                      }
+                      onChat={() =>
+                        router.push(`/chat?recipient=${provider.user_id}`)
+                      }
                       onWriteReview={() =>
                         setReviewDialogState({
                           open: true,
@@ -730,10 +846,12 @@ export default function TechniciansPage() {
 
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <div className="flex items-center gap-2 text-sm font-semibold">
-                    <ShieldCheck className="size-5" /> {t.techniciansPage.cta.verifiedProfile}
+                    <ShieldCheck className="size-5" />{" "}
+                    {t.techniciansPage.cta.verifiedProfile}
                   </div>
                   <div className="flex items-center gap-2 text-sm font-semibold">
-                    <Zap className="size-5" /> {t.techniciansPage.cta.urgentJobs}
+                    <Zap className="size-5" />{" "}
+                    {t.techniciansPage.cta.urgentJobs}
                   </div>
                   <div className="flex items-center gap-2 text-sm font-semibold">
                     <Layers className="size-5" /> {t.techniciansPage.cta.stats}
@@ -794,7 +912,7 @@ function StatCard({
         <div
           className={cn(
             "size-12 rounded-2xl grid place-items-center bg-gradient-to-br shadow-sm shrink-0 transition-transform duration-300 group-hover:scale-110",
-            tone
+            tone,
           )}
         >
           <Icon className="size-5.5" />
@@ -813,17 +931,29 @@ function StatCard({
 }
 
 function RankBadge({ rank }: { rank: number }) {
-  const map: Record<number, { cls: string; Icon: React.ComponentType<{ className?: string }> }> = {
+  const map: Record<
+    number,
+    { cls: string; Icon: React.ComponentType<{ className?: string }> }
+  > = {
     1: { cls: "bg-amber-100 text-amber-700 border-amber-200", Icon: Award },
     2: { cls: "bg-slate-100 text-slate-700 border-slate-200", Icon: Award },
     3: { cls: "bg-orange-100 text-orange-700 border-orange-200", Icon: Award },
   };
-  const cfg = map[rank] || { cls: "bg-primary/10 text-primary border-primary/20", Icon: Trophy };
+  const cfg = map[rank] || {
+    cls: "bg-primary/10 text-primary border-primary/20",
+    Icon: Trophy,
+  };
   const CfgIcon = cfg.Icon;
   return (
     <Badge className={cn("rounded-full text-[10px] font-bold", cfg.cls)}>
       <CfgIcon className="size-3 mr-1" />
-      {rank === 1 ? "1-ci" : rank === 2 ? "2-ci" : rank === 3 ? "3-cü" : `#${rank}`}
+      {rank === 1
+        ? "1-ci"
+        : rank === 2
+          ? "2-ci"
+          : rank === 3
+            ? "3-cü"
+            : `#${rank}`}
     </Badge>
   );
 }
@@ -862,13 +992,13 @@ function PodiumCard({
         "group relative border bg-white overflow-hidden transition-all duration-300 hover:-translate-y-1.5",
         rank === 1
           ? "shadow-premium-lg border-primary/30"
-          : "shadow-sm border-border/60 hover:shadow-premium-lg hover:border-primary/20"
+          : "shadow-sm border-border/60 hover:shadow-premium-lg hover:border-primary/20",
       )}
     >
       <div
         className={cn(
           "w-full bg-gradient-to-br text-white p-5 flex items-center gap-4",
-          colors[rank]
+          colors[rank],
         )}
       >
         <div className="relative">
@@ -878,11 +1008,13 @@ function PodiumCard({
             <span
               className={cn(
                 "absolute -bottom-0.5 -right-0.5 size-4 rounded-full border-2 border-white flex items-center justify-center text-[9px]",
-                provider.is_online ? "bg-emerald-400" : "bg-slate-300"
+                provider.is_online ? "bg-emerald-400" : "bg-slate-300",
               )}
             />
           </div>
-          <span className="absolute -top-3 -right-3 text-3xl drop-shadow">{badges[rank]}</span>
+          <span className="absolute -top-3 -right-3 text-3xl drop-shadow">
+            {badges[rank]}
+          </span>
         </div>
 
         <div className="flex-1 min-w-0">
@@ -900,9 +1032,21 @@ function PodiumCard({
 
       <CardContent className="p-5 flex flex-col gap-4">
         <div className="grid grid-cols-3 gap-2">
-          <MiniStat Icon={Star} value={(provider.rating || 5.0).toFixed(1)} label={t.techniciansPage.card.ratingLabel} />
-          <MiniStat Icon={BriefcaseBusiness} value={String(provider.completed_jobs || 0)} label={t.techniciansPage.card.jobsLabel} />
-          <MiniStat Icon={MapPin} value={`${provider.distance || 0}km`} label={t.techniciansPage.card.distanceLabel} />
+          <MiniStat
+            Icon={Star}
+            value={(provider.rating || 5.0).toFixed(1)}
+            label={t.techniciansPage.card.ratingLabel}
+          />
+          <MiniStat
+            Icon={BriefcaseBusiness}
+            value={String(provider.completed_jobs || 0)}
+            label={t.techniciansPage.card.jobsLabel}
+          />
+          <MiniStat
+            Icon={MapPin}
+            value={`${provider.distance || 0}km`}
+            label={t.techniciansPage.card.distanceLabel}
+          />
         </div>
 
         <div className="h-px bg-border/60" />
@@ -913,7 +1057,9 @@ function PodiumCard({
               {t.techniciansPage.card.hourlyLabel}
             </span>
             <div className="text-lg font-black text-foreground">
-              {provider.hourly_rate ? `${provider.hourly_rate} ₼` : t.techniciansPage.card.negotiable}
+              {provider.hourly_rate
+                ? `${provider.hourly_rate} ₼`
+                : t.techniciansPage.card.negotiable}
             </div>
           </div>
 
@@ -923,14 +1069,14 @@ function PodiumCard({
               "size-10 rounded-xl grid place-items-center border transition-all duration-300 shrink-0",
               isFavorite(provider.user_id)
                 ? "bg-rose-50 border-rose-200 text-rose-500 shadow-sm"
-                : "bg-slate-50 border-border text-muted-foreground hover:border-rose-200 hover:text-rose-500 hover:bg-rose-50"
+                : "bg-slate-50 border-border text-muted-foreground hover:border-rose-200 hover:text-rose-500 hover:bg-rose-50",
             )}
             title={t.techniciansPage.card.favoriteButtonTitle}
           >
             <Heart
               className={cn(
                 "size-4.5 transition-transform duration-300",
-                isFavorite(provider.user_id) && "fill-current scale-110"
+                isFavorite(provider.user_id) && "fill-current scale-110",
               )}
             />
           </button>
@@ -975,7 +1121,7 @@ function PodiumCard({
             "mx-auto rounded-t-lg bg-gradient-to-b from-muted/50 to-muted/10 border border-b-0 border-border/60",
             heightMap[rank],
             "w-[70%]",
-            rank === 1 ? "mt-2" : ""
+            rank === 1 ? "mt-2" : "",
           )}
         />
       </CardContent>
@@ -1038,7 +1184,7 @@ function MasterCard({
               <span
                 className={cn(
                   "absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-white shadow-sm",
-                  provider.is_online ? "bg-emerald-500" : "bg-slate-350"
+                  provider.is_online ? "bg-emerald-500" : "bg-slate-350",
                 )}
               />
             </div>
@@ -1061,14 +1207,14 @@ function MasterCard({
               "size-9 rounded-xl grid place-items-center border transition-all duration-300 shrink-0",
               isFavorite
                 ? "bg-rose-50 border-rose-200 text-rose-500 shadow-sm"
-                : "bg-slate-50 border-border text-muted-foreground hover:border-rose-200 hover:text-rose-500 hover:bg-rose-50"
+                : "bg-slate-50 border-border text-muted-foreground hover:border-rose-200 hover:text-rose-500 hover:bg-rose-50",
             )}
             aria-label={t.techniciansPage.card.favoriteButtonTitle}
           >
             <Heart
               className={cn(
                 "size-4 transition-transform duration-300",
-                isFavorite && "fill-current scale-110"
+                isFavorite && "fill-current scale-110",
               )}
             />
           </button>
@@ -1087,7 +1233,8 @@ function MasterCard({
             </Badge>
           )}
           <div className="ml-auto text-[10px] font-bold text-muted-foreground">
-            {provider.completed_jobs ?? 0} {provider.completed_jobs === 1 ? "iş" : "iş"}
+            {provider.completed_jobs ?? 0}{" "}
+            {provider.completed_jobs === 1 ? "iş" : "iş"}
           </div>
         </div>
 
@@ -1100,15 +1247,25 @@ function MasterCard({
         <div className="grid grid-cols-2 gap-3 border-t border-b border-border/60 py-3 text-[11px] font-semibold text-muted-foreground">
           <div className="flex items-center gap-1.5">
             <Clock3 className="size-3.5 text-primary shrink-0" />
-            <span>{t.dashboard.experienceLabel}: {provider.years_experience ? `${provider.years_experience} il` : "—"}</span>
+            <span>
+              {t.dashboard.experienceLabel}:{" "}
+              {provider.years_experience
+                ? `${provider.years_experience} il`
+                : "—"}
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <Clock4 className="size-3.5 text-primary shrink-0" />
-            <span>{t.techniciansPage.card.radiusLabel}: {provider.working_radius_km} km</span>
+            <span>
+              {t.techniciansPage.card.radiusLabel}: {provider.working_radius_km}{" "}
+              km
+            </span>
           </div>
           <div className="flex items-center gap-1.5 col-span-2">
             <MapPin className="size-3.5 text-primary shrink-0" />
-            <span className="truncate">{provider.profiles?.address || t.dashboard.unknownAddress}</span>
+            <span className="truncate">
+              {provider.profiles?.address || t.dashboard.unknownAddress}
+            </span>
           </div>
         </div>
 
@@ -1119,7 +1276,9 @@ function MasterCard({
               {t.dashboard.priceLabel}
             </span>
             <span className="text-base font-black text-foreground">
-              {provider.hourly_rate ? `${provider.hourly_rate} ₼` : t.techniciansPage.card.negotiable}
+              {provider.hourly_rate
+                ? `${provider.hourly_rate} ₼`
+                : t.techniciansPage.card.negotiable}
             </span>
           </div>
 
