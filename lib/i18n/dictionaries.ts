@@ -237,6 +237,28 @@ export type Dictionary = {
     reviewSaveError: string;
     unknownAddress: string;
   };
+  chatPage: {
+    title: string;
+    subtitle: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    startConversation: string;
+    youPrefix: string;
+    defaultUser: string;
+    backAriaLabel: string;
+    chatTitle: string;
+    liveChat: string;
+    emptyState: string;
+    inputPlaceholder: string;
+    sendButton: string;
+    selfChatError: string;
+    timeAgo: {
+      now: string;
+      minutesAgo: string;
+      hoursAgo: string;
+      daysAgo: string;
+    };
+  };
   aboutPage: {
     badge: string;
     heroTitle: string;
@@ -446,6 +468,28 @@ const az: Dictionary = {
     reviewRequiredRole: "Rəy yazmaq üçün müştəri kimi daxil olmalısınız.",
     reviewSaveError: "Rəyi yadda saxlamaq olmadı. Yenidən cəhd edin.",
     unknownAddress: "Ünvan qeyd edilməyib",
+  },
+  chatPage: {
+    title: "Mesajlar",
+    subtitle: "Bütün söhbətləriniz burada",
+    emptyTitle: "Hələ heç bir söhbətiniz yoxdur",
+    emptyDescription: "Usta profil səhifəsindən \"Çatda Yaz\" düyməsini basaraq söhbətə başlaya bilərsiniz.",
+    startConversation: "Söhbətə başlayın…",
+    youPrefix: "Siz:",
+    defaultUser: "İstifadəçi",
+    backAriaLabel: "Geri qayıt",
+    chatTitle: "Çat",
+    liveChat: "Canlı çat",
+    emptyState: "Söhbətə başlayın — mesajınız qarşı tərəfə dərhal çatacaq.",
+    inputPlaceholder: "Mesaj yazın...",
+    sendButton: "Göndər",
+    selfChatError: "Özünüzlə çat yarada bilməzsiniz.",
+    timeAgo: {
+      now: "İndicə",
+      minutesAgo: "dəq. əvvəl",
+      hoursAgo: "saat əvvəl",
+      daysAgo: "gün əvvəl",
+    },
   },
   aboutPage: {
     badge: "UstaTap haqqında",
@@ -771,6 +815,28 @@ const en: Dictionary = {
     reviewRequiredRole: "You must be signed in as a customer to leave a review.",
     reviewSaveError: "The review could not be saved. Please try again.",
     unknownAddress: "Address not provided",
+  },
+  chatPage: {
+    title: "Messages",
+    subtitle: "All of your conversations are here",
+    emptyTitle: "You do not have any conversations yet",
+    emptyDescription: "You can start a chat from a technician profile by pressing the \"Message\" button.",
+    startConversation: "Start a conversation…",
+    youPrefix: "You:",
+    defaultUser: "User",
+    backAriaLabel: "Go back",
+    chatTitle: "Chat",
+    liveChat: "Live chat",
+    emptyState: "Start the conversation — your message will reach the other person instantly.",
+    inputPlaceholder: "Write a message...",
+    sendButton: "Send",
+    selfChatError: "You cannot start a chat with yourself.",
+    timeAgo: {
+      now: "Just now",
+      minutesAgo: "min ago",
+      hoursAgo: "hr ago",
+      daysAgo: "d ago",
+    },
   },
   aboutPage: {
     badge: "About UstaTap",
@@ -1099,6 +1165,28 @@ const tr: Dictionary = {
     reviewRequiredRole: "Yorum yazmak için müşteri olarak giriş yapmalısınız.",
     reviewSaveError: "Yorum kaydedilemedi. Lütfen tekrar deneyin.",
     unknownAddress: "Adres belirtilmemiş",
+  },
+  chatPage: {
+    title: "Mesajlar",
+    subtitle: "Tüm sohbetleriniz burada",
+    emptyTitle: "Henüz herhangi bir sohbetiniz yok",
+    emptyDescription: "Usta profilinden \"Mesaj Gönder\" düğmesine basarak sohbet başlatabilirsiniz.",
+    startConversation: "Sohbete başlayın…",
+    youPrefix: "Siz:",
+    defaultUser: "Kullanıcı",
+    backAriaLabel: "Geri dön",
+    chatTitle: "Sohbet",
+    liveChat: "Canlı sohbet",
+    emptyState: "Sohbete başlayın — mesajınız karşı tarafa anında ulaşacaktır.",
+    inputPlaceholder: "Mesaj yazın...",
+    sendButton: "Gönder",
+    selfChatError: "Kendinizle sohbet başlatamazsınız.",
+    timeAgo: {
+      now: "Az önce",
+      minutesAgo: "dk önce",
+      hoursAgo: "sa önce",
+      daysAgo: "g önce",
+    },
   },
   aboutPage: {
     badge: "UstaTap Hakkında",

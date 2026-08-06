@@ -12,16 +12,25 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/lib/i18n/i18n-context";
 import { supabase } from "@/lib/supabase/client";
 import { ChatConversation, ChatMessage, Profile } from "@/lib/types/database";
 
 // ─── Time formatting helper ──────────────────────────────────────────────────
-function formatTimeAgo(dateStr: string): string {
+function formatTimeAgo(
+  dateStr: string,
+  labels: {
+    now: string;
+    minutesAgo: string;
+    hoursAgo: string;
+    daysAgo: string;
+  },
+): string {
   const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-  if (diff < 60) return "İndicə";
-  if (diff < 3600) return `${Math.floor(diff / 60)} dəq. əvvəl`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)} saat əvvəl`;
-  return `${Math.floor(diff / 86400)} gün əvvəl`;
+  if (diff < 60) return labels.now;
+  if (diff < 3600) return `${Math.floor(diff / 60)} ${labels.minutesAgo}`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} ${labels.hoursAgo}`;
+  return `${Math.floor(diff / 86400)} ${labels.daysAgo}`;
 }
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -43,57 +52,61 @@ function InboxView({
   const [conversations, setConversations] = useState<ConversationPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { t } = useI18n();
 
-  const loadConversations = useCallback(async (userId: string) => {
-    // 1. Get all conversations for this user
-    const { data: convs } = await supabase
-      .from("chat_conversations")
-      .select("*")
-      .or(`participant_low.eq.${userId},participant_high.eq.${userId}`)
-      .order("last_message_at", { ascending: false });
+  const loadConversations = useCallback(
+    async (userId: string) => {
+      // 1. Get all conversations for this user
+      const { data: convs } = await supabase
+        .from("chat_conversations")
+        .select("*")
+        .or(`participant_low.eq.${userId},participant_high.eq.${userId}`)
+        .order("last_message_at", { ascending: false });
 
-    if (!convs || convs.length === 0) {
-      setConversations([]);
+      if (!convs || convs.length === 0) {
+        setConversations([]);
+        setLoading(false);
+        return;
+      }
+
+      // 2. For each conversation, get the other user's profile and last message
+      const previews: ConversationPreview[] = [];
+      for (const conv of convs) {
+        const otherUserId =
+          conv.participant_low === userId
+            ? conv.participant_high
+            : conv.participant_low;
+
+        const [{ data: profile }, { data: lastMsgs }] = await Promise.all([
+          supabase
+            .from("profiles")
+            .select("id, first_name, last_name")
+            .eq("id", otherUserId)
+            .single(),
+          supabase
+            .from("chat_messages")
+            .select("body, sender_id, created_at")
+            .eq("conversation_id", conv.id)
+            .order("created_at", { ascending: false })
+            .limit(1),
+        ]);
+
+        previews.push({
+          conversation: conv as ChatConversation,
+          otherUser: profile ?? {
+            id: otherUserId,
+            first_name: t.chatPage.defaultUser,
+            last_name: "",
+          },
+          lastMessage: lastMsgs && lastMsgs.length > 0 ? lastMsgs[0] : null,
+        });
+      }
+
+      setConversations(previews);
       setLoading(false);
-      return;
-    }
-
-    // 2. For each conversation, get the other user's profile and last message
-    const previews: ConversationPreview[] = [];
-    for (const conv of convs) {
-      const otherUserId =
-        conv.participant_low === userId
-          ? conv.participant_high
-          : conv.participant_low;
-
-      const [{ data: profile }, { data: lastMsgs }] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("id, first_name, last_name")
-          .eq("id", otherUserId)
-          .single(),
-        supabase
-          .from("chat_messages")
-          .select("body, sender_id, created_at")
-          .eq("conversation_id", conv.id)
-          .order("created_at", { ascending: false })
-          .limit(1),
-      ]);
-
-      previews.push({
-        conversation: conv as ChatConversation,
-        otherUser: profile ?? {
-          id: otherUserId,
-          first_name: "İstifadəçi",
-          last_name: "",
-        },
-        lastMessage: lastMsgs && lastMsgs.length > 0 ? lastMsgs[0] : null,
-      });
-    }
-
-    setConversations(previews);
-    setLoading(false);
-  }, []);
+    },
+    [t],
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -102,9 +115,7 @@ function InboxView({
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        router.replace(
-          `/login?redirectTo=${encodeURIComponent("/chat")}`
-        );
+        router.replace(`/login?redirectTo=${encodeURIComponent("/chat")}`);
         return;
       }
       if (mounted) {
@@ -129,7 +140,7 @@ function InboxView({
         () => {
           // Reload conversations to get updated last message
           void loadConversations(currentUserId);
-        }
+        },
       )
       .subscribe();
     return () => {
@@ -146,9 +157,9 @@ function InboxView({
             <Inbox className="size-5" />
           </div>
           <div>
-            <h1 className="font-bold text-lg">Mesajlar</h1>
+            <h1 className="font-bold text-lg">{t.chatPage.title}</h1>
             <p className="text-xs text-muted-foreground">
-              Bütün söhbətləriniz burada
+              {t.chatPage.subtitle}
             </p>
           </div>
         </header>
@@ -165,11 +176,10 @@ function InboxView({
                 <MessageSquare className="size-7 text-muted-foreground/40" />
               </div>
               <p className="text-sm font-semibold text-muted-foreground">
-                Hələ heç bir söhbətiniz yoxdur
+                {t.chatPage.emptyTitle}
               </p>
               <p className="text-xs text-muted-foreground/70 max-w-xs">
-                Usta profil səhifəsindən "Çatda Yaz" düyməsini basaraq söhbətə
-                başlaya bilərsiniz.
+                {t.chatPage.emptyDescription}
               </p>
             </div>
           ) : (
@@ -178,17 +188,17 @@ function InboxView({
                 const initial = otherUser.first_name
                   ? otherUser.first_name[0].toUpperCase()
                   : "?";
-                const fullName = `${otherUser.first_name} ${otherUser.last_name}`.trim();
+                const fullName =
+                  `${otherUser.first_name} ${otherUser.last_name}`.trim();
                 const preview = lastMessage
                   ? lastMessage.body.length > 60
                     ? lastMessage.body.slice(0, 60) + "…"
                     : lastMessage.body
-                  : "Söhbətə başlayın…";
+                  : t.chatPage.startConversation;
                 const timeStr = lastMessage
-                  ? formatTimeAgo(lastMessage.created_at)
-                  : formatTimeAgo(conversation.created_at);
-                const isMyLastMsg =
-                  lastMessage?.sender_id === currentUserId;
+                  ? formatTimeAgo(lastMessage.created_at, t.chatPage.timeAgo)
+                  : formatTimeAgo(conversation.created_at, t.chatPage.timeAgo);
+                const isMyLastMsg = lastMessage?.sender_id === currentUserId;
 
                 return (
                   <button
@@ -197,7 +207,7 @@ function InboxView({
                     className="flex w-full items-center gap-3.5 px-5 py-4 text-left transition-colors hover:bg-accent/40 active:bg-accent/60"
                   >
                     {/* Avatar */}
-                    <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/80 to-primary text-white font-bold text-sm shadow-sm">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-primary/80 to-primary text-white font-bold text-sm shadow-sm">
                       {initial}
                     </div>
 
@@ -214,7 +224,7 @@ function InboxView({
                       <p className="text-xs text-muted-foreground mt-0.5 truncate leading-relaxed">
                         {isMyLastMsg && (
                           <span className="text-muted-foreground/50">
-                            Siz:{" "}
+                            {t.chatPage.youPrefix} {""}
                           </span>
                         )}
                         {preview}
@@ -236,6 +246,7 @@ function InboxView({
 // =============================================================================
 function ActiveChatView({ recipientId }: { recipientId: string }) {
   const router = useRouter();
+  const { t } = useI18n();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [recipient, setRecipient] = useState<Pick<
@@ -262,13 +273,13 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
       const user = authData.user;
       if (!user) {
         router.replace(
-          `/login?redirectTo=${encodeURIComponent(`/chat?recipient=${recipientId}`)}`
+          `/login?redirectTo=${encodeURIComponent(`/chat?recipient=${recipientId}`)}`,
         );
         return;
       }
       if (user.id === recipientId) {
         if (mounted) {
-          setError("Özünüzlə çat yarada bilməzsiniz.");
+          setError(t.chatPage.selfChatError);
           setLoading(false);
         }
         return;
@@ -357,8 +368,8 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
             setMessages((current) =>
               current.some((message) => message.id === payload.new.id)
                 ? current
-                : [...current, payload.new as ChatMessage]
-            )
+                : [...current, payload.new as ChatMessage],
+            ),
         )
         .subscribe();
     };
@@ -389,7 +400,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
       setMessages((current) =>
         current.some((message) => message.id === data.id)
           ? current
-          : [...current, data as ChatMessage]
+          : [...current, data as ChatMessage],
       );
       setBody("");
     }
@@ -397,8 +408,11 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
   };
 
   const title = recipient
-    ? `${recipient.first_name} ${recipient.last_name}`
-    : "Çat";
+    ? [recipient.first_name, recipient.last_name]
+        .filter(Boolean)
+        .join(" ")
+        .trim() || t.chatPage.chatTitle
+    : t.chatPage.chatTitle;
 
   return (
     <main className="min-h-[calc(100vh-64px)] bg-slate-50/70 px-4 py-7">
@@ -408,7 +422,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
             variant="ghost"
             size="icon"
             onClick={() => router.push("/chat")}
-            aria-label="Geri qayıt"
+            aria-label={t.chatPage.backAriaLabel}
           >
             <ArrowLeft />
           </Button>
@@ -417,7 +431,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
           </div>
           <div>
             <h1 className="font-bold">{title}</h1>
-            <p className="text-xs text-emerald-600">Canlı çat</p>
+            <p className="text-xs text-emerald-600">{t.chatPage.liveChat}</p>
           </div>
         </header>
 
@@ -432,7 +446,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
             </p>
           ) : messages.length === 0 ? (
             <p className="pt-24 text-center text-sm text-muted-foreground">
-              Söhbətə başlayın — mesajınız qarşı tərəfə dərhal çatacaq.
+              {t.chatPage.emptyState}
             </p>
           ) : (
             messages.map((message) => (
@@ -469,13 +483,11 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
             maxLength={2000}
             disabled={loading || Boolean(error)}
             onChange={(event) => setBody(event.target.value)}
-            placeholder="Mesaj yazın..."
+            placeholder={t.chatPage.inputPlaceholder}
           />
-          <Button
-            type="submit"
-            disabled={sending || loading || !body.trim()}
-          >
-            {sending ? <Loader2 className="animate-spin" /> : <Send />} Göndər
+          <Button type="submit" disabled={sending || loading || !body.trim()}>
+            {sending ? <Loader2 className="animate-spin" /> : <Send />}{" "}
+            {t.chatPage.sendButton}
           </Button>
         </form>
       </div>
