@@ -168,7 +168,7 @@ export default function CategoriesPage() {
               {t.nav.categories}
             </h1>
             <p className="text-base sm:text-lg text-foreground/70 max-w-xl mx-auto leading-relaxed">
-              UstaTap-da təklif olunan bütün xidmət kateqoriyaları. Sizə uyğun olan sahəni seçin və peşəkar ustaları kəşf edin.
+              {t.categoriesPage.heroSubtitle}
             </p>
           </div>
 
@@ -209,7 +209,7 @@ export default function CategoriesPage() {
                       {loading ? (
                         <Loader2 className="size-3 animate-spin" />
                       ) : (
-                        `${count} usta`
+                        `${count} ${t.categoriesPage.technicianCount}`
                       )}
                     </div>
 
@@ -235,7 +235,7 @@ export default function CategoriesPage() {
                         className="h-10 rounded-xl text-xs font-bold border-border hover:bg-slate-50 transition-colors cursor-pointer"
                       >
                         <Link href={`/categories/${k}`}>
-                          Bax
+                          {t.categoriesPage.viewButton}
                         </Link>
                       </Button>
                       <Button
@@ -244,7 +244,7 @@ export default function CategoriesPage() {
                         className="h-10 rounded-xl text-xs font-bold transition-transform duration-200 hover:scale-[1.02] cursor-pointer"
                       >
                         <Link href={`/categories/${k}?action=request`}>
-                          İstəmək
+                          {t.categoriesPage.requestButton}
                         </Link>
                       </Button>
                     </div>

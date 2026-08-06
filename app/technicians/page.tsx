@@ -85,10 +85,10 @@ const CATEGORY_LOOKUP: Record<Exclude<CategoryKey, "all">, string[]> = {
 };
 
 const TABS = [
-  { key: "top", label: "Ən Yaxşılar", Icon: Trophy, tone: "from-amber-400/20 to-yellow-500/10 text-amber-600" },
-  { key: "nearby", label: "Ən Yaxın", Icon: Compass, tone: "from-sky-400/20 to-blue-500/10 text-sky-600" },
-  { key: "new", label: "Yeni Qoşulanlar", Icon: Sparkles, tone: "from-violet-400/20 to-purple-500/10 text-violet-600" },
-  { key: "favorites", label: "Favoritlərim", Icon: Heart, tone: "from-rose-400/20 to-pink-500/10 text-rose-600" },
+  { key: "top", Icon: Trophy, tone: "from-amber-400/20 to-yellow-500/10 text-amber-600" },
+  { key: "nearby", Icon: Compass, tone: "from-sky-400/20 to-blue-500/10 text-sky-600" },
+  { key: "new", Icon: Sparkles, tone: "from-violet-400/20 to-purple-500/10 text-violet-600" },
+  { key: "favorites", Icon: Heart, tone: "from-rose-400/20 to-pink-500/10 text-rose-600" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -103,6 +103,17 @@ export default function TechniciansPage() {
   const { t } = useI18n();
   const router = useRouter();
   const cats = t.categories;
+
+  const tabs = useMemo(
+    () =>
+      TABS.map(({ key, Icon, tone }) => ({
+        key,
+        Icon,
+        tone,
+        label: t.techniciansPage.tabs[key],
+      })),
+    [t]
+  );
 
   const [loading, setLoading] = useState(true);
   const [providers, setProviders] = useState<ProviderWithProfile[]>([]);
@@ -321,7 +332,7 @@ export default function TechniciansPage() {
   }, [providers, currentUserId]);
 
   const categoryOptions: Array<{ key: CategoryKey; label: string }> = [
-    { key: "all", label: "Hamısı" },
+    { key: "all", label: t.techniciansPage.categoryAllLabel },
     { key: "electric", label: cats.electric as string },
     { key: "plumbing", label: cats.plumbing as string },
     { key: "cleaning", label: cats.cleaning as string },
@@ -351,19 +362,18 @@ export default function TechniciansPage() {
               className="mx-auto gap-1.5 px-3 py-1 rounded-full animate-lift"
             >
               <Trophy className="size-3.5" />
-              Peşəkar ustalar siyahısı
+              {t.techniciansPage.heroBadge}
             </Badge>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
-              Ustalar
+              {t.techniciansPage.heroTitle}
               <span className="block mt-1 bg-gradient-primary bg-clip-text text-transparent">
-                Ən etibarlı, ən yaxın, ən yeni
+                {t.techniciansPage.heroHighlight}
               </span>
             </h1>
 
             <p className="text-base sm:text-lg text-foreground/70 max-w-xl mx-auto leading-relaxed">
-              UstaTap-da təqdim olunan bütün peşəkar ustaları bir yerdə kəşf edin.
-              Reytinq, məsafə və təcrübəyə uyğun seçim edin.
+              {t.techniciansPage.heroSubtitle}
             </p>
           </div>
 
@@ -373,25 +383,25 @@ export default function TechniciansPage() {
               Icon={Users}
               tone="from-orange-400/20 to-amber-500/10 text-orange-600"
               value={`${stats.total}+`}
-              label="Aktiv Usta"
+              label={t.techniciansPage.stats.activeProviders}
             />
             <StatCard
               Icon={ShieldCheck}
               tone="from-emerald-400/20 to-green-500/10 text-emerald-600"
               value={`${stats.verified}`}
-              label="Təsdiqlənmiş"
+              label={t.techniciansPage.stats.verified}
             />
             <StatCard
               Icon={Star}
               tone="from-amber-400/20 to-yellow-500/10 text-amber-600"
               value={`${stats.avgRating} ★`}
-              label="Orta Reytinq"
+              label={t.techniciansPage.stats.averageRating}
             />
             <StatCard
               Icon={Zap}
               tone="from-sky-400/20 to-blue-500/10 text-sky-600"
               value={`${stats.online}`}
-              label="İndi Online"
+              label={t.techniciansPage.stats.onlineNow}
             />
           </div>
 
@@ -401,13 +411,13 @@ export default function TechniciansPage() {
               <div className="flex items-end justify-between gap-4 mb-6">
                 <div className="flex items-center gap-2">
                   <Award className="size-5 text-amber-500" />
-                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Aylıq Liderlər</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight">{t.techniciansPage.podiumTitle}</h2>
                 </div>
                 <Link
                   href="#all"
                   className="group hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Hamısını gör
+                  {t.common.viewAll}
                   <ChevronRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </Link>
               </div>
@@ -517,7 +527,7 @@ export default function TechniciansPage() {
               <div className="relative flex-1 min-w-[200px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4.5" />
                 <Input
-                  placeholder="Usta adı, kateqoriya və ya ünvan... "
+                  placeholder={t.techniciansPage.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-11 h-11 bg-white rounded-2xl border-border/60 shadow-sm text-sm"
@@ -554,7 +564,7 @@ export default function TechniciansPage() {
                 className="text-xs font-bold border-destructive/30 text-destructive hover:bg-destructive/5 shrink-0"
               >
                 <Heart className="size-3.5 mr-1.5" />
-                Təmizlə
+                {t.techniciansPage.resetFilters}
               </Button>
             )}
           </div>
@@ -575,7 +585,7 @@ export default function TechniciansPage() {
               >
                 <Loader2 className="size-10 animate-spin mx-auto text-primary" />
                 <p className="mt-4 text-sm font-semibold text-muted-foreground">
-                  Ustalar yüklənir, zəhmət olmasa gözləyin...
+                  {t.techniciansPage.loading}
                 </p>
               </motion.div>
             ) : filteredProviders.length === 0 ? (
@@ -604,13 +614,13 @@ export default function TechniciansPage() {
                 </div>
                 <h3 className="text-lg font-bold text-foreground">
                   {activeTab === "favorites"
-                    ? "Hələ favorit usta yoxdur"
-                    : "Uyğun usta tapılmadı"}
+                    ? t.techniciansPage.emptyFavoritesTitle
+                    : t.techniciansPage.emptyNoMatchTitle}
                 </h3>
                 <p className="text-sm text-muted-foreground mt-2 max-w-sm">
                   {activeTab === "favorites"
-                    ? "Ustaların yanındakı ❤️ düyməsini basaraq onları favoritlərə əlavə edə bilərsiniz."
-                    : "Seçdiyiniz parametrlərə uyğun usta yoxdur. Süzgəcləri dəyişdirməyi yoxlayın."}
+                    ? t.techniciansPage.emptyFavoritesDescription
+                    : t.techniciansPage.emptyNoMatchDescription}
                 </p>
                 {activeTab !== "favorites" && activeTab !== "top" && (
                   <Button
@@ -622,7 +632,7 @@ export default function TechniciansPage() {
                     variant="premium"
                     className="mt-6 h-11 rounded-2xl px-6 gap-1.5"
                   >
-                    Süzgəcləri sıfırla
+                    {t.techniciansPage.resetFilters}
                     <ArrowRight className="size-4" />
                   </Button>
                 )}
@@ -632,7 +642,7 @@ export default function TechniciansPage() {
                     variant="premium"
                     className="mt-6 h-11 rounded-2xl px-6 gap-1.5"
                   >
-                    Ustaları kəşf et
+                    {t.techniciansPage.discoverProviders}
                     <ArrowRight className="size-4" />
                   </Button>
                 )}
@@ -709,25 +719,24 @@ export default function TechniciansPage() {
               <div className="flex flex-col gap-3 max-w-xl">
                 <Badge className="bg-white/15 text-white border-white/20 rounded-full w-fit font-bold backdrop-blur-sm">
                   <Wrench className="size-3.5 mr-1.5" />
-                  Sən də peşəkarsan?
+                  {t.techniciansPage.cta.badge}
                 </Badge>
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                  Xidmətlərini UstaTap-da göstər
+                  {t.techniciansPage.cta.title}
                 </h3>
                 <p className="text-white/90 leading-7 sm:text-lg">
-                  Müştərilərlə birbaşa əlaqə qur, sifarişlər qəbul et və
-                  qazancını artır. Qeydiyyat tamamilə pulsuzdur!
+                  {t.techniciansPage.cta.subtitle}
                 </p>
 
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <div className="flex items-center gap-2 text-sm font-semibold">
-                    <ShieldCheck className="size-5" /> Təsdiqlənmiş profil
+                    <ShieldCheck className="size-5" /> {t.techniciansPage.cta.verifiedProfile}
                   </div>
                   <div className="flex items-center gap-2 text-sm font-semibold">
-                    <Zap className="size-5" /> Təcili sifarişlər
+                    <Zap className="size-5" /> {t.techniciansPage.cta.urgentJobs}
                   </div>
                   <div className="flex items-center gap-2 text-sm font-semibold">
-                    <Layers className="size-5" /> Statistikalar
+                    <Layers className="size-5" /> {t.techniciansPage.cta.stats}
                   </div>
                 </div>
               </div>
@@ -740,7 +749,7 @@ export default function TechniciansPage() {
                 >
                   <Link href="/signup" className="gap-2">
                     <Sparkles className="size-4.5" />
-                    Usta Ol
+                    {t.techniciansPage.cta.button}
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
@@ -828,6 +837,7 @@ function PodiumCard({
   provider: ProviderWithProfile;
   onWriteReview: () => void;
 }) {
+  const { t } = useI18n();
   const colors: Record<number, string> = {
     1: "from-amber-400 via-orange-400 to-orange-500",
     2: "from-slate-300 via-slate-400 to-slate-500",
@@ -877,7 +887,7 @@ function PodiumCard({
 
         <div className="flex-1 min-w-0">
           <div className="text-[10px] font-bold uppercase tracking-widest text-white/80">
-            Sıra #{rank}
+            {t.techniciansPage.podium.rankLabel} #{rank}
           </div>
           <h3 className="font-bold text-lg leading-tight truncate">
             {provider.profiles?.first_name} {provider.profiles?.last_name}
@@ -890,9 +900,9 @@ function PodiumCard({
 
       <CardContent className="p-5 flex flex-col gap-4">
         <div className="grid grid-cols-3 gap-2">
-          <MiniStat Icon={Star} value={(provider.rating || 5.0).toFixed(1)} label="Reytinq" />
-          <MiniStat Icon={BriefcaseBusiness} value={String(provider.completed_jobs || 0)} label="İşlər" />
-          <MiniStat Icon={MapPin} value={`${provider.distance || 0}km`} label="Uzaqlıq" />
+          <MiniStat Icon={Star} value={(provider.rating || 5.0).toFixed(1)} label={t.techniciansPage.card.ratingLabel} />
+          <MiniStat Icon={BriefcaseBusiness} value={String(provider.completed_jobs || 0)} label={t.techniciansPage.card.jobsLabel} />
+          <MiniStat Icon={MapPin} value={`${provider.distance || 0}km`} label={t.techniciansPage.card.distanceLabel} />
         </div>
 
         <div className="h-px bg-border/60" />
@@ -900,10 +910,10 @@ function PodiumCard({
         <div className="flex items-center justify-between gap-2">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Saatlıq
+              {t.techniciansPage.card.hourlyLabel}
             </span>
             <div className="text-lg font-black text-foreground">
-              {provider.hourly_rate ? `${provider.hourly_rate} ₼` : "Danışıqla"}
+              {provider.hourly_rate ? `${provider.hourly_rate} ₼` : t.techniciansPage.card.negotiable}
             </div>
           </div>
 
@@ -915,7 +925,7 @@ function PodiumCard({
                 ? "bg-rose-50 border-rose-200 text-rose-500 shadow-sm"
                 : "bg-slate-50 border-border text-muted-foreground hover:border-rose-200 hover:text-rose-500 hover:bg-rose-50"
             )}
-            title="Favoritlərə əlavə et"
+            title={t.techniciansPage.card.favoriteButtonTitle}
           >
             <Heart
               className={cn(
@@ -932,26 +942,29 @@ function PodiumCard({
             variant="outline"
             size="sm"
             className="h-10 rounded-xl text-[11px] font-bold border-border hover:bg-slate-50"
+            title={t.techniciansPage.card.profileButton}
           >
-            Profil
+            {t.techniciansPage.card.profileButton}
           </Button>
           <Button
             onClick={onWriteReview}
             variant="outline"
             size="sm"
             className="h-10 rounded-xl text-[11px] font-bold border-border hover:bg-amber-50 hover:border-amber-200 hover:text-amber-600"
+            title={t.techniciansPage.card.reviewButton}
           >
             <MessageSquarePlus className="size-3.5 mr-1" />
-            Rəy
+            {t.techniciansPage.card.reviewButton}
           </Button>
           <Button
             onClick={() => router.push(`/chat?recipient=${provider.user_id}`)}
             variant="premium"
             size="sm"
             className="h-10 rounded-xl text-[11px] font-bold gap-1 shadow-glow-primary"
+            title={t.techniciansPage.card.writeButton}
           >
             <MessageSquare className="size-3.5" />
-            Yaz
+            {t.techniciansPage.card.writeButton}
           </Button>
         </div>
 
@@ -1009,6 +1022,8 @@ function MasterCard({
   onWriteReview: () => void;
   badge?: React.ReactNode;
 }) {
+  const { t } = useI18n();
+
   return (
     <Card className="group flex flex-col h-full overflow-hidden border border-border/60 bg-white transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/20">
       <CardContent className="p-5 flex-1 flex flex-col gap-4">
@@ -1048,7 +1063,7 @@ function MasterCard({
                 ? "bg-rose-50 border-rose-200 text-rose-500 shadow-sm"
                 : "bg-slate-50 border-border text-muted-foreground hover:border-rose-200 hover:text-rose-500 hover:bg-rose-50"
             )}
-            aria-label="Favorit"
+            aria-label={t.techniciansPage.card.favoriteButtonTitle}
           >
             <Heart
               className={cn(
@@ -1078,22 +1093,22 @@ function MasterCard({
 
         {/* Bio */}
         <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-          {provider.bio || "Bu usta hələ bio əlavə etməyib."}
+          {provider.bio || t.dashboard.noBio}
         </p>
 
         {/* Meta */}
         <div className="grid grid-cols-2 gap-3 border-t border-b border-border/60 py-3 text-[11px] font-semibold text-muted-foreground">
           <div className="flex items-center gap-1.5">
             <Clock3 className="size-3.5 text-primary shrink-0" />
-            <span>Təcrübə: {provider.years_experience ? `${provider.years_experience} il` : "—"}</span>
+            <span>{t.dashboard.experienceLabel}: {provider.years_experience ? `${provider.years_experience} il` : "—"}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Clock4 className="size-3.5 text-primary shrink-0" />
-            <span>Radius: {provider.working_radius_km} km</span>
+            <span>{t.techniciansPage.card.radiusLabel}: {provider.working_radius_km} km</span>
           </div>
           <div className="flex items-center gap-1.5 col-span-2">
             <MapPin className="size-3.5 text-primary shrink-0" />
-            <span className="truncate">{provider.profiles?.address || "Ünvan qeyd edilməyib"}</span>
+            <span className="truncate">{provider.profiles?.address || t.dashboard.unknownAddress}</span>
           </div>
         </div>
 
@@ -1101,10 +1116,10 @@ function MasterCard({
         <div className="flex items-center justify-between gap-4 mt-auto pt-1">
           <div>
             <span className="text-[10px] text-muted-foreground block font-bold uppercase tracking-wider">
-              Qiymət
+              {t.dashboard.priceLabel}
             </span>
             <span className="text-base font-black text-foreground">
-              {provider.hourly_rate ? `${provider.hourly_rate} ₼` : "Danışıqla"}
+              {provider.hourly_rate ? `${provider.hourly_rate} ₼` : t.techniciansPage.card.negotiable}
             </span>
           </div>
 
@@ -1114,29 +1129,29 @@ function MasterCard({
               variant="outline"
               size="sm"
               className="h-9 px-2.5 rounded-lg text-[11px] font-bold border-border hover:bg-slate-50"
-              title="Profili gör"
+              title={t.techniciansPage.card.profileButton}
             >
-              Bax
+              {t.techniciansPage.card.profileButton}
             </Button>
             <Button
               onClick={onWriteReview}
               variant="outline"
               size="sm"
               className="h-9 px-2.5 rounded-lg text-[11px] font-bold border-border hover:bg-amber-50 hover:border-amber-200 hover:text-amber-600"
-              title="Rəy yaz"
+              title={t.techniciansPage.card.reviewButton}
             >
               <MessageSquarePlus className="size-3.5 mr-1" />
-              Rəy
+              {t.techniciansPage.card.reviewButton}
             </Button>
             <Button
               onClick={onChat}
               variant="premium"
               size="sm"
               className="h-9 px-2.5 rounded-lg text-[11px] font-bold gap-1 shadow-glow-primary"
-              title="Sifariş üçün yaz"
+              title={t.techniciansPage.card.writeButton}
             >
               <MessageSquare className="size-3.5" />
-              Yaz
+              {t.techniciansPage.card.writeButton}
             </Button>
           </div>
         </div>

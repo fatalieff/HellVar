@@ -59,6 +59,59 @@ export type Dictionary = {
     moving: string;
     moving_desc: string;
   };
+  categoriesPage: {
+    heroSubtitle: string;
+    viewButton: string;
+    requestButton: string;
+    technicianCount: string;
+    detail: {
+      searchPlaceholder: string;
+      experienceLabel: string;
+      ratingLabel: string;
+      allLabel: string;
+      onlineOnlyLabel: string;
+      loading: string;
+      emptyTitle: string;
+      emptyDescription: string;
+    };
+  };
+  techniciansPage: {
+    heroBadge: string;
+    heroTitle: string;
+    heroHighlight: string;
+    heroSubtitle: string;
+    stats: {
+      activeProviders: string;
+      verified: string;
+      averageRating: string;
+      onlineNow: string;
+    };
+    podiumTitle: string;
+    loading: string;
+    emptyFavoritesTitle: string;
+    emptyNoMatchTitle: string;
+    emptyFavoritesDescription: string;
+    emptyNoMatchDescription: string;
+    resetFilters: string;
+    discoverProviders: string;
+    cta: {
+      badge: string;
+      title: string;
+      subtitle: string;
+      verifiedProfile: string;
+      urgentJobs: string;
+      stats: string;
+      button: string;
+    };
+    searchPlaceholder: string;
+    categoryAllLabel: string;
+    tabs: {
+      top: string;
+      nearby: string;
+      new: string;
+      favorites: string;
+    };
+  };
   auth: {
     signIn: {
       title: string;
@@ -411,6 +464,94 @@ const az: Dictionary = {
     moving: "Daşınma",
     moving_desc: "Ev/ofis daşınması, yük kəmər, mebel sökülməsi, yükləmə",
   },
+  categoriesPage: {
+    heroSubtitle: "UstaTap-da təklif olunan bütün xidmət kateqoriyaları. Sizə uyğun olan sahəni seçin və peşəkar ustaları kəşf edin.",
+    viewButton: "Bax",
+    requestButton: "İstəmək",
+    technicianCount: "usta",
+    detail: {
+      searchPlaceholder: "Usta adı və ya ünvanı ilə axtar...",
+      filtersTitle: "Filtr və sıralama",
+      clearFilters: "Təmizlə",
+      sortingLabel: "Sıralama",
+      sortOptions: {
+        ratingDesc: "Reytinq: Yüksəkdən Aşağıya",
+        priceAsc: "Qiymət: Artan sıra",
+        priceDesc: "Qiymət: Azalan sıra",
+        experience: "Təcrübə: Ən çox",
+        completedJobs: "Görülən iş sayı: Ən çox",
+      },
+      searchRadiusLabel: "Axtarış radiusu",
+      hourlyRateLabel: "Saatlıq ödəniş (AZN)",
+      minPricePlaceholder: "Min",
+      maxPricePlaceholder: "Max",
+      minExperienceLabel: "Minimum Təcrübə",
+      minRatingLabel: "Minimum Reytinq",
+      allLabel: "Hamısı",
+      onlineOnlyLabel: "İndi Online",
+      loading: "Ustalar yüklənir, zəhmət olmasa gözləyin...",
+      emptyTitle: "Uyğun usta tapılmadı",
+      emptyDescription:
+        "Seçdiyiniz süzgəc parametrlərinə uyğun usta yoxdur. Süzgəcləri təmizləyərək və ya axtarış məsafəsini genişləndirərək yenidən yoxlayın.",
+    },
+  },
+  techniciansPage: {
+    heroBadge: "Peşəkar ustalar siyahısı",
+    heroTitle: "Ustalar",
+    heroHighlight: "Ən etibarlı, ən yaxın, ən yeni",
+    heroSubtitle:
+      "UstaTap-da təqdim olunan bütün peşəkar ustaları bir yerdə kəşf edin. Reytinq, məsafə və təcrübəyə uyğun seçim edin.",
+    stats: {
+      activeProviders: "Aktiv Usta",
+      verified: "Təsdiqlənmiş",
+      averageRating: "Orta Reytinq",
+      onlineNow: "İndi Online",
+    },
+    podiumTitle: "Aylıq Liderlər",
+    podium: {
+      rankLabel: "Sıra",
+    },
+    card: {
+      ratingLabel: "Reytinq",
+      jobsLabel: "İşlər",
+      distanceLabel: "Uzaqlıq",
+      hourlyLabel: "Saatlıq",
+      priceLabel: "Qiymət",
+      negotiable: "Danışıqla",
+      addressNotProvided: "Ünvan qeyd edilməyib",
+      profileButton: "Profil",
+      reviewButton: "Rəy",
+      writeButton: "Yaz",
+      favoriteButtonTitle: "Favoritlərə əlavə et",
+    },
+    loading: "Ustalar yüklənir, zəhmət olmasa gözləyin...",
+    emptyFavoritesTitle: "Hələ favorit usta yoxdur",
+    emptyNoMatchTitle: "Uyğun usta tapılmadı",
+    emptyFavoritesDescription:
+      "Ustaların yanındakı ❤️ düyməsini basaraq onları favoritlərə əlavə edə bilərsiniz.",
+    emptyNoMatchDescription:
+      "Seçdiyiniz parametrlərə uyğun usta yoxdur. Süzgəcləri dəyişdirməyi yoxlayın.",
+    resetFilters: "Süzgəcləri sıfırla",
+    discoverProviders: "Ustaları kəşf et",
+    cta: {
+      badge: "Sən də peşəkarsan?",
+      title: "Xidmətlərini UstaTap-da göstər",
+      subtitle:
+        "Müştərilərlə birbaşa əlaqə qur, sifarişlər qəbul et və qazancını artır. Qeydiyyat tamamilə pulsuzdur!",
+      verifiedProfile: "Təsdiqlənmiş profil",
+      urgentJobs: "Təcili sifarişlər",
+      stats: "Statistikalar",
+      button: "Usta Ol",
+    },
+    searchPlaceholder: "Usta adı, kateqoriya və ya ünvan... ",
+    categoryAllLabel: "Hamısı",
+    tabs: {
+      top: "Ən Yaxşılar",
+      nearby: "Ən Yaxın",
+      new: "Yeni Qoşulanlar",
+      favorites: "Favoritlərim",
+    },
+  },
   footer: {
     description:
       "Azərbaycanda ev xidmətləri üçün etibarlı usta tapma platforması. Sürət, etibar və keyfiyyət.",
@@ -434,6 +575,8 @@ const az: Dictionary = {
   },
   common: {
     loading: "Yüklənir...",
+    error: "Xəta baş verdi",
+    active: "Aktiv",
     search: "Axtarış",
     viewAll: "Hamısını gör",
     bookNow: "İndi rezerv et",
@@ -630,6 +773,97 @@ const en: Dictionary = {
     moving: "Moving",
     moving_desc: "Home, office, cargo",
   },
+  categoriesPage: {
+    heroSubtitle: "All service categories offered on UstaTap. Pick the area that fits you and discover expert pros.",
+    viewButton: "View",
+    requestButton: "Request",
+    technicianCount: "pro",
+    detail: {
+      searchPlaceholder: "Search by technician name or address...",
+      filtersTitle: "Filters & sorting",
+      clearFilters: "Clear",
+      sortingLabel: "Sort by",
+      sortOptions: {
+        ratingDesc: "Rating: High to low",
+        priceAsc: "Price: Low to high",
+        priceDesc: "Price: High to low",
+        experience: "Experience: Most",
+        completedJobs: "Completed jobs: Most",
+      },
+      searchRadiusLabel: "Search radius",
+      hourlyRateLabel: "Hourly rate (AZN)",
+      minPricePlaceholder: "Min",
+      maxPricePlaceholder: "Max",
+      minExperienceLabel: "Minimum experience",
+      minRatingLabel: "Minimum rating",
+      radiusLabel: "Distance",
+      verificationLabel: "Verification",
+      activeStatus: "Active",
+      allLabel: "All",
+      onlineOnlyLabel: "Online now",
+      loading: "Loading providers, please wait...",
+      emptyTitle: "No matching provider found",
+      emptyDescription:
+        "There are no providers matching your filter settings. Try clearing filters or widening your search radius.",
+    },
+  },
+  techniciansPage: {
+    heroBadge: "Professional technicians list",
+    heroTitle: "Technicians",
+    heroHighlight: "Most reliable, closest, newest",
+    heroSubtitle:
+      "Discover all professional technicians available on UstaTap in one place. Choose based on rating, distance and experience.",
+    stats: {
+      activeProviders: "Active pros",
+      verified: "Verified",
+      averageRating: "Average rating",
+      onlineNow: "Online now",
+    },
+    podiumTitle: "Monthly leaders",
+    podium: {
+      rankLabel: "Rank",
+    },
+    card: {
+      ratingLabel: "Rating",
+      jobsLabel: "Jobs",
+      distanceLabel: "Distance",
+      hourlyLabel: "Hourly",
+      priceLabel: "Price",
+      negotiable: "Negotiable",
+      addressNotProvided: "Address not provided",
+      profileButton: "Profile",
+      reviewButton: "Review",
+      writeButton: "Write",
+      favoriteButtonTitle: "Add to favorites",
+    },
+    loading: "Loading technicians, please wait...",
+    emptyFavoritesTitle: "No favorite technicians yet",
+    emptyNoMatchTitle: "No matching technicians found",
+    emptyFavoritesDescription:
+      "Tap the ❤️ button next to technicians to add them to favorites.",
+    emptyNoMatchDescription:
+      "No technicians match your selected filters. Try adjusting the filters.",
+    resetFilters: "Reset filters",
+    discoverProviders: "Discover technicians",
+    cta: {
+      badge: "Are you also a pro?",
+      title: "Show your services on UstaTap",
+      subtitle:
+        "Connect directly with customers, accept jobs and increase your earnings. Registration is completely free!",
+      verifiedProfile: "Verified profile",
+      urgentJobs: "Urgent requests",
+      stats: "Statistics",
+      button: "Become a pro",
+    },
+    searchPlaceholder: "Technician name, category or address...",
+    categoryAllLabel: "All",
+    tabs: {
+      top: "Top",
+      nearby: "Nearby",
+      new: "New",
+      favorites: "Favorites",
+    },
+  },
   footer: {
     description:
       "Azerbaijan's trusted marketplace for home services. Speed, trust and quality.",
@@ -653,6 +887,8 @@ const en: Dictionary = {
   },
   common: {
     loading: "Loading...",
+    error: "An error occurred",
+    active: "Active",
     search: "Search",
     viewAll: "View all",
     bookNow: "Book now",
@@ -849,6 +1085,80 @@ const tr: Dictionary = {
     moving: "Nakliye",
     moving_desc: "Ev, ofis, yük",
   },
+  categoriesPage: {
+    heroSubtitle: "UstaTap'ta sunulan tüm hizmet kategorileri. Size uygun alanı seçin ve profesyonel ustaları keşfedin.",
+    viewButton: "Görüntüle",
+    requestButton: "Talep et",
+    technicianCount: "usta",
+    detail: {
+      searchPlaceholder: "Usta adı veya adres ile ara...",
+      experienceLabel: "Minimum Deneyim",
+      ratingLabel: "Minimum Puan",
+      allLabel: "Hepsi",
+      onlineOnlyLabel: "Şu anda Çevrimiçi",
+      loading: "Ustalar yükleniyor, lütfen bekleyin...",
+      emptyTitle: "Eşleşen usta bulunamadı",
+      emptyDescription:
+        "Filtre ayarlarınıza uyan usta yok. Filtreleri temizlemeyi veya arama yarıçapını genişletmeyi deneyin.",
+    },
+  },
+  techniciansPage: {
+    heroBadge: "Profesyonel ustalar listesi",
+    heroTitle: "Ustalar",
+    heroHighlight: "En güvenilir, en yakın, en yeni",
+    heroSubtitle:
+      "UstaTap'ta sunulan tüm profesyonel ustaları tek bir yerde keşfedin. Puan, mesafe ve deneyime göre seçin.",
+    stats: {
+      activeProviders: "Aktif Usta",
+      verified: "Doğrulandı",
+      averageRating: "Ortalama Puan",
+      onlineNow: "Şu anda Çevrimiçi",
+    },
+    podiumTitle: "Aylık liderler",
+    podium: {
+      rankLabel: "Sıra",
+    },
+    card: {
+      ratingLabel: "Puan",
+      jobsLabel: "İşler",
+      distanceLabel: "Mesafe",
+      hourlyLabel: "Saatlik",
+      priceLabel: "Fiyat",
+      negotiable: "Pazarlığa açık",
+      addressNotProvided: "Adres belirtilmemiş",
+      profileButton: "Profil",
+      reviewButton: "Yorum",
+      writeButton: "Yaz",
+      favoriteButtonTitle: "Favorilere ekle",
+    },
+    loading: "Ustalar yükleniyor, lütfen bekleyin...",
+    emptyFavoritesTitle: "Henüz favori usta yok",
+    emptyNoMatchTitle: "Eşleşen usta bulunamadı",
+    emptyFavoritesDescription:
+      "Ustaların yanındaki ❤️ düğmesine basarak onları favorilere ekleyebilirsiniz.",
+    emptyNoMatchDescription:
+      "Seçtiğiniz filtrelere uygun usta yok. Filtreleri ayarlamayı deneyin.",
+    resetFilters: "Filtreleri sıfırla",
+    discoverProviders: "Ustaları keşfet",
+    cta: {
+      badge: "Sen de profesyonel misin?",
+      title: "Hizmetlerini UstaTap'ta göster",
+      subtitle:
+        "Müşterilerle doğrudan iletişime geç, işler kabul et ve kazancını artır. Kayıt tamamen ücretsiz!",
+      verifiedProfile: "Doğrulanmış profil",
+      urgentJobs: "Acil talepler",
+      stats: "İstatistikler",
+      button: "Usta Ol",
+    },
+    searchPlaceholder: "Usta adı, kategori veya adres...",
+    categoryAllLabel: "Hepsi",
+    tabs: {
+      top: "En İyi",
+      nearby: "Yakın",
+      new: "Yeni",
+      favorites: "Favoriler",
+    },
+  },
   footer: {
     description:
       "Azerbaycan'da ev hizmetleri için güvenilir usta bulma platforması. Hız, güven ve kalite.",
@@ -872,6 +1182,8 @@ const tr: Dictionary = {
   },
   common: {
     loading: "Yükleniyor...",
+    error: "Bir hata oluştu",
+    active: "Aktif",
     search: "Arama",
     viewAll: "Tümünü gör",
     bookNow: "Şimdi ayır",
