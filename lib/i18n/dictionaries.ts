@@ -314,6 +314,20 @@ export type Dictionary = {
     reviews: string;
     completedJobs: string;
   };
+  notifications: {
+    title: string;
+    markAllRead: string;
+    empty: string;
+    emptyHint: string;
+    newMessage: string;
+    newReview: string;
+    justNow: string;
+    minutesAgo: string;
+    hoursAgo: string;
+    daysAgo: string;
+    unreadMessages: string;
+    openChat: string;
+  };
 };
 
 const az: Dictionary = {
@@ -624,6 +638,20 @@ const az: Dictionary = {
     rating: "Reytinq",
     reviews: "rəy",
     completedJobs: "tamamlanmış iş",
+  },
+  notifications: {
+    title: "Bildirişlər",
+    markAllRead: "Hamısını oxunmuş et",
+    empty: "Bildiriş yoxdur",
+    emptyHint: "Yeni bildirişlər burada görsənəcək",
+    newMessage: "Yeni mesaj",
+    newReview: "Yeni rəy",
+    justNow: "Indicə",
+    minutesAgo: "dəq. əvvəl",
+    hoursAgo: "saat əvvəl",
+    daysAgo: "gün əvvəl",
+    unreadMessages: "oxunmamış mesaj",
+    openChat: "Çatı aç",
   },
 };
 
@@ -939,6 +967,20 @@ const en: Dictionary = {
     reviews: "reviews",
     completedJobs: "completed jobs",
   },
+  notifications: {
+    title: "Notifications",
+    markAllRead: "Mark all as read",
+    empty: "No notifications",
+    emptyHint: "New notifications will appear here",
+    newMessage: "New message",
+    newReview: "New review",
+    justNow: "Just now",
+    minutesAgo: "min ago",
+    hoursAgo: "hr ago",
+    daysAgo: "d ago",
+    unreadMessages: "unread message(s)",
+    openChat: "Open chat",
+  },
 };
 
 const tr: Dictionary = {
@@ -1252,6 +1294,20 @@ const tr: Dictionary = {
     rating: "Puan",
     reviews: "yorum",
     completedJobs: "tamamlanan iş",
+  },
+  notifications: {
+    title: "Bildirimler",
+    markAllRead: "Tümünü okundu say",
+    empty: "Bildirim yok",
+    emptyHint: "Yeni bildirimler burada görünecek",
+    newMessage: "Yeni mesaj",
+    newReview: "Yeni yorum",
+    justNow: "Şimdi",
+    minutesAgo: "dk önce",
+    hoursAgo: "sa önce",
+    daysAgo: "gün önce",
+    unreadMessages: "okunmamış mesaj",
+    openChat: "Sohbetı aç",
   },
 };
 

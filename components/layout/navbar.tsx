@@ -4,14 +4,28 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
-import { Profile } from "@/lib/types/database";
-import { Menu, Wrench, ArrowRight, Sparkles, LogOut, User as UserIcon } from "lucide-react";
+import { Profile, Notification } from "@/lib/types/database";
+import {
+  Menu,
+  Wrench,
+  ArrowRight,
+  Sparkles,
+  LogOut,
+  User as UserIcon,
+  MessageSquare,
+  Bell,
+  X,
+  Check,
+  CheckCheck,
+  Star,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { LanguageSwitcher } from "./language-switcher";
 import { Container } from "./container";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { cn } from "@/lib/utils";
 
 const NAV_LINKS: (keyof ReturnType<typeof useI18n>["t"]["nav"])[] = [
   "home",
@@ -20,13 +34,122 @@ const NAV_LINKS: (keyof ReturnType<typeof useI18n>["t"]["nav"])[] = [
   "about",
 ];
 
+// ─── Time formatting helper ──────────────────────────────────────────────────
+function formatTimeAgo(dateStr: string, n: Record<string, string>): string {
+  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (diff < 60) return n.justNow;
+  if (diff < 3600) return `${Math.floor(diff / 60)} ${n.minutesAgo}`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} ${n.hoursAgo}`;
+  return `${Math.floor(diff / 86400)} ${n.daysAgo}`;
+}
+
+// ─── Notification icon per type ──────────────────────────────────────────────
+function NotifIcon({ type }: { type: Notification["type"] }) {
+  if (type === "new_review")
+    return (
+      <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+        <Star className="size-3.5" fill="currentColor" />
+      </span>
+    );
+  return (
+    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+      <MessageSquare className="size-3.5" />
+    </span>
+  );
+}
+
+// ─── Notification dropdown panel ─────────────────────────────────────────────
+function NotificationsPanel({
+  notifications,
+  onMarkAllRead,
+  onMarkRead,
+  n,
+}: {
+  notifications: Notification[];
+  onMarkAllRead: () => void;
+  onMarkRead: (id: string) => void;
+  n: ReturnType<typeof useI18n>["t"]["notifications"];
+}) {
+  const unread = notifications.filter((x) => !x.is_read);
+
+  return (
+    <div className="w-80 max-w-[92vw] rounded-2xl border border-border/80 bg-popover shadow-2xl overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border/60">
+        <span className="font-semibold text-sm">{n.title}</span>
+        {unread.length > 0 && (
+          <button
+            onClick={onMarkAllRead}
+            className="flex items-center gap-1 text-xs text-primary hover:underline"
+          >
+            <CheckCheck className="size-3.5" />
+            {n.markAllRead}
+          </button>
+        )}
+      </div>
+
+      {/* List */}
+      <div className="overflow-y-auto max-h-[340px] divide-y divide-border/40">
+        {notifications.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-10 px-4 text-center gap-2">
+            <Bell className="size-8 text-muted-foreground/40" />
+            <p className="text-sm font-medium text-muted-foreground">{n.empty}</p>
+            <p className="text-xs text-muted-foreground/70">{n.emptyHint}</p>
+          </div>
+        ) : (
+          notifications.slice(0, 15).map((notif) => (
+            <button
+              key={notif.id}
+              onClick={() => onMarkRead(notif.id)}
+              className={cn(
+                "flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-accent/50",
+                !notif.is_read && "bg-primary/[0.04]"
+              )}
+            >
+              <NotifIcon type={notif.type} />
+              <div className="flex-1 min-w-0">
+                <p
+                  className={cn(
+                    "text-xs leading-snug line-clamp-2",
+                    !notif.is_read ? "font-semibold text-foreground" : "text-muted-foreground"
+                  )}
+                >
+                  {notif.title}
+                </p>
+                {notif.body && (
+                  <p className="text-xs text-muted-foreground/80 line-clamp-1 mt-0.5">
+                    {notif.body}
+                  </p>
+                )}
+                <p className="text-[10px] text-muted-foreground/60 mt-1">
+                  {formatTimeAgo(notif.created_at, n)}
+                </p>
+              </div>
+              {!notif.is_read && (
+                <span className="mt-1 size-2 shrink-0 rounded-full bg-primary" />
+              )}
+            </button>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Navbar component ───────────────────────────────────────────────────
 export function Navbar() {
   const { t } = useI18n();
+  const n = t.notifications;
   const router = useRouter();
   const [scrolled, setScrolled] = React.useState(false);
   const [user, setUser] = React.useState<any>(null);
   const [profile, setProfile] = React.useState<Profile | null>(null);
+  const [notifications, setNotifications] = React.useState<Notification[]>([]);
+  const [unreadMessages, setUnreadMessages] = React.useState(0);
+  const [showNotifs, setShowNotifs] = React.useState(false);
+  const notifsRef = React.useRef<HTMLDivElement>(null);
 
+  // Scroll effect
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
     onScroll();
@@ -34,23 +157,40 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Check user session and profile role dynamically
+  // Close notifications dropdown on outside click
   React.useEffect(() => {
-    // 1. Get initial session
+    const handler = (e: MouseEvent) => {
+      if (notifsRef.current && !notifsRef.current.contains(e.target as Node)) {
+        setShowNotifs(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // Auth + profile
+  React.useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchProfile(session.user.id);
+        fetchNotifications(session.user.id);
+        fetchUnreadMessages(session.user.id);
       }
     });
 
-    // 2. Listen to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchProfile(session.user.id);
+        fetchNotifications(session.user.id);
+        fetchUnreadMessages(session.user.id);
       } else {
         setProfile(null);
+        setNotifications([]);
+        setUnreadMessages(0);
       }
     });
 
@@ -59,6 +199,54 @@ export function Navbar() {
     };
   }, []);
 
+  // Realtime: notifications
+  React.useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`notifications-${user.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          setNotifications((prev) => [payload.new as Notification, ...prev]);
+        }
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [user]);
+
+  // Realtime: unread chat messages
+  React.useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`chat-unread-${user.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "chat_messages",
+        },
+        (payload) => {
+          const msg = payload.new as { sender_id: string };
+          if (msg.sender_id !== user.id) {
+            setUnreadMessages((prev) => prev + 1);
+          }
+        }
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [user]);
+
   const fetchProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
@@ -66,11 +254,48 @@ export function Navbar() {
         .select("*")
         .eq("id", userId)
         .single();
-      if (!error && data) {
-        setProfile(data);
-      }
+      if (!error && data) setProfile(data);
     } catch (err) {
       console.warn("Navbardakı profil oxunarkən xəta:", err);
+    }
+  };
+
+  const fetchNotifications = async (userId: string) => {
+    try {
+      const { data } = await supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (data) setNotifications(data as Notification[]);
+    } catch (err) {
+      console.warn("Bildirişlər oxunarkən xəta:", err);
+    }
+  };
+
+  const fetchUnreadMessages = async (userId: string) => {
+    try {
+      // Count messages in conversations where user participates and sender != user
+      const { data: convs } = await supabase
+        .from("chat_conversations")
+        .select("id")
+        .or(`participant_low.eq.${userId},participant_high.eq.${userId}`);
+
+      if (!convs || convs.length === 0) return;
+
+      const convIds = convs.map((c) => c.id);
+      const { count } = await supabase
+        .from("chat_messages")
+        .select("id", { count: "exact", head: true })
+        .in("conversation_id", convIds)
+        .neq("sender_id", userId)
+        // Only show messages from last 24 hours as "unread indicator"
+        .gte("created_at", new Date(Date.now() - 86400_000).toISOString());
+
+      setUnreadMessages(count ?? 0);
+    } catch (err) {
+      console.warn("Oxunmamış mesajlar yoxlanarkən xəta:", err);
     }
   };
 
@@ -79,6 +304,33 @@ export function Navbar() {
     router.push("/login");
     router.refresh();
   };
+
+  const handleMarkAllRead = async () => {
+    if (!user) return;
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("user_id", user.id)
+      .eq("is_read", false);
+    setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+  };
+
+  const handleMarkRead = async (id: string) => {
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("id", id);
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
+    );
+  };
+
+  const handleChatClick = () => {
+    setUnreadMessages(0);
+    router.push("/chat");
+  };
+
+  const unreadNotifs = notifications.filter((n) => !n.is_read).length;
 
   return (
     <header
@@ -132,7 +384,7 @@ export function Navbar() {
 
           {/* DYNAMIC AUTHENTICATED OR UNAUTHENTICATED ACTION LINKS */}
           {user ? (
-            <div className="flex items-center gap-2 md:gap-3">
+            <div className="flex items-center gap-1.5 md:gap-2">
               {/* Role-based dashboard button */}
               {profile?.role === "PROVIDER" ? (
                 <Button
@@ -154,6 +406,51 @@ export function Navbar() {
                   <span>{t.nav.customerPanel}</span>
                 </Button>
               )}
+
+              {/* ── Chat icon with unread badge ── */}
+              <button
+                onClick={handleChatClick}
+                className="relative flex items-center justify-center w-9 h-9 rounded-xl hover:bg-accent/60 transition-colors text-muted-foreground hover:text-foreground"
+                aria-label="Çat"
+                id="navbar-chat-btn"
+              >
+                <MessageSquare className="size-[18px]" />
+                {unreadMessages > 0 && (
+                  <span className="absolute top-1 right-1 flex size-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full size-2.5 bg-red-500" />
+                  </span>
+                )}
+              </button>
+
+              {/* ── Notifications bell with dropdown ── */}
+              <div className="relative" ref={notifsRef}>
+                <button
+                  onClick={() => setShowNotifs((v) => !v)}
+                  className="relative flex items-center justify-center w-9 h-9 rounded-xl hover:bg-accent/60 transition-colors text-muted-foreground hover:text-foreground"
+                  aria-label={n.title}
+                  id="navbar-notif-btn"
+                >
+                  <Bell className="size-[18px]" />
+                  {unreadNotifs > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center px-0.5 shadow-sm">
+                      {unreadNotifs > 9 ? "9+" : unreadNotifs}
+                    </span>
+                  )}
+                </button>
+
+                {/* Dropdown panel */}
+                {showNotifs && (
+                  <div className="absolute right-0 top-full mt-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <NotificationsPanel
+                      notifications={notifications}
+                      onMarkAllRead={handleMarkAllRead}
+                      onMarkRead={handleMarkRead}
+                      n={n}
+                    />
+                  </div>
+                )}
+              </div>
 
               {/* User Avatar Circle */}
               <div className="w-8 h-8 rounded-full bg-gradient-primary text-white flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-background">
@@ -243,6 +540,69 @@ export function Navbar() {
                     </div>
 
                     <Separator />
+
+                    {/* Mobile: quick-access chat + notif buttons */}
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleChatClick}
+                        className="relative flex-1 flex items-center justify-center gap-2 h-10 rounded-xl border border-border text-sm font-medium hover:bg-accent/50 transition-colors"
+                      >
+                        <MessageSquare className="size-4" />
+                        Çat
+                        {unreadMessages > 0 && (
+                          <span className="absolute top-1.5 right-2 size-2 rounded-full bg-red-500" />
+                        )}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowNotifs(false);
+                          // Mobile: navigate to a simple notifications view inline
+                        }}
+                        className="relative flex-1 flex items-center justify-center gap-2 h-10 rounded-xl border border-border text-sm font-medium hover:bg-accent/50 transition-colors"
+                      >
+                        <Bell className="size-4" />
+                        {n.title}
+                        {unreadNotifs > 0 && (
+                          <span className="absolute top-1.5 right-2 min-w-[15px] h-[15px] rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center px-0.5">
+                            {unreadNotifs > 9 ? "9+" : unreadNotifs}
+                          </span>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Mobile: show unread notifications inline */}
+                    {unreadNotifs > 0 && (
+                      <div className="rounded-xl border border-border/60 overflow-hidden">
+                        <div className="flex items-center justify-between px-3 py-2 bg-muted/30">
+                          <span className="text-xs font-semibold">{n.title}</span>
+                          <button
+                            onClick={handleMarkAllRead}
+                            className="text-[10px] text-primary"
+                          >
+                            {n.markAllRead}
+                          </button>
+                        </div>
+                        {notifications
+                          .filter((x) => !x.is_read)
+                          .slice(0, 3)
+                          .map((notif) => (
+                            <button
+                              key={notif.id}
+                              onClick={() => handleMarkRead(notif.id)}
+                              className="flex w-full items-start gap-2.5 px-3 py-2.5 border-t border-border/40 text-left hover:bg-accent/30 transition-colors"
+                            >
+                              <NotifIcon type={notif.type} />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-semibold line-clamp-1">{notif.title}</p>
+                                {notif.body && (
+                                  <p className="text-[10px] text-muted-foreground line-clamp-1">{notif.body}</p>
+                                )}
+                              </div>
+                            </button>
+                          ))}
+                      </div>
+                    )}
+
                     <nav className="flex flex-col gap-1">
                       {profile?.role === "PROVIDER" ? (
                         <Button onClick={() => router.push("/provider/dashboard")} className="w-full justify-start text-xs font-semibold" variant="premium">

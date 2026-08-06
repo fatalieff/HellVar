@@ -65,6 +65,19 @@ export type ChatMessage = {
   created_at: string;
 };
 
+export type NotificationType = 'new_message' | 'new_review' | 'review_reply' | 'system';
+
+export type Notification = {
+  id: string;
+  user_id: string;
+  type: NotificationType;
+  title: string;
+  body?: string | null;
+  related_id?: string | null;
+  is_read: boolean;
+  created_at: string;
+};
+
 export type ProviderWithProfile = ProviderDetails & {
   profiles: Profile | null;
 };
@@ -115,6 +128,12 @@ export interface Database {
         Row: ChatMessage;
         Insert: Omit<ChatMessage, 'id' | 'created_at'> & { id?: string; created_at?: string };
         Update: never;
+        Relationships: [];
+      };
+      notifications: {
+        Row: Notification;
+        Insert: Omit<Notification, 'id' | 'created_at' | 'is_read'> & { id?: string; created_at?: string; is_read?: boolean };
+        Update: Partial<Pick<Notification, 'is_read'>>;
         Relationships: [];
       };
     };
