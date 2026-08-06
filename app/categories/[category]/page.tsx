@@ -352,7 +352,11 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
           .order("created_at", { ascending: false });
         
         if (reviewError) {
-          if (reviewError.code === "42P01") {
+          const missingTable =
+            reviewError.code === "42P01" ||
+            reviewError.code === "PGRST205" ||
+            (typeof reviewError.message === "string" && reviewError.message.includes("Could not find the table"));
+          if (missingTable) {
             console.warn("provider_reviews table does not exist. Gracefully ignoring reviews...");
             setReviews([]);
             return;
