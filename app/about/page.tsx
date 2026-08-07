@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import Link from "next/link";
@@ -395,7 +395,7 @@ export default function AboutPage() {
                   
                   <div className="mt-4 flex flex-wrap gap-3">
                     <Button asChild variant="premium" className="rounded-2xl px-5 hover:scale-102 transition-transform duration-200">
-                      <a href="mailto:support@ustatap.az">
+                      <a href="mailto:support@hellvar.az">
                         {t.aboutPage.contactButton}
                         <ArrowRight className="size-4" />
                       </a>
@@ -413,3 +413,4 @@ export default function AboutPage() {
     </div>
   );
 }
+

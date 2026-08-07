@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -209,7 +209,7 @@ export function RegisterForm() {
 
       setSuccess(true);
     } catch (err: unknown) {
-      console.error("Qeydiyyat zamanı xəta baş verdi:", err);
+      console.error("Qeydiyyat zamanÄ± xÉ™ta baÅŸ verdi:", err);
       setError(err instanceof Error ? err.message : t.auth.signUp.genericError);
     } finally {
       setLoading(false);
@@ -264,7 +264,7 @@ export function RegisterForm() {
                   {isCompleted ? <Check className="w-5 h-5 text-white" /> : step}
                 </motion.div>
                 <span className={`text-xs mt-2 font-medium hidden sm:inline ${isActive ? "text-primary font-semibold" : "text-muted-foreground"}`}>
-                  {step === 1 ? "Əsas Məlumatlar" : step === 2 ? "Rol Seçimi" : "Qeydiyyatın Tamamlanması"}
+                  {step === 1 ? "Əsas məlumatlar" : step === 2 ? "Rol Seçimi" : "Qeydiyyatın Tamamlanması"}
                 </span>
               </div>
             );
@@ -284,10 +284,10 @@ export function RegisterForm() {
               <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mb-4">
                 <Check className="w-8 h-8" />
               </div>
-              <h2 className="text-2xl font-bold mb-3 text-foreground">Təbriklər! Qeydiyyat Tamamlandı</h2>
+              <h2 className="text-2xl font-bold mb-3 text-foreground">TÉ™briklÉ™r! Qeydiyyat TamamlandÄ±</h2>
               <p className="text-muted-foreground max-w-sm mb-6 text-sm">
-                Hesabınız uğurla yaradıldı. Zəhmət olmasa e-poçt (email) ünvanınıza göndərilən təsdiq linkinə daxil olaraq hesabı təsdiqləyin.
-                {role === "PROVIDER" && " Sənədləriniz administrator tərəfindən yoxlanıldıqdan sonra profiliniz aktivləşdiriləcəkdir."}
+                HesabÄ±nÄ±z uÄŸurla yaradÄ±ldÄ±. ZÉ™hmÉ™t olmasa e-poÃ§t (email) Ã¼nvanÄ±nÄ±za gÃ¶ndÉ™rilÉ™n tÉ™sdiq linkinÉ™ daxil olaraq hesabÄ± tÉ™sdiqlÉ™yin.
+                {role === "PROVIDER" && " SÉ™nÉ™dlÉ™riniz administrator tÉ™rÉ™findÉ™n yoxlanÄ±ldÄ±qdan sonra profiliniz aktivlÉ™ÅŸdirilÉ™cÉ™kdir."}
               </p>
               <Button asChild className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-white shadow-glow-primary">
                 <a href="/login">Daxil ol</a>
@@ -309,7 +309,7 @@ export function RegisterForm() {
                 <div className="space-y-4">
                   <div className="text-left">
                     <h2 className="text-xl font-bold text-foreground">Əsas məlumatlarınızı daxil edin</h2>
-                    <p className="text-sm text-muted-foreground">UstaTap-da qeydiyyatdan keçmək üçün zəruri məlumatlar.</p>
+                    <p className="text-sm text-muted-foreground">HəllVar-da qeydiyyatdan keçmək üçün zəruri məlumatlar.</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -355,7 +355,7 @@ export function RegisterForm() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email">E-poçt ünvanı (Email)</Label>
+                    <Label htmlFor="email">E-poçt (Email)</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                       <Input
@@ -492,7 +492,7 @@ export function RegisterForm() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="address-detail">Tam ünvan (isteğe bağlı)</Label>
+                        <Label htmlFor="address-detail">Tam Ünvan (İstəyə Bağlı)</Label>
                         <Input
                           id="address-detail"
                           type="text"
@@ -646,7 +646,7 @@ export function RegisterForm() {
                       </>
                     ) : (
                       <>
-                        Qeydiyyatı Tamamla
+                        Qeydiyyatı tamamla
                         <Check className="w-4 h-4 ml-2" />
                       </>
                     )}
@@ -660,3 +660,4 @@ export function RegisterForm() {
     </div>
   );
 }
+

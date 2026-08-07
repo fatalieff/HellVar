@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Wrench } from "lucide-react";
+import Image from "next/image";
 import { Container } from "./container";
 import { Separator } from "@/components/ui/separator";
 import { useI18n } from "@/lib/i18n/i18n-context";
@@ -17,8 +17,8 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2 flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-2 w-fit">
-              <span className="grid size-9 place-items-center rounded-xl bg-gradient-primary shadow-glow-primary">
-                <Wrench className="size-4.5 text-white" />
+              <span className="grid size-9 place-items-center rounded-xl overflow-hidden shadow-glow-primary">
+                <Image src="/logo.jpg" alt="HəllVar" width={36} height={36} className="rounded-xl object-cover" />
               </span>
               <div className="flex flex-col leading-tight">
                 <span className="text-[17px] font-semibold tracking-tight">{t.brand.name}</span>

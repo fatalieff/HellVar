@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { Profile, Notification } from "@/lib/types/database";
@@ -347,8 +348,8 @@ export function Navbar() {
           className="flex items-center gap-2 shrink-0 group"
           aria-label={t.brand.name}
         >
-          <span className="relative grid size-9 place-items-center rounded-xl bg-gradient-primary shadow-glow-primary transition-transform duration-300 group-hover:scale-105">
-            <Wrench className="size-4.5 text-white" data-icon="inline" />
+          <span className="relative grid size-9 place-items-center rounded-xl overflow-hidden transition-transform duration-300 group-hover:scale-105">
+            <Image src="/logo.jpg" alt="HəllVar" width={36} height={36} className="rounded-xl object-cover" />
           </span>
           <div className="flex flex-col leading-tight">
             <span className="text-[17px] font-semibold tracking-tight">
@@ -492,8 +493,8 @@ export function Navbar() {
             <SheetContent side="right" className="w-[85vw] max-w-sm">
               <div className="flex flex-col gap-6 h-full">
                 <div className="flex items-center gap-2">
-                  <span className="grid size-9 place-items-center rounded-xl bg-gradient-primary">
-                    <Wrench className="size-4.5 text-white" />
+                  <span className="grid size-9 place-items-center rounded-xl overflow-hidden">
+                    <Image src="/logo.jpg" alt="HəllVar" width={36} height={36} className="rounded-xl object-cover" />
                   </span>
                   <div className="flex flex-col">
                     <span className="text-[17px] font-semibold">{t.brand.name}</span>

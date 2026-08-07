@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
@@ -27,8 +27,9 @@ export const useFavoritesStore = create<FavoritesState>()(
       clearFavorites: () => set({ favorites: [] }),
     }),
     {
-      name: "ustatap-favorites",
+      name: "hellvar-favorites",
       storage: createJSONStorage(() => localStorage),
     }
   )
 );
+

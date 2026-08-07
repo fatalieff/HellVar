@@ -35,6 +35,25 @@ export type Dictionary = {
     searchButton: string;
     popularCategories: string;
   };
+  homePage: {
+    queryTooShort: string;
+    adviceError: string;
+    aiUrgentBadge: string;
+    aiSuggestionBadge: string;
+    aiUrgentTitle: string;
+    aiSuggestionTitle: string;
+    nextStepLabel: string;
+    nextStepDesc: string;
+    showMatchingProviders: string;
+    aiErrorBadge: string;
+    viewButtonLabel: string;
+    requestButtonLabel: string;
+    allCategoriesTitle: string;
+    stepTwoDesc: string;
+    stepThreeDesc: string;
+    ctaTitle: string;
+    ctaDesc: string;
+  };
   categories: {
     electric: string;
     electric_desc: string;
@@ -354,7 +373,7 @@ export type Dictionary = {
 
 const az: Dictionary = {
   brand: {
-    name: "UstaTap",
+    name: "HəllVar",
     tagline: "Etibarlı usta, bir toxunuşda",
   },
   nav: {
@@ -376,8 +395,27 @@ const az: Dictionary = {
     subtitle:
       "Sadəcə problemini yaz, biz sənə uyğun ustaları göstərək. 5 dəqiqədə rezervasiya et.",
     searchPlaceholder: "Məsələn: kondisioner işləmir, su kəsilir, rozetka yandirilmir...",
-    searchButton: "Usta tap",
+    searchButton: "HəllVar",
     popularCategories: "Məşhur kateqoriyalar",
+  },
+  homePage: {
+    queryTooShort: "Problemi bir az daha ətraflı yazın.",
+    adviceError: "Məsləhət alınmadı.",
+    aiUrgentBadge: "Təcili AI Analizi",
+    aiSuggestionBadge: "AI Tövsiyəsi",
+    aiUrgentTitle: "Bu problem üçün sürətli müdaxilə tövsiyə olunur",
+    aiSuggestionTitle: "AI probleminiz üçün uyğun istiqaməti təyin etdi",
+    nextStepLabel: "Növbəti addım",
+    nextStepDesc: "AI analizinə uyğun ustaları birbaşa siyahıda göstər.",
+    showMatchingProviders: "Uyğun ustaları göstər",
+    aiErrorBadge: "AI Yanıtı Alınamadı",
+    viewButtonLabel: "Bax",
+    requestButtonLabel: "İstəmək",
+    allCategoriesTitle: "Bütün Kateqoriyalar",
+    stepTwoDesc: "Reytinq, rəylər və tamamlanmış işlər",
+    stepThreeDesc: "5 dəqiqədə rezervasiya · Həmişə dəstək",
+    ctaTitle: "Sən də ustasan? 🛠️",
+    ctaDesc: "Öz xidmətlərini HəllVar-da göstər, müştərilərlə birbaşa əlaqə qur və qazancını artır.",
   },
   auth: {
     signIn: {
@@ -492,9 +530,9 @@ const az: Dictionary = {
     },
   },
   aboutPage: {
-    badge: "UstaTap haqqında",
+    badge: "HəllVar haqqında",
     heroTitle: "Ev işlərini daha sürətli, daha etibarlı və daha rahat etmək üçün yaradıq.",
-    heroSubtitle: "UstaTap müştərilərə uyğun ustaları tapmağa, ustalara isə iş tapmağa kömək edən modern bir xidmət platformasıdır. Bizim məqsədimiz hər iki tərəfi də rahat və etibarlı bir prosesə çıxarmaqdır.",
+    heroSubtitle: "HəllVar müştərilərə uyğun ustaları tapmağa, ustalara isə iş tapmağa kömək edən modern bir xidmət platformasıdır. Bizim məqsədimiz hər iki tərəfi də rahat və etibarlı bir prosesə çıxarmaqdır.",
     ctaStart: "İndi başla",
     ctaViewProviders: "Ustaları gör",
     trustTitle: "Etibarlılıq",
@@ -505,10 +543,10 @@ const az: Dictionary = {
     statSpeedText: "Sürətli müraciət və ilkin əlaqə imkanı.",
     benefitsEyebrow: "Bizim missiyamız",
     benefitsTitle: "Ev xidmətlərini daha asan, daha təhlükəsiz və daha insanı bir yerdə toplamaq.",
-    benefitsText: "UstaTap yalnız bir xidmət siyahısı deyil. Bu, müştəri ilə usta arasında etibar, sürət və rahatlıq yaradan bir məkan olaraq düşünülür.",
+    benefitsText: "HəllVar yalnız bir xidmət siyahısı deyil. Bu, müştəri ilə usta arasında etibar, sürət və rahatlıq yaradan bir məkan olaraq düşünülür.",
     missionEyebrow: "Bizim missiyamız",
     missionTitle: "Ev xidmətlərini daha asan, daha təhlükəsiz və daha insanı bir yerdə toplamaq.",
-    missionText: "UstaTap yalnız bir xidmət siyahısı deyil. Bu, müştəri ilə usta arasında etibar, sürət və rahatlıq yaradan bir məkan olaraq düşünülür.",
+    missionText: "HəllVar yalnız bir xidmət siyahısı deyil. Bu, müştəri ilə usta arasında etibar, sürət və rahatlıq yaradan bir məkan olaraq düşünülür.",
     missionPoints: {
       customer: { title: "Müştəri məmnuniyyəti", text: "Dəqiq məlumat, rahat seçim və asan əlaqə ilə hər addım daha aydın olur." },
       provider: { title: "Usta inkişafı", text: "İş tapma, profil görünürlüğü və təkliflərin artırılması üçün daha rahat mexanizm yaradırıq." },
@@ -523,7 +561,7 @@ const az: Dictionary = {
     faqTitle: "Aydınlıq üçün ən çox sorulan sualları bir yerdə topladıq.",
     faqText: "Hələ də bir sualınız qalırsa, aşağıdakı əlaqə bölməsindən yazın. Təsdiq edildikdən sonra davam edəcəyik.",
     faqs: {
-      why: { question: "UstaTap nə üçün lazımlıdır?", answer: "UstaTap ev və iş sahəsi üçün etibarlı ustaları tez tapmağa kömək edir. Müştəri problemini yazır, sistem uyğun ustaları göstərir və əlaqə qurma prosesini asanlaşdırır." },
+      why: { question: "HəllVar nə üçün lazımlıdır?", answer: "HəllVar ev və iş sahəsi üçün etibarlı ustaları tez tapmağa kömək edir. Müştəri problemini yazır, sistem uyğun ustaları göstərir və əlaqə qurma prosesini asanlaşdırır." },
       becomeProvider: { question: "Usta olmaq mümkün müdür?", answer: "Bəli. Qeydiyyatdan keçib profil yaradaraq usta kimi qeydiyyatdan keçə bilərsiniz. Təsdiqləmə sonrası profiliniz görünür və xidmət təklif edə bilirsiniz." },
       verification: { question: "Ustalar necə təsdiqlənir?", answer: "Profil, xidmət sahəsi və məlumatlar yoxlanılır. Təsdiqlənmiş ustalar daha çox etibar qazandığı üçün müştərilər üçün daha əlçatan olur." },
       payments: { question: "Ödəniş və ya rezervasiya necə gedir?", answer: "Hazırda platforma əsasən xidmətə uyğun əlaqə və təşəbbüs prosesi yönləndirilir. Daha sonra rezervasiya və ödəniş addımları daha da genişləndirilə bilər." },
@@ -531,7 +569,7 @@ const az: Dictionary = {
     contactEyebrow: "Sualınız var?",
     contactTitle: "Bizimlə əlaqə saxlamaq üçün rahat bir yol var.",
     contactText: "İstədiyiniz məlumatı yazın, təklif və ya sualınızı bizə göndərin. Təsdiqləndikdən sonra davam edəcəyik.",
-    contactEmail: "Suallarınız üçün support@ustatap.az ünvanına yazın.",
+    contactEmail: "Suallarınız üçün support@HəllVar.az ünvanına yazın.",
     contactButton: "Əlaqə saxla",
     signupButton: "Qeydiyyatdan keç",
   },
@@ -560,7 +598,7 @@ const az: Dictionary = {
     moving_desc: "Ev, ofis, bağ evi və yük daşınması, mebel sökülməsi və yüklənməsi",
   },
   categoriesPage: {
-    heroSubtitle: "UstaTap-da təklif olunan bütün xidmət kateqoriyaları. Sizə uyğun olan sahəni seçin və peşəkar ustaları kəşf edin.",
+    heroSubtitle: "HəllVar-da təklif olunan bütün xidmət kateqoriyaları. Sizə uyğun olan sahəni seçin və peşəkar ustaları kəşf edin.",
     viewButton: "Bax",
     requestButton: "İstəmək",
     technicianCount: "usta",
@@ -596,7 +634,7 @@ const az: Dictionary = {
     heroTitle: "Ustalar",
     heroHighlight: "Ən etibarlı, ən yaxın, ən yeni",
     heroSubtitle:
-      "UstaTap-da təqdim olunan bütün peşəkar ustaları bir yerdə kəşf edin. Reytinq, məsafə və təcrübəyə uyğun seçim edin.",
+      "HəllVar-da təqdim olunan bütün peşəkar ustaları bir yerdə kəşf edin. Reytinq, məsafə və təcrübəyə uyğun seçim edin.",
     stats: {
       activeProviders: "Aktiv Usta",
       verified: "Təsdiqlənmiş",
@@ -632,7 +670,7 @@ const az: Dictionary = {
     discoverProviders: "Ustaları kəşf et",
     cta: {
       badge: "Sən də peşəkarsan?",
-      title: "Xidmətlərini UstaTap-da göstər",
+      title: "Xidmətlərini HəllVar-da göstər",
       subtitle:
         "Müştərilərlə birbaşa əlaqə qur, sifarişlər qəbul et və qazancını artır. Qeydiyyat tamamilə pulsuzdur!",
       verifiedProfile: "Təsdiqlənmiş profil",
@@ -701,7 +739,7 @@ const az: Dictionary = {
 
 const en: Dictionary = {
   brand: {
-    name: "UstaTap",
+    name: "HəllVar",
     tagline: "Trusted experts, one tap away",
   },
   nav: {
@@ -723,8 +761,27 @@ const en: Dictionary = {
     subtitle:
       "Just describe your problem and we'll match you with verified technicians. Book in 5 minutes.",
     searchPlaceholder: "e.g. AC not cooling, leaky faucet, broken socket...",
-    searchButton: "Find a Pro",
+    searchButton: "HəllVar",
     popularCategories: "Popular categories",
+  },
+  homePage: {
+    queryTooShort: "Please describe your problem in a bit more detail.",
+    adviceError: "Could not get advice.",
+    aiUrgentBadge: "Urgent AI Analysis",
+    aiSuggestionBadge: "AI Suggestion",
+    aiUrgentTitle: "Swift action is recommended for this issue",
+    aiSuggestionTitle: "AI identified the right direction for your problem",
+    nextStepLabel: "Next step",
+    nextStepDesc: "Show providers matching the AI analysis directly in the list.",
+    showMatchingProviders: "Show matching providers",
+    aiErrorBadge: "AI Response Failed",
+    viewButtonLabel: "View",
+    requestButtonLabel: "Request",
+    allCategoriesTitle: "All Categories",
+    stepTwoDesc: "Ratings, reviews and completed jobs",
+    stepThreeDesc: "Book in 5 minutes · Always supported",
+    ctaTitle: "Are you a pro? 🛠️",
+    ctaDesc: "List your services on HəllVar, connect directly with customers and grow your income.",
   },
   auth: {
     signIn: {
@@ -839,9 +896,9 @@ const en: Dictionary = {
     },
   },
   aboutPage: {
-    badge: "About UstaTap",
+    badge: "About HəllVar",
     heroTitle: "We built this platform to make home services faster, more reliable, and easier to access.",
-    heroSubtitle: "UstaTap helps customers find trusted professionals and helps providers discover new opportunities. Our goal is to make both sides of the experience smoother and more dependable.",
+    heroSubtitle: "HəllVar helps customers find trusted professionals and helps providers discover new opportunities. Our goal is to make both sides of the experience smoother and more dependable.",
     ctaStart: "Get started",
     ctaViewProviders: "View providers",
     trustTitle: "Trust",
@@ -852,10 +909,10 @@ const en: Dictionary = {
     statSpeedText: "Fast first contact and quick initial connection.",
     benefitsEyebrow: "Our mission",
     benefitsTitle: "Making home services simpler, safer, and more human-centered.",
-    benefitsText: "UstaTap is more than a directory. It is a space designed to build trust, speed, and comfort between customers and providers.",
+    benefitsText: "HəllVar is more than a directory. It is a space designed to build trust, speed, and comfort between customers and providers.",
     missionEyebrow: "Our mission",
     missionTitle: "Making home services simpler, safer, and more human-centered.",
-    missionText: "UstaTap is more than a directory. It is a space designed to build trust, speed, and comfort between customers and providers.",
+    missionText: "HəllVar is more than a directory. It is a space designed to build trust, speed, and comfort between customers and providers.",
     missionPoints: {
       customer: { title: "Customer satisfaction", text: "Every step becomes clearer with accurate information, easy choices, and simple communication." },
       provider: { title: "Provider growth", text: "We create a smoother experience for finding work, increasing visibility, and improving opportunities." },
@@ -870,7 +927,7 @@ const en: Dictionary = {
     faqTitle: "We gathered the most common questions in one place for clarity.",
     faqText: "If you still have a question, feel free to reach out through the contact section below. We will continue from there.",
     faqs: {
-      why: { question: "Why is UstaTap useful?", answer: "UstaTap helps people quickly find trusted professionals for home and business needs. Customers describe the problem, the system suggests suitable providers, and the connection process becomes simpler." },
+      why: { question: "Why is HəllVar useful?", answer: "HəllVar helps people quickly find trusted professionals for home and business needs. Customers describe the problem, the system suggests suitable providers, and the connection process becomes simpler." },
       becomeProvider: { question: "Can I become a provider?", answer: "Yes. After signing up and creating a profile, you can join as a provider. Once verified, your profile becomes visible and you can offer services." },
       verification: { question: "How are providers verified?", answer: "Profiles, service areas, and information are reviewed. Verified providers are easier for customers to trust and contact." },
       payments: { question: "How do payments or bookings work?", answer: "At the moment the platform focuses on connection and onboarding. Future updates will expand booking and payment flows." },
@@ -878,7 +935,7 @@ const en: Dictionary = {
     contactEyebrow: "Have a question?",
     contactTitle: "There is a simple way to get in touch with us.",
     contactText: "Write us with any information, offer, or question you have. We will continue from there after confirmation.",
-    contactEmail: "Send your questions to support@ustatap.az.",
+    contactEmail: "Send your questions to support@HəllVar.az.",
     contactButton: "Contact us",
     signupButton: "Sign up",
   },
@@ -907,7 +964,7 @@ const en: Dictionary = {
     moving_desc: "Home, office, villa & cargo moving, furniture disassembly and loading",
   },
   categoriesPage: {
-    heroSubtitle: "All service categories offered on UstaTap. Pick the area that fits you and discover expert pros.",
+    heroSubtitle: "All service categories offered on HəllVar. Pick the area that fits you and discover expert pros.",
     viewButton: "View",
     requestButton: "Request",
     technicianCount: "pro",
@@ -946,7 +1003,7 @@ const en: Dictionary = {
     heroTitle: "Technicians",
     heroHighlight: "Most reliable, closest, newest",
     heroSubtitle:
-      "Discover all professional technicians available on UstaTap in one place. Choose based on rating, distance and experience.",
+      "Discover all professional technicians available on HəllVar in one place. Choose based on rating, distance and experience.",
     stats: {
       activeProviders: "Active pros",
       verified: "Verified",
@@ -982,7 +1039,7 @@ const en: Dictionary = {
     discoverProviders: "Discover technicians",
     cta: {
       badge: "Are you also a pro?",
-      title: "Show your services on UstaTap",
+      title: "Show your services on HəllVar",
       subtitle:
         "Connect directly with customers, accept jobs and increase your earnings. Registration is completely free!",
       verifiedProfile: "Verified profile",
@@ -1051,7 +1108,7 @@ const en: Dictionary = {
 
 const tr: Dictionary = {
   brand: {
-    name: "UstaTap",
+    name: "HəllVar",
     tagline: "Güvenilir usta, tek dokunuşta",
   },
   nav: {
@@ -1073,8 +1130,27 @@ const tr: Dictionary = {
     subtitle:
       "Sorununu yaz, sana uygun ustaları gösterelim. 5 dakikada rezervasyon yap.",
     searchPlaceholder: "Örn: klima çalışmıyor, musluk damlıyor, priz çalışmıyor...",
-    searchButton: "Usta bul",
+    searchButton: "HəllVar",
     popularCategories: "Popüler kategoriler",
+  },
+  homePage: {
+    queryTooShort: "Lütfen sorununuzu biraz daha ayrıntılı açıklayın.",
+    adviceError: "Öneri alınamadı.",
+    aiUrgentBadge: "Acil AI Analizi",
+    aiSuggestionBadge: "AI Önerisi",
+    aiUrgentTitle: "Bu sorun için hızlı müdahale önerilir",
+    aiSuggestionTitle: "AI sorununuz için doğru yönü belirledi",
+    nextStepLabel: "Sonraki adım",
+    nextStepDesc: "AI analizine uygun ustaları doğrudan listede göster.",
+    showMatchingProviders: "Uygun ustaları göster",
+    aiErrorBadge: "AI Yanıtı Alınamadı",
+    viewButtonLabel: "Görüntüle",
+    requestButtonLabel: "Talep et",
+    allCategoriesTitle: "Tüm Kategoriler",
+    stepTwoDesc: "Puanlar, yorumlar ve tamamlanan işler",
+    stepThreeDesc: "5 dakikada rezervasyon · Her zaman destek",
+    ctaTitle: "Sen de usta mısın? 🛠️",
+    ctaDesc: "Hizmetlerini HəllVar'da göster, müşterilerle doğrudan iletişime geç ve kazancını artır.",
   },
   auth: {
     signIn: {
@@ -1189,9 +1265,9 @@ const tr: Dictionary = {
     },
   },
   aboutPage: {
-    badge: "UstaTap Hakkında",
+    badge: "HəllVar Hakkında",
     heroTitle: "Ev işlerini daha hızlı, daha güvenilir ve daha erişilebilir hale getirmek için bu platformu kurduk.",
-    heroSubtitle: "UstaTap, müşterilerin güvenilir uzmanlara ulaşmasına ve ustaların yeni fırsatları keşfetmesine yardımcı olur. Amacımız her iki tarafın deneyimini de daha akıcı ve güvenilir hale getirmektir.",
+    heroSubtitle: "HəllVar, müşterilerin güvenilir uzmanlara ulaşmasına ve ustaların yeni fırsatları keşfetmesine yardımcı olur. Amacımız her iki tarafın deneyimini de daha akıcı ve güvenilir hale getirmektir.",
     ctaStart: "Başla",
     ctaViewProviders: "Ustaları gör",
     trustTitle: "Güven",
@@ -1202,10 +1278,10 @@ const tr: Dictionary = {
     statSpeedText: "Hızlı ilk temas ve hızlı bağlantı imkanı.",
     benefitsEyebrow: "Misyonumuz",
     benefitsTitle: "Ev hizmetlerini daha basit, daha güvenli ve daha insana yakın hale getiriyoruz.",
-    benefitsText: "UstaTap sadece bir rehber değil; müşteriler ile ustalar arasında güven, hız ve rahatlık kurmayı amaçlayan bir alan.",
+    benefitsText: "HəllVar sadece bir rehber değil; müşteriler ile ustalar arasında güven, hız ve rahatlık kurmayı amaçlayan bir alan.",
     missionEyebrow: "Misyonumuz",
     missionTitle: "Ev hizmetlerini daha basit, daha güvenli ve daha insana yakın hale getiriyoruz.",
-    missionText: "UstaTap sadece bir rehber değil; müşteriler ile ustalar arasında güven, hız ve rahatlık kurmayı amaçlayan bir alan.",
+    missionText: "HəllVar sadece bir rehber değil; müşteriler ile ustalar arasında güven, hız ve rahatlık kurmayı amaçlayan bir alan.",
     missionPoints: {
       customer: { title: "Müşteri memnuniyeti", text: "Doğru bilgi, kolay seçim ve basit iletişim ile her adım daha anlaşılır hale gelir." },
       provider: { title: "Usta büyümesi", text: "İş bulma, görünürlük artırma ve fırsatların daha kolay açılması için daha akıcı bir deneyim sunuyoruz." },
@@ -1220,7 +1296,7 @@ const tr: Dictionary = {
     faqTitle: "Açıklık için en sık sorulan soruları bir araya topladık.",
     faqText: "Hâlâ bir sorunuz varsa, aşağıdaki iletişim bölümünden yazabilirsiniz. Oradan devam edeceğiz.",
     faqs: {
-      why: { question: "UstaTap neden işe yarar?", answer: "UstaTap, ev ve iş yerleri için güvenilir uzmanları hızlıca bulmaya yardımcı olur. Müşteriler sorunu açıklar, sistem uygun ustaları önerir ve bağlanma süreci daha basit hale gelir." },
+      why: { question: "HəllVar neden işe yarar?", answer: "HəllVar, ev ve iş yerleri için güvenilir uzmanları hızlıca bulmaya yardımcı olur. Müşteriler sorunu açıklar, sistem uygun ustaları önerir ve bağlanma süreci daha basit hale gelir." },
       becomeProvider: { question: "Usta olabilir miyim?", answer: "Evet. Kayıt olup profil oluşturarak usta olarak katılabilirsiniz. Onaylandıktan sonra profiliniz görünür hale gelir ve hizmet sunabilirsiniz." },
       verification: { question: "Ustalar nasıl doğrulanır?", answer: "Profil, hizmet alanı ve bilgiler kontrol edilir. Doğrulanmış ustalar müşteriler için daha güvenilir ve ulaşılabilir olur." },
       payments: { question: "Ödeme veya rezervasyon nasıl işler?", answer: "Şu anda platform temel olarak bağlantı ve giriş sürecine odaklanır. Gelecekte rezervasyon ve ödeme akışları genişletilecektir." },
@@ -1228,7 +1304,7 @@ const tr: Dictionary = {
     contactEyebrow: "Sorunuz mu var?",
     contactTitle: "Bizimle iletişime geçmenin kolay bir yolu var.",
     contactText: "İster bilgi, ister teklif ya da soru paylaşın. Onaylandıktan sonra devam edeceğiz.",
-    contactEmail: "Sorularınızı support@ustatap.az adresine gönderin.",
+    contactEmail: "Sorularınızı support@HəllVar.az adresine gönderin.",
     contactButton: "İletişime geç",
     signupButton: "Kayıt ol",
   },
@@ -1257,7 +1333,7 @@ const tr: Dictionary = {
     moving_desc: "Ev, ofis, yazlık ve yük taşıma, mobilya söküm ve yükleme",
   },
   categoriesPage: {
-    heroSubtitle: "UstaTap'ta sunulan tüm hizmet kategorileri. Size uygun alanı seçin ve profesyonel ustaları keşfedin.",
+    heroSubtitle: "HəllVar'ta sunulan tüm hizmet kategorileri. Size uygun alanı seçin ve profesyonel ustaları keşfedin.",
     viewButton: "Görüntüle",
     requestButton: "Talep et",
     technicianCount: "usta",
@@ -1296,7 +1372,7 @@ const tr: Dictionary = {
     heroTitle: "Ustalar",
     heroHighlight: "En güvenilir, en yakın, en yeni",
     heroSubtitle:
-      "UstaTap'ta sunulan tüm profesyonel ustaları tek bir yerde keşfedin. Puan, mesafe ve deneyime göre seçin.",
+      "HəllVar'ta sunulan tüm profesyonel ustaları tek bir yerde keşfedin. Puan, mesafe ve deneyime göre seçin.",
     stats: {
       activeProviders: "Aktif Usta",
       verified: "Doğrulandı",
@@ -1332,7 +1408,7 @@ const tr: Dictionary = {
     discoverProviders: "Ustaları keşfet",
     cta: {
       badge: "Sen de profesyonel misin?",
-      title: "Hizmetlerini UstaTap'ta göster",
+      title: "Hizmetlerini HəllVar'ta göster",
       subtitle:
         "Müşterilerle doğrudan iletişime geç, işler kabul et ve kazancını artır. Kayıt tamamen ücretsiz!",
       verifiedProfile: "Doğrulanmış profil",

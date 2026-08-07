@@ -18,10 +18,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ustatap.az"),
+  metadataBase: new URL("https://hellvar.az"),
   title: {
-    default: "UstaTap — Etibarlı usta, bir toxunuşda",
-    template: "%s · UstaTap",
+    default: "HəllVar — Etibarlı usta, bir toxunuşda",
+    template: "%s · HəllVar",
   },
   description:
     "Azərbaycanda ev xidmətləri üçün etibarlı usta tapma platforması. Elektrik, santexnika, kondisioner və s. 5 dəqiqədə rezervasiya edin.",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     "baku",
   ],
   openGraph: {
-    title: "UstaTap — Etibarlı usta, bir toxunuşda",
+    title: "HəllVar — Etibarlı usta, bir toxunuşda",
     description:
       "Azərbaycanda ev xidmətləri üçün etibarlı usta tapma platforması.",
     locale: "az_AZ",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "UstaTap",
+    title: "HəllVar",
     description: "Trusted home services in Azerbaijan.",
   },
   robots: {
@@ -58,7 +58,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const localeCookie = cookieStore.get("ustatap.locale")?.value;
+  const localeCookie = cookieStore.get("hellvar.locale")?.value;
   const locale = localeCookie && ["az", "en", "tr"].includes(localeCookie) ? localeCookie : "az";
 
   return (

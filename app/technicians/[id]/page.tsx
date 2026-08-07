@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -395,8 +395,8 @@ export default function TechnicianProfilePage({
                 onClick={() => {
                   if (navigator.share) {
                     void navigator.share({
-                      title: `UstaTap - ${fullName}`,
-                      text: `${provider.category} ustası ${fullName} - UstaTap`,
+                      title: `HəllVar - ${fullName}`,
+                      text: `${provider.category} ustası ${fullName} - HəllVar`,
                       url: window.location.href,
                     });
                   }
@@ -992,7 +992,7 @@ export default function TechnicianProfilePage({
                       Təsdiqlənmiş Usta
                     </h4>
                     <p className="text-xs text-emerald-700/80 mt-1 leading-relaxed">
-                      Sənədlər və şəxsiyyət məlumatları UstaTap komandası
+                      Sənədlər və şəxsiyyət məlumatları HəllVar komandası
                       tərəfindən yoxlanıb təsdiqlənib. Etibarlı seçim!
                     </p>
                   </div>

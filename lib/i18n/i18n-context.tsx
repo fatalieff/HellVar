@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import {
@@ -17,8 +17,8 @@ type I18nContextValue = {
 
 const I18nContext = React.createContext<I18nContextValue | null>(null);
 
-const STORAGE_KEY = "ustatap.locale";
-const COOKIE_NAME = "ustatap.locale";
+const STORAGE_KEY = "hellvar.locale";
+const COOKIE_NAME = "hellvar.locale";
 
 function normalizeLocale(value: string | null | undefined): Locale | null {
   if (!value) return null;
@@ -94,3 +94,4 @@ export function useI18n(): I18nContextValue {
   }
   return ctx;
 }
+

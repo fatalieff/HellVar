@@ -109,14 +109,14 @@ export default function Home() {
   const [adviceLoading, setAdviceLoading] = React.useState(false);
 
   const getAdvice = async () => {
-    if (query.trim().length < 3) { setAdviceError("Problemi bir az daha ətraflı yazın."); return; }
+    if (query.trim().length < 3) { setAdviceError(t.homePage.queryTooShort); return; }
     setAdviceLoading(true); setAdvice(null); setAdviceError(null);
     try {
       const response = await fetch("/api/ai-advice", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ problem: query }) });
       const result = await response.json() as { category?: string; advice?: string; urgent?: boolean; error?: string };
-      if (!response.ok || !result.category || !result.advice) throw new Error(result.error ?? "Məsləhət alınmadı.");
+      if (!response.ok || !result.category || !result.advice) throw new Error(result.error ?? t.homePage.adviceError);
       setAdvice({ category: result.category, advice: result.advice, urgent: Boolean(result.urgent) });
-    } catch (error) { setAdviceError(error instanceof Error ? error.message : "Məsləhət alınmadı."); }
+    } catch (error) { setAdviceError(error instanceof Error ? error.message : t.homePage.adviceError); }
     finally { setAdviceLoading(false); }
   };
 
@@ -241,7 +241,7 @@ export default function Home() {
                               variant={advice.urgent ? "destructive" : "accent"}
                               className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]"
                             >
-                              {advice.urgent ? "Təcili AI Analizi" : "AI Tövsiyəsi"}
+                              {advice.urgent ? t.homePage.aiUrgentBadge : t.homePage.aiSuggestionBadge}
                             </Badge>
                             <Badge
                               variant="outline"
@@ -254,8 +254,8 @@ export default function Home() {
                           <div className="mt-3 space-y-2">
                             <p className="text-base font-semibold tracking-tight text-foreground sm:text-lg">
                               {advice.urgent
-                                ? "Bu problem üçün sürətli müdaxilə tövsiyə olunur"
-                                : "AI probleminiz üçün uyğun istiqaməti təyin etdi"}
+                                ? t.homePage.aiUrgentTitle
+                                : t.homePage.aiSuggestionTitle}
                             </p>
                             <p className="text-sm leading-7 text-foreground/75 sm:text-[15px]">
                               {advice.advice}
@@ -267,10 +267,10 @@ export default function Home() {
                       <div className="flex flex-col gap-3 rounded-2xl border border-white/70 bg-white/70 p-4 sm:flex-row sm:items-center sm:justify-between">
                         <div className="space-y-1">
                           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                            Növbəti addım
+                            {t.homePage.nextStepLabel}
                           </p>
                           <p className="text-sm text-foreground/75">
-                            AI analizinə uyğun ustaları birbaşa siyahıda göstər.
+                            {t.homePage.nextStepDesc}
                           </p>
                         </div>
 
@@ -280,7 +280,7 @@ export default function Home() {
                           className="h-11 rounded-2xl px-5 shadow-premium"
                         >
                           <Link href="/dashboard">
-                            Uygun ustaları göster
+                            {t.homePage.showMatchingProviders}
                             <ArrowRight className="size-4" data-icon="inline-end" />
                           </Link>
                         </Button>
@@ -296,7 +296,7 @@ export default function Home() {
                           variant="warning"
                           className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]"
                         >
-                          AI Yanıtı Alınamadı
+                        {t.homePage.aiErrorBadge}
                         </Badge>
                         <p className="mt-3 text-sm leading-7 text-foreground/80 sm:text-[15px]">
                           {adviceError}
@@ -378,7 +378,7 @@ export default function Home() {
                           className="h-9 rounded-lg text-xs font-semibold border-border hover:bg-slate-50 transition-colors cursor-pointer"
                         >
                           <Link href={`/categories/${k}`}>
-                            Bax
+                            {t.homePage.viewButtonLabel}
                           </Link>
                         </Button>
                         <Button
@@ -388,7 +388,7 @@ export default function Home() {
                           className="h-9 rounded-lg text-xs font-semibold transition-transform duration-200 hover:scale-[1.02] cursor-pointer"
                         >
                           <Link href={`/categories/${k}?action=request`}>
-                            İstəmək
+                            {t.homePage.requestButtonLabel}
                           </Link>
                         </Button>
                       </div>
@@ -410,10 +410,10 @@ export default function Home() {
                 <CardContent className="p-4 flex-1 flex flex-col justify-between gap-4">
                   <div className="space-y-1">
                     <h3 className="text-[17px] font-bold tracking-tight text-foreground">
-                      Bütün Kateqoriyalar
+                      {t.homePage.allCategoriesTitle}
                     </h3>
                     <p className="text-sm text-muted-foreground leading-snug">
-                      Digər bütün xidmətlər və peşəkar ustaları kəşf edin.
+                    {t.categoriesPage.heroSubtitle}
                     </p>
                   </div>
                   <Button
@@ -423,7 +423,7 @@ export default function Home() {
                     className="w-full h-9 rounded-lg text-xs font-semibold mt-auto gap-1.5 cursor-pointer"
                   >
                     <Link href="/categories">
-                      Hamısını Gör
+                      {t.common.viewAll}
                       <ArrowRight className="size-3.5" />
                     </Link>
                   </Button>
@@ -449,14 +449,14 @@ export default function Home() {
               step="02"
               Icon={Star}
               title={t.common.rating}
-              desc={`${t.common.viewAll} · ${t.common.reviews} · ${t.common.completedJobs}`}
+              desc={t.homePage.stepTwoDesc}
               delay={120}
             />
             <StepCard
               step="03"
               Icon={Flame}
               title={t.common.bookNow}
-              desc="5 dəqiqədə rezervasiya · Həmişə dəstək"
+              desc={t.homePage.stepThreeDesc}
               delay={240}
             />
           </div>
@@ -474,10 +474,10 @@ export default function Home() {
             <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] items-center">
               <div className="flex flex-col gap-3 max-w-xl">
                 <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-                  Sən də ustasan? 🛠️
+                  {t.homePage.ctaTitle}
                 </h3>
                 <p className="text-white/90 leading-7">
-                  Öz xidmətlərini UstaTap-da göstər, müştərilərlə birbaşa əlaqə qur və qazancını artır.
+                  {t.homePage.ctaDesc}
                 </p>
               </div>
               <div className="flex gap-3">
@@ -537,3 +537,4 @@ function StepCard({
     </Card>
   );
 }
+
