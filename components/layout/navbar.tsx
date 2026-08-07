@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
 import { Profile, Notification } from "@/lib/types/database";
 import {
@@ -19,6 +20,9 @@ import {
   Check,
   CheckCheck,
   Star,
+  Mail,
+  Phone,
+  MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -137,6 +141,106 @@ function NotificationsPanel({
   );
 }
 
+// ─── Profile menu row ───────────────────────────────────────────────────────
+function ProfileInfoRow({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value?: string | null;
+}) {
+  return (
+    <div className="flex items-center gap-3 px-4 py-1.5">
+      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent/60 text-muted-foreground">
+        {icon}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/70">
+          {label}
+        </p>
+        <p className="truncate text-sm text-foreground/85">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+// ─── Profile dropdown panel ──────────────────────────────────────────────────
+function ProfileMenu({
+  user,
+  profile,
+  onSignOut,
+}: {
+  user: { email?: string | null };
+  profile: Profile | null;
+  onSignOut: () => void;
+}) {
+  const { t } = useI18n();
+  const pm = t.profileMenu;
+  const fullName =
+    profile?.first_name || profile?.last_name
+      ? `${profile.first_name ?? ""} ${profile.last_name ?? ""}`.trim()
+      : (user.email?.split("@")[0] ?? "");
+  const isProvider = profile?.role === "PROVIDER";
+  const roleLabel = isProvider ? pm.roleProvider : pm.roleCustomer;
+  const initials = fullName
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase() ?? "")
+    .join("");
+
+  return (
+    <div className="w-80 max-w-[92vw] rounded-2xl border border-border/80 bg-popover shadow-2xl overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-4 py-4">
+        <div className="relative shrink-0">
+          <div className="grid size-11 place-items-center rounded-full bg-gradient-primary text-white font-bold text-base shadow-sm ring-2 ring-background">
+            {initials || <UserIcon className="size-5" />}
+          </div>
+          <span className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-background bg-emerald-500" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold text-foreground">{fullName}</p>
+          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+        </div>
+        <span className="shrink-0 rounded-full border border-border/70 bg-accent/50 px-2.5 py-1 text-[10px] font-semibold text-foreground/80">
+          {roleLabel}
+        </span>
+      </div>
+
+      {/* Contact info */}
+      <div className="border-t border-border/60 py-2">
+        <ProfileInfoRow icon={<Mail className="size-3.5" />} label={pm.emailLabel} value={user.email} />
+        <ProfileInfoRow
+          icon={<Phone className="size-3.5" />}
+          label={pm.phoneLabel}
+          value={profile?.phone || pm.notProvided}
+        />
+        <ProfileInfoRow
+          icon={<MapPin className="size-3.5" />}
+          label={pm.addressLabel}
+          value={profile?.address || pm.notProvided}
+        />
+      </div>
+
+      {/* Actions */}
+      <div className="border-t border-border/60 p-2">
+        <button
+          onClick={onSignOut}
+          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
+        >
+          <span className="flex size-7 items-center justify-center rounded-lg bg-red-50 text-red-500">
+            <LogOut className="size-3.5" />
+          </span>
+          {t.nav.logout}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Navbar component ───────────────────────────────────────────────────
 export function Navbar() {
   const { t } = useI18n();
@@ -148,7 +252,9 @@ export function Navbar() {
   const [notifications, setNotifications] = React.useState<Notification[]>([]);
   const [unreadMessages, setUnreadMessages] = React.useState(0);
   const [showNotifs, setShowNotifs] = React.useState(false);
+  const [showProfileMenu, setShowProfileMenu] = React.useState(false);
   const notifsRef = React.useRef<HTMLDivElement>(null);
+  const profileRef = React.useRef<HTMLDivElement>(null);
 
   // Scroll effect
   React.useEffect(() => {
@@ -158,11 +264,14 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close notifications dropdown on outside click
+  // Close dropdowns on outside click
   React.useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (notifsRef.current && !notifsRef.current.contains(e.target as Node)) {
         setShowNotifs(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setShowProfileMenu(false);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -427,7 +536,10 @@ export function Navbar() {
               {/* ── Notifications bell with dropdown ── */}
               <div className="relative" ref={notifsRef}>
                 <button
-                  onClick={() => setShowNotifs((v) => !v)}
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    setShowNotifs((v) => !v);
+                  }}
                   className="relative flex items-center justify-center w-9 h-9 rounded-xl hover:bg-accent/60 transition-colors text-muted-foreground hover:text-foreground"
                   aria-label={n.title}
                   id="navbar-notif-btn"
@@ -453,21 +565,46 @@ export function Navbar() {
                 )}
               </div>
 
-              {/* User Avatar Circle */}
-              <div className="w-8 h-8 rounded-full bg-gradient-primary text-white flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-background">
-                {profile?.first_name ? profile.first_name[0].toUpperCase() : <UserIcon className="w-4 h-4" />}
-              </div>
+              {/* User Avatar + Profile Menu */}
+              <div className="relative" ref={profileRef}>
+                <button
+                  onClick={() => {
+                    setShowNotifs(false);
+                    setShowProfileMenu((v) => !v);
+                  }}
+                  className="relative flex size-9 items-center justify-center rounded-full bg-gradient-primary text-white font-bold text-sm shadow-sm ring-2 ring-background transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+                  aria-label={t.profileMenu.menuLabel}
+                  aria-expanded={showProfileMenu}
+                  id="navbar-profile-btn"
+                >
+                  {profile?.first_name ? (
+                    profile.first_name[0].toUpperCase()
+                  ) : (
+                    <UserIcon className="size-4" />
+                  )}
+                </button>
 
-              {/* Sign out button */}
-              <Button
-                onClick={handleSignOut}
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-red-500 h-9 w-9"
-                title={t.nav.logout}
-              >
-                <LogOut className="w-4.5 h-4.5" />
-              </Button>
+                <AnimatePresence>
+                  {showProfileMenu && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      className="absolute right-0 top-full mt-2 z-50 origin-top-right"
+                    >
+                      <ProfileMenu
+                        user={user}
+                        profile={profile}
+                        onSignOut={() => {
+                          setShowProfileMenu(false);
+                          handleSignOut();
+                        }}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           ) : (
             // Unauthenticated view

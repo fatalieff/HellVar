@@ -208,6 +208,47 @@ export type Dictionary = {
       duplicateEmail: string;
       userIdMissing: string;
       genericError: string;
+      stepBasic: string;
+      stepRole: string;
+      stepComplete: string;
+      successTitle: string;
+      successDesc: string;
+      successProviderNote: string;
+      successSignIn: string;
+      basicTitle: string;
+      basicSubtitle: string;
+      firstNameLabel: string;
+      firstNamePlaceholder: string;
+      lastNameLabel: string;
+      lastNamePlaceholder: string;
+      phoneLabel: string;
+      phonePlaceholder: string;
+      emailLabel: string;
+      passwordLabel: string;
+      roleTitle: string;
+      roleSubtitle: string;
+      customerDesc: string;
+      providerDesc: string;
+      addressTitle: string;
+      addressSubtitle: string;
+      districtLabel: string;
+      districtPlaceholder: string;
+      districtSuffix: string;
+      fullAddressLabel: string;
+      fullAddressPlaceholder: string;
+      providerTitle: string;
+      providerSubtitle: string;
+      categoryLabel: string;
+      categoryPlaceholder: string;
+      radiusLabel: string;
+      documentsLabel: string;
+      documentsDropText: string;
+      documentsFileTypes: string;
+      selectedDocsLabel: string;
+      removeFileLabel: string;
+      submitLoading: string;
+      submitComplete: string;
+      providerCategories: Record<string, string>;
     };
   };
   dashboard: {
@@ -369,6 +410,15 @@ export type Dictionary = {
     unreadMessages: string;
     openChat: string;
   };
+  profileMenu: {
+    menuLabel: string;
+    roleCustomer: string;
+    roleProvider: string;
+    emailLabel: string;
+    phoneLabel: string;
+    addressLabel: string;
+    notProvided: string;
+  };
 };
 
 const az: Dictionary = {
@@ -459,6 +509,64 @@ const az: Dictionary = {
       duplicateEmail: "Bu e-poçt (email) ünvanı ilə artıq qeydiyyatdan keçilib. Zəhmət olmasa daxil olma bölməsinə keçin.",
       userIdMissing: "Qeydiyyat zamanı istifadəçi ID-si tapılmadı.",
       genericError: "Qeydiyyat zamanı gözlənilməz xəta baş verdi.",
+      stepBasic: "Əsas məlumatlar",
+      stepRole: "Rol Seçimi",
+      stepComplete: "Qeydiyyatın Tamamlanması",
+      successTitle: "Təbriklər! Qeydiyyat Tamamlandı",
+      successDesc:
+        "Hesabınız uğurla yaradıldı. Zəhmət olmasa e-poşt (email) ünvanınıza göndərilən təsdiq linkinə daxil olaraq hesabı təsdiqləyin.",
+      successProviderNote:
+        "Sənədləriniz administrator tərəfindən yoxlanıldıqdan sonra profiliniz aktivləşdiriləcəkdir.",
+      successSignIn: "Daxil ol",
+      basicTitle: "Əsas məlumatlarınızı daxil edin",
+      basicSubtitle: "HəllVar-da qeydiyyatdan keçmək üçün zəruri məlumatlar.",
+      firstNameLabel: "Ad",
+      firstNamePlaceholder: "Məsələn, Murad",
+      lastNameLabel: "Soyad",
+      lastNamePlaceholder: "Məsələn, Fataliyev",
+      phoneLabel: "Telefon nömrəsi",
+      phonePlaceholder: " (50) 123-45-67",
+      emailLabel: "E-poçt (Email)",
+      passwordLabel: "Şifrə",
+      roleTitle: "Hesabınızın növünü seçin",
+      roleSubtitle: "Platformadan necə istifadə edəcəyinizi müəyyənləşdirin.",
+      customerDesc: "Etibarlı ustalar axtarmaq və ev/ofis xidmətləri sifariş etmək üçün.",
+      providerDesc: "Müştərilərə peşəkar xidmət göstərmək və gəlir əldə etmək üçün.",
+      addressTitle: "Ünvan məlumatlarını daxil edin",
+      addressSubtitle: "Ustaların sizə daha tez çata bilməsi üçün ərazini seçin.",
+      districtLabel: "Bakı rayonları",
+      districtPlaceholder: "Rayon seçin...",
+      districtSuffix: "rayonu",
+      fullAddressLabel: "Tam Ünvan (İstəyə Bağlı)",
+      fullAddressPlaceholder: "Məsələn: Mətbuat pr. 24, bina 3, m. 45",
+      providerTitle: "Peşəkar fəaliyyət məlumatları",
+      providerSubtitle: "Müştərilərin sizi tapa bilməsi üçün xidmət təfərrüatları.",
+      categoryLabel: "Xidmət Kateqoriyası",
+      categoryPlaceholder: "Kateqoriya seçin...",
+      radiusLabel: "İş Radiusunuz (Xidmət məsafəsi)",
+      documentsLabel: "Təsdiqləyici Sənədlər (Şəxsiyyət vəsiqəsi / Sertifikatlar)",
+      documentsDropText: "Faylları seçin və ya bura dartın",
+      documentsFileTypes: "PNG, JPG, PDF (maks. 5MB)",
+      selectedDocsLabel: "Seçilən sənədlər",
+      removeFileLabel: "Sil",
+      submitLoading: "Qeydiyyat tamamlanır...",
+      submitComplete: "Qeydiyyatı tamamla",
+      providerCategories: {
+        "Elektrik": "Elektrik",
+        "Santexnik": "Santexnik",
+        "Təmizlik xidməti": "Təmizlik xidməti",
+        "Dayə": "Dayə",
+        "Kombi Ustası": "Kombi Ustası",
+        "İT / Texniki yardım": "İT / Texniki yardım",
+        "Ev təmiri": "Ev təmiri",
+        "Kondisioner Ustası": "Kondisioner Ustası",
+        "Mebel Ustası": "Mebel Ustası",
+        "Daşınma xidməti": "Daşınma xidməti",
+        "Rəngsaz": "Rəngsaz",
+        "Alçipan Ustası": "Alçipan Ustası",
+        "Kafel-Metlax Ustası": "Kafel-Metlax Ustası",
+        "Digər": "Digər",
+      },
     },
   },
   dashboard: {
@@ -735,6 +843,15 @@ const az: Dictionary = {
     unreadMessages: "oxunmamış mesaj",
     openChat: "Çatı aç",
   },
+  profileMenu: {
+    menuLabel: "Profil menyusu",
+    roleCustomer: "Müştəri",
+    roleProvider: "Usta / Mütəxəssis",
+    emailLabel: "E-poçt",
+    phoneLabel: "Telefon",
+    addressLabel: "Ünvan",
+    notProvided: "Göstərilməyib",
+  },
 };
 
 const en: Dictionary = {
@@ -825,6 +942,64 @@ const en: Dictionary = {
       duplicateEmail: "An account already exists with this email. Please sign in instead.",
       userIdMissing: "The user ID could not be found during sign-up.",
       genericError: "An unexpected error occurred during sign-up.",
+      stepBasic: "Basic information",
+      stepRole: "Choose role",
+      stepComplete: "Complete sign-up",
+      successTitle: "Congratulations! Registration complete",
+      successDesc:
+        "Your account has been created successfully. Please confirm your account by clicking the verification link sent to your email.",
+      successProviderNote:
+        "Your profile will be activated after your documents have been reviewed by an administrator.",
+      successSignIn: "Sign in",
+      basicTitle: "Enter your basic information",
+      basicSubtitle: "Required information to register on HəllVar.",
+      firstNameLabel: "First name",
+      firstNamePlaceholder: "e.g. Murad",
+      lastNameLabel: "Last name",
+      lastNamePlaceholder: "e.g. Fataliyev",
+      phoneLabel: "Phone number",
+      phonePlaceholder: " (50) 123-45-67",
+      emailLabel: "Email",
+      passwordLabel: "Password",
+      roleTitle: "Choose your account type",
+      roleSubtitle: "Define how you want to use the platform.",
+      customerDesc: "To find trusted specialists and order home/office services.",
+      providerDesc: "To provide professional services to customers and earn income.",
+      addressTitle: "Enter your address details",
+      addressSubtitle: "Select your area so specialists can reach you faster.",
+      districtLabel: "Baku districts",
+      districtPlaceholder: "Select district...",
+      districtSuffix: "district",
+      fullAddressLabel: "Full Address (Optional)",
+      fullAddressPlaceholder: "e.g. Matbuat Ave. 24, bldg 3, apt 45",
+      providerTitle: "Professional details",
+      providerSubtitle: "Service details so customers can find you.",
+      categoryLabel: "Service category",
+      categoryPlaceholder: "Select category...",
+      radiusLabel: "Working radius (service distance)",
+      documentsLabel: "Supporting documents (ID / Certificates)",
+      documentsDropText: "Select files or drag and drop here",
+      documentsFileTypes: "PNG, JPG, PDF (max 5MB)",
+      selectedDocsLabel: "Selected documents",
+      removeFileLabel: "Remove",
+      submitLoading: "Completing registration...",
+      submitComplete: "Complete registration",
+      providerCategories: {
+        "Elektrik": "Electrician",
+        "Santexnik": "Plumber",
+        "Təmizlik xidməti": "Cleaning service",
+        "Dayə": "Nanny",
+        "Kombi Ustası": "Boiler technician",
+        "İT / Texniki yardım": "IT / Technical support",
+        "Ev təmiri": "Home repair",
+        "Kondisioner Ustası": "AC technician",
+        "Mebel Ustası": "Furniture craftsman",
+        "Daşınma xidməti": "Moving service",
+        "Rəngsaz": "Painter",
+        "Alçipan Ustası": "Drywall installer",
+        "Kafel-Metlax Ustası": "Tile installer",
+        "Digər": "Other",
+      },
     },
   },
   dashboard: {
@@ -1104,6 +1279,15 @@ const en: Dictionary = {
     unreadMessages: "unread message(s)",
     openChat: "Open chat",
   },
+  profileMenu: {
+    menuLabel: "Profile menu",
+    roleCustomer: "Customer",
+    roleProvider: "Professional / Specialist",
+    emailLabel: "Email",
+    phoneLabel: "Phone",
+    addressLabel: "Address",
+    notProvided: "Not provided",
+  },
 };
 
 const tr: Dictionary = {
@@ -1194,6 +1378,64 @@ const tr: Dictionary = {
       duplicateEmail: "Bu e-posta adresiyle zaten kayıtlısınız. Lütfen giriş yapın.",
       userIdMissing: "Kayıt sırasında kullanıcı kimliği bulunamadı.",
       genericError: "Kayıt sırasında beklenmeyen bir hata oluştu.",
+      stepBasic: "Temel bilgiler",
+      stepRole: "Rol seçimi",
+      stepComplete: "Kaydın tamamlanması",
+      successTitle: "Tebrikler! Kayıt tamamlandı",
+      successDesc:
+        "Hesabınız başarıyla oluşturuldu. Lütfen e-posta adresinize gönderilen doğrulama bağlantısına tıklayarak hesabı doğrulayın.",
+      successProviderNote:
+        "Belgeleriniz yönetici tarafından incelendikten sonra profiliniz etkinleştirilecektir.",
+      successSignIn: "Giriş yap",
+      basicTitle: "Temel bilgilerinizi girin",
+      basicSubtitle: "HəllVar'da kayıt olmak için gerekli bilgiler.",
+      firstNameLabel: "Ad",
+      firstNamePlaceholder: "örn. Murad",
+      lastNameLabel: "Soyad",
+      lastNamePlaceholder: "örn. Fataliyev",
+      phoneLabel: "Telefon numarası",
+      phonePlaceholder: " (50) 123-45-67",
+      emailLabel: "E-posta",
+      passwordLabel: "Şifre",
+      roleTitle: "Hesap türünüzü seçin",
+      roleSubtitle: "Platformayı nasıl kullanacağınızı belirleyin.",
+      customerDesc: "Güvenilir ustalar bulmak ve ev/ofis hizmetleri sipariş etmek için.",
+      providerDesc: "Müşterilere profesyonel hizmet sunmak ve gelir elde etmek için.",
+      addressTitle: "Adres bilgilerinizi girin",
+      addressSubtitle: "Ustaların size daha hızlı ulaşabilmesi için bölgenizi seçin.",
+      districtLabel: "Bakü ilçeleri",
+      districtPlaceholder: "İlçe seçin...",
+      districtSuffix: "ilçesi",
+      fullAddressLabel: "Tam Adres (Opsiyonel)",
+      fullAddressPlaceholder: "örn. Mətbuat cad. 24, bina 3, daire 45",
+      providerTitle: "Profesyonel faaliyet bilgileri",
+      providerSubtitle: "Müşterilerin sizi bulabilmesi için hizmet ayrıntıları.",
+      categoryLabel: "Hizmet kategorisi",
+      categoryPlaceholder: "Kategori seçin...",
+      radiusLabel: "Çalışma yarıçapınız (hizmet mesafesi)",
+      documentsLabel: "Destekleyici belgeler (Kimlik / Sertifikalar)",
+      documentsDropText: "Dosyaları seçin veya buraya sürükleyin",
+      documentsFileTypes: "PNG, JPG, PDF (maks. 5MB)",
+      selectedDocsLabel: "Seçilen belgeler",
+      removeFileLabel: "Sil",
+      submitLoading: "Kayıt tamamlanıyor...",
+      submitComplete: "Kaydı tamamla",
+      providerCategories: {
+        "Elektrik": "Elektrikçi",
+        "Santexnik": "Tesisatçı",
+        "Təmizlik xidməti": "Temizlik hizmeti",
+        "Dayə": "Bakıcı",
+        "Kombi Ustası": "Kombi ustası",
+        "İT / Texniki yardım": "BT / Teknik destek",
+        "Ev təmiri": "Ev tamiri",
+        "Kondisioner Ustası": "Klima ustası",
+        "Mebel Ustası": "Mobilya ustası",
+        "Daşınma xidməti": "Taşıma hizmeti",
+        "Rəngsaz": "Boyacı",
+        "Alçipan Ustası": "Alçıpan ustası",
+        "Kafel-Metlax Ustası": "Fayans ustası",
+        "Digər": "Diğer",
+      },
     },
   },
   dashboard: {
@@ -1472,6 +1714,15 @@ const tr: Dictionary = {
     daysAgo: "gün önce",
     unreadMessages: "okunmamış mesaj",
     openChat: "Sohbetı aç",
+  },
+  profileMenu: {
+    menuLabel: "Profil menüsü",
+    roleCustomer: "Müşteri",
+    roleProvider: "Usta / Uzman",
+    emailLabel: "E-posta",
+    phoneLabel: "Telefon",
+    addressLabel: "Adres",
+    notProvided: "Belirtilmedi",
   },
 };
 

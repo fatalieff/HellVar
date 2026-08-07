@@ -39,7 +39,7 @@ const BAKU_DISTRICTS = [
   "Pirallahı"
 ];
 
-// Provider categories
+// Provider categories (canonical values stored in DB, labels localized)
 const PROVIDER_CATEGORIES = [
   "Elektrik",
   "Santexnik",
@@ -59,6 +59,7 @@ const PROVIDER_CATEGORIES = [
 
 export function RegisterForm() {
   const { t } = useI18n();
+  const su = t.auth.signUp;
   const [stage, setStage] = useState(1);
   const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
   const [loading, setLoading] = useState(false);
@@ -74,7 +75,8 @@ export function RegisterForm() {
   const [role, setRole] = useState<ProfileRole | null>(null);
   
   // Customer specific
-  const [address, setAddress] = useState("");
+  const [district, setDistrict] = useState("");
+  const [addressDetail, setAddressDetail] = useState("");
   
   // Provider specific
   const [category, setCategory] = useState("");
@@ -151,19 +153,25 @@ export function RegisterForm() {
     setLoading(true);
 
     // Final checks
-    if (role === "CUSTOMER" && !address) {
-      setError(t.auth.signUp.addressRequired);
+    const combinedAddress = district
+      ? addressDetail
+        ? `${district} ${su.districtSuffix}, ${addressDetail}`
+        : `${district} ${su.districtSuffix}`
+      : addressDetail;
+
+    if (role === "CUSTOMER" && !combinedAddress) {
+      setError(su.addressRequired);
       setLoading(false);
       return;
     }
     if (role === "PROVIDER") {
       if (!category) {
-        setError(t.auth.signUp.categoryRequired);
+        setError(su.categoryRequired);
         setLoading(false);
         return;
       }
       if (selectedFiles.length === 0) {
-        setError(t.auth.signUp.documentsRequired);
+        setError(su.documentsRequired);
         setLoading(false);
         return;
       }
@@ -183,7 +191,7 @@ export function RegisterForm() {
             last_name: lastName,
             phone: formattedPhone,
             role,
-            address: role === "CUSTOMER" ? address : null,
+            address: role === "CUSTOMER" ? combinedAddress : null,
             category: role === "PROVIDER" ? category : null,
             working_radius_km: role === "PROVIDER" ? workingRadius : null,
             documents_uploaded: role === "PROVIDER" && selectedFiles.length > 0
@@ -196,12 +204,12 @@ export function RegisterForm() {
       // Check if user already exists (identities will be empty in Supabase if duplicate email)
       const userIdentities = authData.user?.identities || [];
       if (authData.user && userIdentities.length === 0) {
-        throw new Error(t.auth.signUp.duplicateEmail);
+        throw new Error(su.duplicateEmail);
       }
 
       const userId = authData.user?.id;
       if (!userId) {
-        throw new Error(t.auth.signUp.userIdMissing);
+        throw new Error(su.userIdMissing);
       }
 
       // Profile records are created by the database trigger. This works even
@@ -210,7 +218,7 @@ export function RegisterForm() {
       setSuccess(true);
     } catch (err: unknown) {
       console.error("Qeydiyyat zamanı xəta baş verdi:", err);
-      setError(err instanceof Error ? err.message : t.auth.signUp.genericError);
+      setError(err instanceof Error ? err.message : su.genericError);
     } finally {
       setLoading(false);
     }
@@ -264,7 +272,7 @@ export function RegisterForm() {
                   {isCompleted ? <Check className="w-5 h-5 text-white" /> : step}
                 </motion.div>
                 <span className={`text-xs mt-2 font-medium hidden sm:inline ${isActive ? "text-primary font-semibold" : "text-muted-foreground"}`}>
-                  {step === 1 ? "Əsas məlumatlar" : step === 2 ? "Rol Seçimi" : "Qeydiyyatın Tamamlanması"}
+                  {step === 1 ? su.stepBasic : step === 2 ? su.stepRole : su.stepComplete}
                 </span>
               </div>
             );
@@ -284,13 +292,13 @@ export function RegisterForm() {
               <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mb-4">
                 <Check className="w-8 h-8" />
               </div>
-              <h2 className="text-2xl font-bold mb-3 text-foreground">Təbriklər! Qeydiyyat Tamamlandı</h2>
+              <h2 className="text-2xl font-bold mb-3 text-foreground">{su.successTitle}</h2>
               <p className="text-muted-foreground max-w-sm mb-6 text-sm">
-                Hesabınız uğurla yaradıldı. Zəhmət olmasa e-poşt (email) ünvanınıza göndərilən təsdiq linkinə daxil olaraq hesabı təsdiqləyin.
-                {role === "PROVIDER" && " Sənədləriniz administrator tərəfindən yoxlanıldıqdan sonra profiliniz aktivləşdiriləcəkdir."}
+                {su.successDesc}
+                {role === "PROVIDER" && ` ${su.successProviderNote}`}
               </p>
               <Button asChild className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-white shadow-glow-primary">
-                <a href="/login">Daxil ol</a>
+                <a href="/login">{su.successSignIn}</a>
               </Button>
             </motion.div>
           ) : (
@@ -308,28 +316,28 @@ export function RegisterForm() {
               {stage === 1 && (
                 <div className="space-y-4">
                   <div className="text-left">
-                    <h2 className="text-xl font-bold text-foreground">Əsas məlumatlarınızı daxil edin</h2>
-                    <p className="text-sm text-muted-foreground">HəllVar-da qeydiyyatdan keçmək üçün zəruri məlumatlar.</p>
+                    <h2 className="text-xl font-bold text-foreground">{su.basicTitle}</h2>
+                    <p className="text-sm text-muted-foreground">{su.basicSubtitle}</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="first_name">Ad</Label>
+                      <Label htmlFor="first_name">{su.firstNameLabel}</Label>
                       <Input
                         id="first_name"
                         type="text"
-                        placeholder="Məsələn, Murad"
+                        placeholder={su.firstNamePlaceholder}
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         className="bg-white border-border focus-visible:ring-primary"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="last_name">Soyad</Label>
+                      <Label htmlFor="last_name">{su.lastNameLabel}</Label>
                       <Input
                         id="last_name"
                         type="text"
-                        placeholder="Məsələn, Fataliyev"
+                        placeholder={su.lastNamePlaceholder}
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         className="bg-white border-border focus-visible:ring-primary"
@@ -338,7 +346,7 @@ export function RegisterForm() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Telefon nömrəsi</Label>
+                    <Label htmlFor="phone">{su.phoneLabel}</Label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium border-r border-border pr-2">
                         +994
@@ -346,7 +354,7 @@ export function RegisterForm() {
                       <Input
                         id="phone"
                         type="tel"
-                        placeholder=" (50) 123-45-67"
+                        placeholder={su.phonePlaceholder}
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         className="pl-[72px] bg-white border-border focus-visible:ring-primary"
@@ -355,7 +363,7 @@ export function RegisterForm() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email">E-poçt (Email)</Label>
+                    <Label htmlFor="email">{su.emailLabel}</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                       <Input
@@ -370,7 +378,7 @@ export function RegisterForm() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="password">Şifrə</Label>
+                    <Label htmlFor="password">{su.passwordLabel}</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                       <Input
@@ -390,8 +398,8 @@ export function RegisterForm() {
               {stage === 2 && (
                 <div className="space-y-5">
                   <div className="text-left">
-                    <h2 className="text-xl font-bold text-foreground">Hesabınızın növünü seçin</h2>
-                    <p className="text-sm text-muted-foreground">Platformadan necə istifadə edəcəyinizi müəyyənləşdirin.</p>
+                    <h2 className="text-xl font-bold text-foreground">{su.roleTitle}</h2>
+                    <p className="text-sm text-muted-foreground">{su.roleSubtitle}</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
@@ -418,9 +426,9 @@ export function RegisterForm() {
                       }`}>
                         <User className="w-6 h-6" />
                       </div>
-                      <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">Müştəri</h3>
+                      <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{su.customer}</h3>
                       <p className="text-xs text-muted-foreground text-balance">
-                        Etibarlı ustalar axtarmaq və ev/ofis xidmətləri sifariş etmək üçün.
+                        {su.customerDesc}
                       </p>
                     </button>
 
@@ -447,9 +455,9 @@ export function RegisterForm() {
                       }`}>
                         <Briefcase className="w-6 h-6" />
                       </div>
-                      <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">Usta / Mütəxəssis</h3>
+                      <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{su.provider}</h3>
                       <p className="text-xs text-muted-foreground text-balance">
-                        Müştərilərə peşəkar xidmət göstərmək və gəlir əldə etmək üçün.
+                        {su.providerDesc}
                       </p>
                     </button>
                   </div>
@@ -462,24 +470,24 @@ export function RegisterForm() {
                   {role === "CUSTOMER" ? (
                     <div className="space-y-4">
                       <div className="text-left">
-                        <h2 className="text-xl font-bold text-foreground">Ünvan məlumatlarını daxil edin</h2>
-                        <p className="text-sm text-muted-foreground">Ustaların sizə daha tez çata bilməsi üçün ərazini seçin.</p>
+                        <h2 className="text-xl font-bold text-foreground">{su.addressTitle}</h2>
+                        <p className="text-sm text-muted-foreground">{su.addressSubtitle}</p>
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="address-select">Bakı rayonları</Label>
+                        <Label htmlFor="address-select">{su.districtLabel}</Label>
                         <div className="relative">
                           <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                           <select
                             id="address-select"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
+                            value={district}
+                            onChange={(e) => setDistrict(e.target.value)}
                             className="w-full rounded-md border border-border bg-white pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none"
                           >
-                            <option value="">Rayon seçin...</option>
-                            {BAKU_DISTRICTS.map((district) => (
-                              <option key={district} value={district}>
-                                {district} rayonu
+                            <option value="">{su.districtPlaceholder}</option>
+                            {BAKU_DISTRICTS.map((d) => (
+                              <option key={d} value={d}>
+                                {d} {su.districtSuffix}
                               </option>
                             ))}
                           </select>
@@ -492,30 +500,26 @@ export function RegisterForm() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="address-detail">Tam Ünvan (İstəyə Bağlı)</Label>
+                        <Label htmlFor="address-detail">{su.fullAddressLabel}</Label>
                         <Input
                           id="address-detail"
                           type="text"
-                          placeholder="Məsələn: Mətbuat pr. 24, bina 3, m. 45"
+                          placeholder={su.fullAddressPlaceholder}
                           className="bg-white border-border focus-visible:ring-primary"
-                          value={address.includes("rayonu") ? (address.split("rayonu, ")[1] || "") : address}
-                          onChange={(e) => {
-                            const baseDistrict = address.includes("rayonu") ? address.split("rayonu")[0] + "rayonu" : "";
-                            const detail = e.target.value;
-                            setAddress(baseDistrict ? `${baseDistrict}, ${detail}` : detail);
-                          }}
+                          value={addressDetail}
+                          onChange={(e) => setAddressDetail(e.target.value)}
                         />
                       </div>
                     </div>
                   ) : (
                     <div className="space-y-4">
                       <div className="text-left">
-                        <h2 className="text-xl font-bold text-foreground">Peşəkar fəaliyyət məlumatları</h2>
-                        <p className="text-sm text-muted-foreground">Müştərilərin sizi tapa bilməsi üçün xidmət təfərrüatları.</p>
+                        <h2 className="text-xl font-bold text-foreground">{su.providerTitle}</h2>
+                        <p className="text-sm text-muted-foreground">{su.providerSubtitle}</p>
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="category-select">Xidmət Kateqoriyası</Label>
+                        <Label htmlFor="category-select">{su.categoryLabel}</Label>
                         <div className="relative">
                           <Sliders className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                           <select
@@ -524,10 +528,10 @@ export function RegisterForm() {
                             onChange={(e) => setCategory(e.target.value)}
                             className="w-full rounded-md border border-border bg-white pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none"
                           >
-                            <option value="">Kateqoriya seçin...</option>
+                            <option value="">{su.categoryPlaceholder}</option>
                             {PROVIDER_CATEGORIES.map((cat) => (
                               <option key={cat} value={cat}>
-                                {cat}
+                                {su.providerCategories[cat]}
                               </option>
                             ))}
                           </select>
@@ -541,7 +545,7 @@ export function RegisterForm() {
 
                       <div className="space-y-2">
                         <div className="flex justify-between items-center mb-1">
-                          <Label htmlFor="radius-slider">İş Radiusunuz (Xidmət məsafəsi)</Label>
+                          <Label htmlFor="radius-slider">{su.radiusLabel}</Label>
                           <span className="text-sm font-semibold text-primary">{workingRadius} km</span>
                         </div>
                         <input
@@ -556,7 +560,7 @@ export function RegisterForm() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label>Təsdiqləyici Sənədlər (Şəxsiyyət vəsiqəsi / Sertifikatlar)</Label>
+                        <Label>{su.documentsLabel}</Label>
                         <div className="border-2 border-dashed border-border hover:border-primary/50 transition-colors rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer relative bg-muted/30">
                           <input
                             type="file"
@@ -565,14 +569,14 @@ export function RegisterForm() {
                             className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                           />
                           <Upload className="w-8 h-8 text-muted-foreground mb-2" />
-                          <p className="text-sm font-medium text-foreground">Faylları seçin və ya bura dartın</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">PNG, JPG, PDF (maks. 5MB)</p>
+                          <p className="text-sm font-medium text-foreground">{su.documentsDropText}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{su.documentsFileTypes}</p>
                         </div>
 
                         {selectedFiles.length > 0 && (
                           <div className="mt-3 space-y-2">
                             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                              Seçilən sənədlər ({selectedFiles.length})
+                              {su.selectedDocsLabel} ({selectedFiles.length})
                             </p>
                             <div className="max-h-24 overflow-y-auto space-y-1.5 pr-1">
                               {selectedFiles.map((file, idx) => (
@@ -586,7 +590,7 @@ export function RegisterForm() {
                                     onClick={() => removeFile(idx)}
                                     className="text-red-500 hover:text-red-600 font-semibold ml-2"
                                   >
-                                    Sil
+                                    {su.removeFileLabel}
                                   </button>
                                 </div>
                               ))}
@@ -618,7 +622,7 @@ export function RegisterForm() {
                     className="border-border text-foreground hover:bg-muted"
                   >
                     <ArrowLeft className="w-4 h-4 mr-2" />
-                    Geri
+                    {su.back}
                   </Button>
                 ) : (
                   <div />
@@ -630,7 +634,7 @@ export function RegisterForm() {
                     onClick={goToNextStage}
                     className="bg-primary hover:bg-primary/95 text-white shadow-sm flex items-center ml-auto font-medium"
                   >
-                    Davam et
+                    {su.next}
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 ) : (
@@ -642,11 +646,11 @@ export function RegisterForm() {
                     {loading ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Qeydiyyat tamamlanır...
+                        {su.submitLoading}
                       </>
                     ) : (
                       <>
-                        Qeydiyyatı tamamla
+                        {su.submitComplete}
                         <Check className="w-4 h-4 ml-2" />
                       </>
                     )}
