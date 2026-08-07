@@ -9,6 +9,9 @@ export type Profile = {
   phone: string;
   role: ProfileRole;
   address?: string | null;
+  avatar_url?: string | null;
+  created_at?: string;
+  updated_at?: string;
 };
 
 export type ProviderDetails = {

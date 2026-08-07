@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
 import { Profile, Notification } from "@/lib/types/database";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { getAvatarPublicUrl } from "@/lib/supabase/avatar";
 import {
   Menu,
   Wrench,
@@ -23,6 +25,7 @@ import {
   Mail,
   Phone,
   MapPin,
+  UserCog,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -171,10 +174,12 @@ function ProfileMenu({
   user,
   profile,
   onSignOut,
+  onViewProfile,
 }: {
   user: { email?: string | null };
   profile: Profile | null;
   onSignOut: () => void;
+  onViewProfile: () => void;
 }) {
   const { t } = useI18n();
   const pm = t.profileMenu;
@@ -190,15 +195,19 @@ function ProfileMenu({
     .slice(0, 2)
     .map((p) => p[0]?.toUpperCase() ?? "")
     .join("");
+  const avatarUrl = getAvatarPublicUrl(profile?.avatar_url);
 
   return (
     <div className="w-80 max-w-[92vw] rounded-2xl border border-border/80 bg-popover shadow-2xl overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-4">
         <div className="relative shrink-0">
-          <div className="grid size-11 place-items-center rounded-full bg-gradient-primary text-white font-bold text-base shadow-sm ring-2 ring-background">
-            {initials || <UserIcon className="size-5" />}
-          </div>
+          <Avatar className="size-11 border-2 border-background shadow-sm">
+            {avatarUrl ? <AvatarImage src={avatarUrl} alt={fullName} /> : null}
+            <AvatarFallback className="bg-gradient-primary text-white font-bold text-base">
+              {initials || <UserIcon className="size-5" />}
+            </AvatarFallback>
+          </Avatar>
           <span className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-background bg-emerald-500" />
         </div>
         <div className="min-w-0 flex-1">
@@ -226,7 +235,16 @@ function ProfileMenu({
       </div>
 
       {/* Actions */}
-      <div className="border-t border-border/60 p-2">
+      <div className="border-t border-border/60 p-2 space-y-1">
+        <button
+          onClick={onViewProfile}
+          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent/50"
+        >
+          <span className="flex size-7 items-center justify-center rounded-lg bg-accent/60 text-muted-foreground">
+            <UserCog className="size-3.5" />
+          </span>
+          {pm.viewProfile}
+        </button>
         <button
           onClick={onSignOut}
           className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
@@ -255,6 +273,7 @@ export function Navbar() {
   const [showProfileMenu, setShowProfileMenu] = React.useState(false);
   const notifsRef = React.useRef<HTMLDivElement>(null);
   const profileRef = React.useRef<HTMLDivElement>(null);
+  const userAvatarUrl = getAvatarPublicUrl(profile?.avatar_url);
 
   // Scroll effect
   React.useEffect(() => {
@@ -577,11 +596,18 @@ export function Navbar() {
                   aria-expanded={showProfileMenu}
                   id="navbar-profile-btn"
                 >
-                  {profile?.first_name ? (
-                    profile.first_name[0].toUpperCase()
-                  ) : (
-                    <UserIcon className="size-4" />
-                  )}
+                  <Avatar className="size-9">
+                    {userAvatarUrl ? (
+                      <AvatarImage src={userAvatarUrl} alt={t.profileMenu.menuLabel} />
+                    ) : null}
+                    <AvatarFallback className="bg-gradient-primary text-sm font-bold text-white">
+                      {profile?.first_name ? (
+                        profile.first_name[0].toUpperCase()
+                      ) : (
+                        <UserIcon className="size-4" />
+                      )}
+                    </AvatarFallback>
+                  </Avatar>
                 </button>
 
                 <AnimatePresence>
@@ -596,6 +622,10 @@ export function Navbar() {
                       <ProfileMenu
                         user={user}
                         profile={profile}
+                        onViewProfile={() => {
+                          setShowProfileMenu(false);
+                          router.push("/profile");
+                        }}
                         onSignOut={() => {
                           setShowProfileMenu(false);
                           handleSignOut();
@@ -664,9 +694,14 @@ export function Navbar() {
                 {user ? (
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-muted-foreground border">
-                        {profile?.first_name ? profile.first_name[0].toUpperCase() : <UserIcon className="w-5 h-5" />}
-                      </div>
+                      <Avatar className="w-10 h-10 border">
+                        {userAvatarUrl ? (
+                          <AvatarImage src={userAvatarUrl} alt="Avatar" />
+                        ) : null}
+                        <AvatarFallback className="bg-slate-100 font-bold text-muted-foreground">
+                          {profile?.first_name ? profile.first_name[0].toUpperCase() : <UserIcon className="w-5 h-5" />}
+                        </AvatarFallback>
+                      </Avatar>
                       <div>
                         <div className="font-semibold text-sm">
                           {profile?.first_name} {profile?.last_name}
@@ -742,6 +777,14 @@ export function Navbar() {
                     )}
 
                     <nav className="flex flex-col gap-1">
+                      <Button
+                        onClick={() => router.push("/profile")}
+                        className="w-full justify-start text-xs font-semibold"
+                        variant="outline"
+                      >
+                        <UserCog className="w-4 h-4 mr-2" />
+                        {t.profileMenu.viewProfile}
+                      </Button>
                       {profile?.role === "PROVIDER" ? (
                         <Button onClick={() => router.push("/provider/dashboard")} className="w-full justify-start text-xs font-semibold" variant="premium">
                           <Sparkles className="w-4 h-4 mr-2" />

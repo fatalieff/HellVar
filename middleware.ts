@@ -11,8 +11,8 @@ export function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  // Protect /dashboard, /provider, and /categories routes
-  if (pathname.startsWith('/dashboard') || pathname.startsWith('/provider') || pathname.startsWith('/categories')) {
+  // Protect /dashboard, /profile, /provider, and /categories routes
+  if (pathname.startsWith('/dashboard') || pathname.startsWith('/profile') || pathname.startsWith('/provider') || pathname.startsWith('/categories')) {
     if (!hasSession) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
@@ -29,6 +29,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/dashboard/:path*', 
+    '/profile/:path*',
     '/provider/:path*',
     '/categories/:path*'
   ],

@@ -249,7 +249,49 @@ export type Dictionary = {
       submitLoading: string;
       submitComplete: string;
       providerCategories: Record<string, string>;
+      avatarLabel: string;
+      avatarHint: string;
+      avatarPickText: string;
+      avatarRemove: string;
+      avatarPendingNote: string;
     };
+  };
+  profile: {
+    title: string;
+    subtitle: string;
+    personalInfoTitle: string;
+    personalInfoHint: string;
+    firstNameLabel: string;
+    firstNamePlaceholder: string;
+    lastNameLabel: string;
+    lastNamePlaceholder: string;
+    phoneLabel: string;
+    phonePlaceholder: string;
+    emailLabel: string;
+    addressLabel: string;
+    addressPlaceholder: string;
+    roleLabel: string;
+    roleCustomer: string;
+    roleProvider: string;
+    memberSince: string;
+    avatarSectionTitle: string;
+    avatarSectionHint: string;
+    changePhoto: string;
+    removePhoto: string;
+    uploadLoading: string;
+    saveChanges: string;
+    saving: string;
+    savedSuccess: string;
+    saveError: string;
+    loadError: string;
+    notSignedIn: string;
+    signIn: string;
+    avatarSaved: string;
+    fileTooLarge: string;
+    invalidFileType: string;
+    pendingAvatarApplying: string;
+    pendingAvatarApplied: string;
+    backHome: string;
   };
   dashboard: {
     searchPlaceholder: string;
@@ -418,6 +460,7 @@ export type Dictionary = {
     phoneLabel: string;
     addressLabel: string;
     notProvided: string;
+    viewProfile: string;
   };
 };
 
@@ -567,6 +610,12 @@ const az: Dictionary = {
         "Kafel-Metlax Ustası": "Kafel-Metlax Ustası",
         "Digər": "Digər",
       },
+      avatarLabel: "Profil şəkli (istəyə bağlı)",
+      avatarHint: "PNG, JPG, WEBP və ya GIF (maks. 2MB)",
+      avatarPickText: "Şəkil seç və ya bura dart",
+      avatarRemove: "Sil",
+      avatarPendingNote:
+        "Seçdiyiniz şəkil hesabınızı təsdiqlədikdən sonra profil səhifəsində avtomatik tətbiq olunacaq.",
     },
   },
   dashboard: {
@@ -843,6 +892,43 @@ const az: Dictionary = {
     unreadMessages: "oxunmamış mesaj",
     openChat: "Çatı aç",
   },
+  profile: {
+    title: "Profil",
+    subtitle: "Şəxsi məlumatlarınızı və profil şəklinizi idarə edin.",
+    backHome: "Ana səhifəyə qayıt",
+    personalInfoTitle: "Şəxsi məlumatlar",
+    personalInfoHint: "Məlumatlarınız digər istifadəçilərə göstərilə bilər.",
+    firstNameLabel: "Ad",
+    firstNamePlaceholder: "Məsələn, Murad",
+    lastNameLabel: "Soyad",
+    lastNamePlaceholder: "Məsələn, Fataliyev",
+    phoneLabel: "Telefon nömrəsi",
+    phonePlaceholder: " (50) 123-45-67",
+    emailLabel: "E-poçt (Email)",
+    addressLabel: "Ünvan",
+    addressPlaceholder: "Məsələn: Mətbuat pr. 24, bina 3, m. 45",
+    roleLabel: "Rol",
+    roleCustomer: "Müştəri",
+    roleProvider: "Usta / Mütəxəssis",
+    memberSince: "Qeydiyyat tarixi",
+    avatarSectionTitle: "Profil şəkli",
+    avatarSectionHint: "PNG, JPG, WEBP və ya GIF, maks. 2MB.",
+    changePhoto: "Şəkli dəyiş",
+    removePhoto: "Şəkli sil",
+    uploadLoading: "Şəkil yüklənir...",
+    saveChanges: "Dəyişiklikləri yadda saxla",
+    saving: "Yadda saxlanılır...",
+    savedSuccess: "Məlumatlarınız uğurla yeniləndi.",
+    saveError: "Dəyişikliklər yadda saxlanılmadı. Yenidən cəhd edin.",
+    loadError: "Profil yüklənərkən xəta baş verdi.",
+    notSignedIn: "Bu səhifəyə daxil olmaq üçün hesabınıza giriş edin.",
+    signIn: "Daxil ol",
+    avatarSaved: "Profil şəkliniz yeniləndi.",
+    fileTooLarge: "Şəkil ölçüsü 2MB-dan böyükdür.",
+    invalidFileType: "Yalnız PNG, JPG, WEBP və ya GIF formatları dəstəklənir.",
+    pendingAvatarApplying: "Gözləyən profil şəkliniz tətbiq olunur...",
+    pendingAvatarApplied: "Profil şəkliniz uğurla tətbiq olundu.",
+  },
   profileMenu: {
     menuLabel: "Profil menyusu",
     roleCustomer: "Müştəri",
@@ -851,6 +937,7 @@ const az: Dictionary = {
     phoneLabel: "Telefon",
     addressLabel: "Ünvan",
     notProvided: "Göstərilməyib",
+    viewProfile: "Profilimi gör",
   },
 };
 
@@ -1000,6 +1087,12 @@ const en: Dictionary = {
         "Kafel-Metlax Ustası": "Tile installer",
         "Digər": "Other",
       },
+      avatarLabel: "Profile photo (optional)",
+      avatarHint: "PNG, JPG, WEBP or GIF (max 2MB)",
+      avatarPickText: "Select a photo or drag & drop here",
+      avatarRemove: "Remove",
+      avatarPendingNote:
+        "Your selected photo will be applied automatically on the profile page after your account is confirmed.",
     },
   },
   dashboard: {
@@ -1279,6 +1372,43 @@ const en: Dictionary = {
     unreadMessages: "unread message(s)",
     openChat: "Open chat",
   },
+  profile: {
+    title: "Profile",
+    subtitle: "Manage your personal information and profile photo.",
+    backHome: "Back to home",
+    personalInfoTitle: "Personal information",
+    personalInfoHint: "Your details may be visible to other users.",
+    firstNameLabel: "First name",
+    firstNamePlaceholder: "e.g. Murad",
+    lastNameLabel: "Last name",
+    lastNamePlaceholder: "e.g. Fataliyev",
+    phoneLabel: "Phone number",
+    phonePlaceholder: " (50) 123-45-67",
+    emailLabel: "Email",
+    addressLabel: "Address",
+    addressPlaceholder: "e.g. Matbuat Ave. 24, bldg 3, apt 45",
+    roleLabel: "Role",
+    roleCustomer: "Customer",
+    roleProvider: "Professional / Specialist",
+    memberSince: "Member since",
+    avatarSectionTitle: "Profile photo",
+    avatarSectionHint: "PNG, JPG, WEBP or GIF, max 2MB.",
+    changePhoto: "Change photo",
+    removePhoto: "Remove photo",
+    uploadLoading: "Uploading photo...",
+    saveChanges: "Save changes",
+    saving: "Saving...",
+    savedSuccess: "Your details were updated successfully.",
+    saveError: "Could not save changes. Please try again.",
+    loadError: "An error occurred while loading your profile.",
+    notSignedIn: "Please sign in to access this page.",
+    signIn: "Sign in",
+    avatarSaved: "Your profile photo was updated.",
+    fileTooLarge: "The photo is larger than 2MB.",
+    invalidFileType: "Only PNG, JPG, WEBP or GIF formats are supported.",
+    pendingAvatarApplying: "Applying your pending profile photo...",
+    pendingAvatarApplied: "Your profile photo was applied successfully.",
+  },
   profileMenu: {
     menuLabel: "Profile menu",
     roleCustomer: "Customer",
@@ -1287,6 +1417,7 @@ const en: Dictionary = {
     phoneLabel: "Phone",
     addressLabel: "Address",
     notProvided: "Not provided",
+    viewProfile: "View my profile",
   },
 };
 
@@ -1436,6 +1567,12 @@ const tr: Dictionary = {
         "Kafel-Metlax Ustası": "Fayans ustası",
         "Digər": "Diğer",
       },
+      avatarLabel: "Profil fotoğrafı (isteğe bağlı)",
+      avatarHint: "PNG, JPG, WEBP veya GIF (maks. 2MB)",
+      avatarPickText: "Fotoğraf seçin veya buraya sürükleyin",
+      avatarRemove: "Sil",
+      avatarPendingNote:
+        "Seçtiğiniz fotoğraf, hesabınız doğrulandıktan sonra profil sayfasında otomatik olarak uygulanacaktır.",
     },
   },
   dashboard: {
@@ -1715,6 +1852,43 @@ const tr: Dictionary = {
     unreadMessages: "okunmamış mesaj",
     openChat: "Sohbetı aç",
   },
+  profile: {
+    title: "Profil",
+    subtitle: "Kişisel bilgilerinizi ve profil fotoğrafınızı yönetin.",
+    backHome: "Anasayfaya dön",
+    personalInfoTitle: "Kişisel bilgiler",
+    personalInfoHint: "Bilgileriniz diğer kullanıcılara görünebilir.",
+    firstNameLabel: "Ad",
+    firstNamePlaceholder: "örn. Murad",
+    lastNameLabel: "Soyad",
+    lastNamePlaceholder: "örn. Fataliyev",
+    phoneLabel: "Telefon numarası",
+    phonePlaceholder: " (50) 123-45-67",
+    emailLabel: "E-posta",
+    addressLabel: "Adres",
+    addressPlaceholder: "örn. Mətbuat cad. 24, bina 3, daire 45",
+    roleLabel: "Rol",
+    roleCustomer: "Müşteri",
+    roleProvider: "Usta / Uzman",
+    memberSince: "Üyelik tarihi",
+    avatarSectionTitle: "Profil fotoğrafı",
+    avatarSectionHint: "PNG, JPG, WEBP veya GIF, maks. 2MB.",
+    changePhoto: "Fotoğrafı değiştir",
+    removePhoto: "Fotoğrafı kaldır",
+    uploadLoading: "Fotoğraf yükleniyor...",
+    saveChanges: "Değişiklikleri kaydet",
+    saving: "Kaydediliyor...",
+    savedSuccess: "Bilgileriniz başarıyla güncellendi.",
+    saveError: "Değişiklikler kaydedilemedi. Lütfen tekrar deneyin.",
+    loadError: "Profil yüklenirken bir hata oluştu.",
+    notSignedIn: "Bu sayfaya erişmek için giriş yapın.",
+    signIn: "Giriş yap",
+    avatarSaved: "Profil fotoğrafınız güncellendi.",
+    fileTooLarge: "Fotoğraf 2MB'tan büyük.",
+    invalidFileType: "Yalnızca PNG, JPG, WEBP veya GIF formatları desteklenir.",
+    pendingAvatarApplying: "Bekleyen profil fotoğrafınız uygulanıyor...",
+    pendingAvatarApplied: "Profil fotoğrafınız başarıyla uygulandı.",
+  },
   profileMenu: {
     menuLabel: "Profil menüsü",
     roleCustomer: "Müşteri",
@@ -1723,6 +1897,7 @@ const tr: Dictionary = {
     phoneLabel: "Telefon",
     addressLabel: "Adres",
     notProvided: "Belirtilmedi",
+    viewProfile: "Profilimi gör",
   },
 };
 

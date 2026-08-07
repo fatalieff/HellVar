@@ -4,6 +4,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
 import { ProfileRole } from "@/lib/types/database";
+import {
+  fileToDataUrl,
+  isAvatarFile,
+  MAX_AVATAR_SIZE,
+  savePendingAvatar,
+  uploadAvatar,
+} from "@/lib/supabase/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,7 +28,9 @@ import {
   Lock, 
   Mail, 
   FileText,
-  Loader2
+  Loader2,
+  Camera,
+  X
 } from "lucide-react";
 
 // Baku districts for address selection
@@ -60,6 +69,7 @@ const PROVIDER_CATEGORIES = [
 export function RegisterForm() {
   const { t } = useI18n();
   const su = t.auth.signUp;
+  const pr = t.profile;
   const [stage, setStage] = useState(1);
   const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
   const [loading, setLoading] = useState(false);
@@ -82,6 +92,12 @@ export function RegisterForm() {
   const [category, setCategory] = useState("");
   const [workingRadius, setWorkingRadius] = useState(15); // in km
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  // Avatar (optional)
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [avatarPending, setAvatarPending] = useState(false);
 
   // Validation States for active steps
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -144,6 +160,32 @@ export function RegisterForm() {
 
   const removeFile = (index: number) => {
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Avatar selection
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!isAvatarFile(file)) {
+      setAvatarError("INVALID");
+      return;
+    }
+    if (file.size > MAX_AVATAR_SIZE) {
+      setAvatarError("TOO_LARGE");
+      return;
+    }
+    setAvatarError(null);
+    if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  };
+
+  const removeAvatar = () => {
+    if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+    setAvatarFile(null);
+    setAvatarPreview(null);
+    setAvatarError(null);
   };
 
   // Submit flow
@@ -214,6 +256,30 @@ export function RegisterForm() {
 
       // Profile records are created by the database trigger. This works even
       // when email confirmation is enabled and no browser session exists yet.
+
+      // Avatar yükləməsi (session varsa dərhal, yoxdursa gözləyən kimi)
+      if (avatarFile) {
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (sessionData.session) {
+          try {
+            const avatarUrl = await uploadAvatar(userId, avatarFile);
+            await supabase
+              .from("profiles")
+              .update({ avatar_url: avatarUrl })
+              .eq("id", userId);
+          } catch (avatarErr) {
+            console.warn("Avatar yüklənərkən xəta baş verdi:", avatarErr);
+          }
+        } else {
+          try {
+            const dataUrl = await fileToDataUrl(avatarFile);
+            savePendingAvatar(userId, dataUrl);
+            setAvatarPending(true);
+          } catch (avatarErr) {
+            console.warn("Avatar gözləyən kimi saxlanılmadı:", avatarErr);
+          }
+        }
+      }
 
       setSuccess(true);
     } catch (err: unknown) {
@@ -293,10 +359,16 @@ export function RegisterForm() {
                 <Check className="w-8 h-8" />
               </div>
               <h2 className="text-2xl font-bold mb-3 text-foreground">{su.successTitle}</h2>
-              <p className="text-muted-foreground max-w-sm mb-6 text-sm">
+              <p className="text-muted-foreground max-w-sm mb-2 text-sm">
                 {su.successDesc}
                 {role === "PROVIDER" && ` ${su.successProviderNote}`}
               </p>
+              {avatarPending && (
+                <p className="mb-5 flex items-center justify-center gap-1.5 text-xs font-medium text-primary">
+                  <Camera className="w-3.5 h-3.5 shrink-0" />
+                  {su.avatarPendingNote}
+                </p>
+              )}
               <Button asChild className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-white shadow-glow-primary">
                 <a href="/login">{su.successSignIn}</a>
               </Button>
@@ -467,6 +539,69 @@ export function RegisterForm() {
               {/* STAGE 3: Conditional Completion */}
               {stage === 3 && (
                 <div className="space-y-4">
+                  {/* Optional avatar upload */}
+                  <div className="rounded-xl border border-dashed border-border bg-muted/30 p-4 transition-colors hover:border-primary/50">
+                    <input
+                      id="register-avatar-input"
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/gif"
+                      onChange={handleAvatarChange}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="register-avatar-input"
+                      className="group flex cursor-pointer items-center gap-4"
+                    >
+                      <div className="relative shrink-0">
+                        <div className="grid size-20 place-items-center overflow-hidden rounded-full border-2 border-border bg-white text-muted-foreground/60 transition-all duration-200 group-hover:border-primary/50">
+                          {avatarPreview ? (
+                            <img
+                              src={avatarPreview}
+                              alt="Avatar"
+                              className="size-full object-cover"
+                            />
+                          ) : (
+                            <Camera className="size-8" />
+                          )}
+                        </div>
+                        {avatarPreview && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              removeAvatar();
+                            }}
+                            className="absolute -right-1 -top-1 grid size-6 place-items-center rounded-full bg-red-500 text-white shadow-sm transition-colors hover:bg-red-600"
+                            aria-label={su.avatarRemove}
+                          >
+                            <X className="size-3.5" />
+                          </button>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-foreground">
+                          {su.avatarLabel}
+                        </p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {su.avatarPickText}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground/70">
+                          {su.avatarHint}
+                        </p>
+                        {avatarError === "TOO_LARGE" && (
+                          <p className="mt-1 text-xs font-medium text-red-600">
+                            {pr.fileTooLarge}
+                          </p>
+                        )}
+                        {avatarError === "INVALID" && (
+                          <p className="mt-1 text-xs font-medium text-red-600">
+                            {pr.invalidFileType}
+                          </p>
+                        )}
+                      </div>
+                    </label>
+                  </div>
                   {role === "CUSTOMER" ? (
                     <div className="space-y-4">
                       <div className="text-left">
