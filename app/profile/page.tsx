@@ -10,6 +10,7 @@ import { useI18n } from "@/lib/i18n/i18n-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Container } from "@/components/layout/container";
@@ -77,6 +78,7 @@ export default function ProfilePage() {
   const [lastName, setLastName] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [address, setAddress] = React.useState("");
+  const [bio, setBio] = React.useState("");
 
   // Avatar state
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -131,6 +133,15 @@ export default function ProfilePage() {
       setPhone(prof.phone ?? "");
       setAddress(prof.address ?? "");
       setAvatarUrl(getAvatarPublicUrl(prof.avatar_url));
+
+      if (prof.role === "PROVIDER") {
+        const { data: details } = await supabase
+          .from("provider_details")
+          .select("bio")
+          .eq("user_id", prof.id)
+          .maybeSingle();
+        setBio(details?.bio ?? "");
+      }
 
       // Email təsdiqlənmədən əvvəl qeydiyyatda seçilən gözləyən avatarı tətbiq et
       const pending = getPendingAvatar();
@@ -235,6 +246,15 @@ export default function ProfilePage() {
         })
         .eq("id", user.id);
       if (error) throw error;
+
+      if (profile?.role === "PROVIDER") {
+        const { error: bioError } = await supabase
+          .from("provider_details")
+          .update({ bio: bio.trim() || null })
+          .eq("user_id", user.id);
+        if (bioError) throw bioError;
+      }
+
       setProfile((prev) =>
         prev
           ? { ...prev, first_name: firstName.trim(), last_name: lastName.trim(), phone: normalizePhone(phone), address: address.trim() || null }
@@ -601,6 +621,21 @@ export default function ProfilePage() {
                     />
                   </div>
                 </div>
+
+                {isProvider && (
+                  <div className="space-y-2">
+                    <Label htmlFor="profile-bio">{p.bioLabel}</Label>
+                    <Textarea
+                      id="profile-bio"
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                      placeholder={p.bioPlaceholder}
+                      rows={4}
+                      maxLength={500}
+                      className="resize-none bg-white border-border focus-visible:ring-primary"
+                    />
+                  </div>
+                )}
 
                 <div className="flex items-center justify-between gap-4 border-t border-border/60 pt-5">
                   <span className="hidden text-xs text-muted-foreground sm:inline">

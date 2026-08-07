@@ -221,6 +221,7 @@ export function DashboardClient() {
           documents_uploaded,
           rating,
           hourly_rate,
+          bio,
           is_online
         `);
 
@@ -910,16 +911,6 @@ export function DashboardClient() {
                         </p>
                         <p className="mt-1 font-semibold text-foreground">
                           {activeProvider.hourly_rate ? `${activeProvider.hourly_rate} ₼/saat` : "-"}
-                        </p>
-                      </div>
-
-                      <div className="rounded-xl border border-border bg-slate-50 px-4 py-3 sm:col-span-2">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                          {t.dashboard.addressLabel}
-                        </p>
-                        <p className="mt-1 inline-flex items-start gap-2 font-medium text-foreground">
-                          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                          <span>{activeProvider.profiles?.address || t.dashboard.unknownAddress}</span>
                         </p>
                       </div>
 

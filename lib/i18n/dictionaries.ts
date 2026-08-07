@@ -270,6 +270,8 @@ export type Dictionary = {
     emailLabel: string;
     addressLabel: string;
     addressPlaceholder: string;
+    bioLabel: string;
+    bioPlaceholder: string;
     roleLabel: string;
     roleCustomer: string;
     roleProvider: string;
@@ -907,6 +909,8 @@ const az: Dictionary = {
     emailLabel: "E-poçt (Email)",
     addressLabel: "Ünvan",
     addressPlaceholder: "Məsələn: Mətbuat pr. 24, bina 3, m. 45",
+    bioLabel: "Bio / Haqqımda",
+    bioPlaceholder: "Xidmətləriniz, təcrübəniz və iş sahəniz haqqında qısa məlumat yazın.",
     roleLabel: "Rol",
     roleCustomer: "Müştəri",
     roleProvider: "Usta / Mütəxəssis",
@@ -1387,6 +1391,8 @@ const en: Dictionary = {
     emailLabel: "Email",
     addressLabel: "Address",
     addressPlaceholder: "e.g. Matbuat Ave. 24, bldg 3, apt 45",
+    bioLabel: "Bio / About me",
+    bioPlaceholder: "Write a short description about your services and experience.",
     roleLabel: "Role",
     roleCustomer: "Customer",
     roleProvider: "Professional / Specialist",
@@ -1867,6 +1873,8 @@ const tr: Dictionary = {
     emailLabel: "E-posta",
     addressLabel: "Adres",
     addressPlaceholder: "örn. Mətbuat cad. 24, bina 3, daire 45",
+    bioLabel: "Bio / Hakkımda",
+    bioPlaceholder: "Hizmetleriniz, deneyiminiz ve çalışma alanınız hakkında kısa bilgi yazın.",
     roleLabel: "Rol",
     roleCustomer: "Müşteri",
     roleProvider: "Usta / Uzman",
