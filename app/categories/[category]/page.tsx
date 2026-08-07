@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { supabase } from "@/lib/supabase/client";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,6 +64,7 @@ type Profile = {
   phone: string;
   role: string;
   address?: string | null;
+  avatar_url?: string | null;
 };
 
 type ProviderDetails = {
@@ -392,7 +394,7 @@ export default function CategoryDetailPage({
         const providerIds = dbProviders.map((p) => p.user_id);
         const { data: profileRows, error: profileError } = await supabase
           .from("profiles")
-          .select("id, first_name, last_name, phone, role, address")
+          .select("id, first_name, last_name, phone, role, address, avatar_url")
           .in("id", providerIds);
 
         if (profileError) throw profileError;
@@ -892,9 +894,13 @@ export default function CategoryDetailPage({
                         {/* Provider profile summary header */}
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-center gap-3">
-                            <div className="relative size-12 rounded-xl bg-gradient-primary text-white flex items-center justify-center font-bold text-base shadow-sm">
-                              {provider.profiles?.first_name?.[0]}
-                              {provider.profiles?.last_name?.[0]}
+                            <div className="relative shrink-0">
+                              <UserAvatar
+                                avatarUrl={provider.profiles?.avatar_url}
+                                name={`${provider.profiles?.first_name} ${provider.profiles?.last_name}`}
+                                className="size-12 rounded-xl shadow-sm"
+                                fallbackClassName="rounded-xl bg-gradient-primary text-white font-bold text-base"
+                              />
 
                               {/* Online Status Dot Badge */}
                               <span
@@ -1024,9 +1030,13 @@ export default function CategoryDetailPage({
               <DialogHeader className="flex flex-col gap-4 border-b border-border/80 pb-4 text-left">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="relative size-14 rounded-2xl bg-gradient-primary text-white flex items-center justify-center font-bold text-xl shadow-glow-primary">
-                      {selectedProvider.profiles?.first_name?.[0]}
-                      {selectedProvider.profiles?.last_name?.[0]}
+                    <div className="relative shrink-0">
+                      <UserAvatar
+                        avatarUrl={selectedProvider.profiles?.avatar_url}
+                        name={`${selectedProvider.profiles?.first_name} ${selectedProvider.profiles?.last_name}`}
+                        className="size-14 rounded-2xl shadow-glow-primary"
+                        fallbackClassName="rounded-2xl bg-gradient-primary text-white font-bold text-xl"
+                      />
 
                       <span
                         className={cn(

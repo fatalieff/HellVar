@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { Profile, ProviderDetails, ProviderReview } from "@/lib/types/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -237,7 +238,7 @@ export function DashboardClient() {
       if (providerIds.length > 0) {
         const { data: profileRows, error: profileError } = await supabase
           .from("profiles")
-          .select("id, first_name, last_name, phone, role, address")
+          .select("id, first_name, last_name, phone, role, address, avatar_url")
           .in("id", providerIds);
 
         if (profileError) throw profileError;
@@ -601,9 +602,12 @@ export function DashboardClient() {
                             }`}
                           >
                             <div className="flex items-start space-x-3.5">
-                              <div className="w-11 h-11 rounded-full bg-slate-100 flex items-center justify-center font-bold text-muted-foreground shrink-0 border border-border group-hover:border-primary/20 transition-colors">
-                                <User className="w-5 h-5" />
-                              </div>
+                              <UserAvatar
+                                avatarUrl={p.profiles?.avatar_url}
+                                name={`${p.profiles?.first_name} ${p.profiles?.last_name}`}
+                                className="size-11 border border-border group-hover:border-primary/20 transition-colors"
+                                fallbackClassName="bg-slate-100 text-muted-foreground"
+                              />
                               <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-start gap-1">
                                   <h3 className="font-bold text-foreground text-sm truncate group-hover:text-primary transition-colors">
@@ -712,9 +716,12 @@ export function DashboardClient() {
                               ? "border-primary scale-125 ring-4 ring-primary/20" 
                               : "border-slate-700 hover:border-primary hover:scale-110"
                           }`}>
-                            <span className="text-slate-800 font-bold text-xs">
-                              {p.profiles?.first_name[0]}
-                            </span>
+                            <UserAvatar
+                              avatarUrl={p.profiles?.avatar_url}
+                              name={`${p.profiles?.first_name} ${p.profiles?.last_name}`}
+                              className="size-full"
+                              fallbackClassName="bg-transparent text-slate-800 font-bold text-xs"
+                            />
                             <span className="absolute -bottom-1.5 -right-1 w-4 h-4 rounded-full bg-slate-900 border border-white flex items-center justify-center text-[8px] text-white">
                               ⚙️
                             </span>
@@ -757,9 +764,12 @@ export function DashboardClient() {
                         <div className="p-5 space-y-4">
                           <div className="flex justify-between items-start">
                             <div className="flex items-center space-x-3.5">
-                              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center font-bold text-muted-foreground border border-border group-hover:border-primary/20 transition-colors">
-                                <User className="w-6 h-6" />
-                              </div>
+                              <UserAvatar
+                                avatarUrl={p.profiles?.avatar_url}
+                                name={`${p.profiles?.first_name} ${p.profiles?.last_name}`}
+                                className="size-12 border border-border group-hover:border-primary/20 transition-colors"
+                                fallbackClassName="bg-slate-100 text-muted-foreground"
+                              />
                               <div>
                                 <h3 className="font-bold text-foreground text-sm group-hover:text-primary transition-colors">
                                   {p.profiles?.first_name} {p.profiles?.last_name}
@@ -849,9 +859,12 @@ export function DashboardClient() {
                 <div className="space-y-5">
                   <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
                     <div className="flex items-start gap-4">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full border border-border bg-slate-100 text-muted-foreground">
-                        <User className="h-7 w-7" />
-                      </div>
+                      <UserAvatar
+                        avatarUrl={activeProvider.profiles?.avatar_url}
+                        name={activeProviderFullName}
+                        className="size-16 border border-border"
+                        fallbackClassName="bg-slate-100 text-muted-foreground"
+                      />
                       <div className="min-w-0 flex-1 space-y-2">
                         <div>
                           <h3 className="text-lg font-bold text-foreground">

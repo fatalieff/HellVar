@@ -8,12 +8,12 @@ import {
   Loader2,
   MessageSquare,
   Send,
-  UserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { supabase } from "@/lib/supabase/client";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { ChatConversation, ChatMessage, Profile } from "@/lib/types/database";
 
 // ─── Time formatting helper ──────────────────────────────────────────────────
@@ -36,7 +36,10 @@ function formatTimeAgo(
 // ─── Types ──────────────────────────────────────────────────────────────────
 type ConversationPreview = {
   conversation: ChatConversation;
-  otherUser: Pick<Profile, "id" | "first_name" | "last_name">;
+  otherUser: Pick<
+    Profile,
+    "id" | "first_name" | "last_name" | "avatar_url"
+  >;
   lastMessage: { body: string; sender_id: string; created_at: string } | null;
 };
 
@@ -80,7 +83,7 @@ function InboxView({
         const [{ data: profile }, { data: lastMsgs }] = await Promise.all([
           supabase
             .from("profiles")
-            .select("id, first_name, last_name")
+            .select("id, first_name, last_name, avatar_url")
             .eq("id", otherUserId)
             .single(),
           supabase
@@ -97,6 +100,7 @@ function InboxView({
             id: otherUserId,
             first_name: t.chatPage.defaultUser,
             last_name: "",
+            avatar_url: null,
           },
           lastMessage: lastMsgs && lastMsgs.length > 0 ? lastMsgs[0] : null,
         });
@@ -185,9 +189,6 @@ function InboxView({
           ) : (
             <div className="divide-y divide-border/50">
               {conversations.map(({ conversation, otherUser, lastMessage }) => {
-                const initial = otherUser.first_name
-                  ? otherUser.first_name[0].toUpperCase()
-                  : "?";
                 const fullName =
                   `${otherUser.first_name} ${otherUser.last_name}`.trim();
                 const preview = lastMessage
@@ -207,9 +208,12 @@ function InboxView({
                     className="flex w-full items-center gap-3.5 px-5 py-4 text-left transition-colors hover:bg-accent/40 active:bg-accent/60"
                   >
                     {/* Avatar */}
-                    <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-primary/80 to-primary text-white font-bold text-sm shadow-sm">
-                      {initial}
-                    </div>
+                    <UserAvatar
+                      avatarUrl={otherUser.avatar_url}
+                      name={fullName}
+                      className="size-11"
+                      fallbackClassName="bg-linear-to-br from-primary/80 to-primary text-white text-sm"
+                    />
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
@@ -251,7 +255,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [recipient, setRecipient] = useState<Pick<
     Profile,
-    "first_name" | "last_name"
+    "first_name" | "last_name" | "avatar_url"
   > | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [body, setBody] = useState("");
@@ -338,7 +342,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
           .order("created_at", { ascending: true }),
         supabase
           .from("profiles")
-          .select("first_name, last_name")
+          .select("first_name, last_name, avatar_url")
           .eq("id", recipientId)
           .maybeSingle(),
       ]);
@@ -426,8 +430,13 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
           >
             <ArrowLeft />
           </Button>
-          <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <UserRound className="size-5" />
+          <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
+            <UserAvatar
+              avatarUrl={recipient?.avatar_url}
+              name={title}
+              className="size-10"
+              fallbackClassName="bg-primary/10 text-primary"
+            />
           </div>
           <div>
             <h1 className="font-bold">{title}</h1>

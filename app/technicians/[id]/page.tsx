@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { supabase } from "@/lib/supabase/client";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { Profile, ProviderDetails, ProviderReview } from "@/lib/types/database";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -431,18 +432,20 @@ export default function TechnicianProfilePage({
                 {/* Avatar + Name */}
                 <div className="flex flex-col sm:flex-row sm:items-end gap-5">
                   <div className="relative">
-                    <div className="size-28 sm:size-36 rounded-3xl bg-white border-4 border-white shadow-premium-lg flex items-center justify-center text-4xl sm:text-5xl font-black text-foreground overflow-hidden">
-                      {provider.profiles?.first_name?.[0]}
-                      {provider.profiles?.last_name?.[0]}
-                      <span
-                        className={cn(
-                          "absolute bottom-2 right-2 size-5 rounded-full border-4 border-white shadow-sm",
-                          provider.is_online
-                            ? "bg-emerald-500"
-                            : "bg-slate-300",
-                        )}
-                      />
-                    </div>
+                    <UserAvatar
+                      avatarUrl={provider.profiles?.avatar_url}
+                      name={fullName}
+                      className="size-28 sm:size-36 rounded-3xl border-4 border-white shadow-premium-lg"
+                      fallbackClassName="rounded-3xl bg-white text-foreground text-4xl sm:text-5xl font-black"
+                    />
+                    <span
+                      className={cn(
+                        "absolute bottom-2 right-2 size-5 rounded-full border-4 border-white shadow-sm",
+                        provider.is_online
+                          ? "bg-emerald-500"
+                          : "bg-slate-300",
+                      )}
+                    />
                   </div>
 
                   <div className="flex-1 min-w-0">

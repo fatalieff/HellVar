@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { supabase } from "@/lib/supabase/client";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { Profile, ProviderDetails } from "@/lib/types/database";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -1015,16 +1016,18 @@ function PodiumCard({
         )}
       >
         <div className="relative">
-          <div className="size-16 rounded-2xl bg-white/25 backdrop-blur-sm border-2 border-white/40 flex items-center justify-center font-black text-2xl shadow-lg">
-            {provider.profiles?.first_name?.[0]}
-            {provider.profiles?.last_name?.[0]}
-            <span
-              className={cn(
-                "absolute -bottom-0.5 -right-0.5 size-4 rounded-full border-2 border-white flex items-center justify-center text-[9px]",
-                provider.is_online ? "bg-emerald-400" : "bg-slate-300",
-              )}
-            />
-          </div>
+          <UserAvatar
+            avatarUrl={provider.profiles?.avatar_url}
+            name={`${provider.profiles?.first_name} ${provider.profiles?.last_name}`}
+            className="size-16 rounded-2xl border-2 border-white/40 shadow-lg"
+            fallbackClassName="rounded-2xl bg-white/25 backdrop-blur-sm text-white font-black text-2xl"
+          />
+          <span
+            className={cn(
+              "absolute -bottom-0.5 -right-0.5 size-4 rounded-full border-2 border-white flex items-center justify-center text-[9px]",
+              provider.is_online ? "bg-emerald-400" : "bg-slate-300",
+            )}
+          />
           <span className="absolute -top-3 -right-3 text-3xl drop-shadow">
             {badges[rank]}
           </span>
@@ -1190,10 +1193,12 @@ function MasterCard({
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3.5 min-w-0">
             <div className="relative shrink-0">
-              <div className="size-12 rounded-2xl bg-gradient-primary text-white flex items-center justify-center font-black text-base shadow-sm">
-                {provider.profiles?.first_name?.[0]}
-                {provider.profiles?.last_name?.[0]}
-              </div>
+              <UserAvatar
+                avatarUrl={provider.profiles?.avatar_url}
+                name={`${provider.profiles?.first_name} ${provider.profiles?.last_name}`}
+                className="size-12 rounded-2xl shadow-sm"
+                fallbackClassName="rounded-2xl bg-gradient-primary text-white font-black text-base"
+              />
               <span
                 className={cn(
                   "absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-white shadow-sm",
