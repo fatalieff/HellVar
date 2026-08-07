@@ -35,7 +35,6 @@ export function LanguageSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[13rem]">
-        <DropdownMenuLabel>Dil / Language / Dil</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
           value={locale}
@@ -51,7 +50,7 @@ export function LanguageSwitcher() {
                     "grid size-7 place-items-center rounded-md border text-[11px] font-bold uppercase tracking-wider transition-all",
                     selected
                       ? "border-primary/40 bg-primary/10 text-primary"
-                      : "border-border bg-muted/40 text-muted-foreground"
+                      : "border-border bg-muted/40 text-muted-foreground",
                   )}
                 >
                   {item.short}

@@ -391,7 +391,7 @@ const az: Dictionary = {
   },
   hero: {
     eyebrow: "Sürətli · Etibarlı · Professional",
-    title: "Ev probleminə uyğun ustani tap",
+    title: "Ev probleminə uyğun ustanı tap",
     subtitle:
       "Sadəcə problemini yaz, biz sənə uyğun ustaları göstərək. 5 dəqiqədə rezervasiya et.",
     searchPlaceholder: "Məsələn: kondisioner işləmir, su kəsilir, rozetka yandirilmir...",
