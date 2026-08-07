@@ -454,19 +454,19 @@ export function DashboardClient() {
     <div className="flex-1 flex flex-col w-full">
       {/* FILTER & SEARCH PANEL */}
       <section className="bg-white border-b border-border py-4 px-4 sm:px-6 lg:px-8 shadow-sm">
-        <div className="max-w-7xl mx-auto flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="max-w-7xl mx-auto flex flex-col xl:flex-row xl:items-center gap-4">
           
           {/* Left Side: Address info & Categories */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4 flex-1">
-            <div className="flex items-center text-xs text-muted-foreground bg-muted/40 border border-border px-3 py-1.5 rounded-lg shrink-0 w-fit">
-              <MapPin className="w-3.5 h-3.5 text-primary shrink-0 mr-1.5" />
-              <span className="font-semibold text-foreground/80 truncate max-w-[180px]">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-3 flex-1 min-w-0">
+            <div className="flex items-center gap-2 h-10 w-fit max-w-full shrink-0 bg-muted/40 border border-border px-3.5 rounded-xl">
+              <MapPin className="w-4 h-4 text-primary shrink-0" />
+              <span className="text-xs font-semibold text-foreground/80 truncate">
                 {userAddress}
               </span>
             </div>
 
             {/* Categories list badges - Balanced wrapping */}
-            <div className="flex flex-wrap items-center gap-1.5 py-1">
+            <div className="flex flex-wrap items-center gap-2">
               {categoryOptions.map((cat) => {
                 const isActive = selectedCategory === cat.key;
                 return (
@@ -476,7 +476,7 @@ export function DashboardClient() {
                       setSelectedCategory(cat.key);
                       closeProviderProfile();
                     }}
-                    className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 ${
+                    className={`h-9 px-3.5 rounded-full text-xs font-semibold whitespace-nowrap inline-flex items-center transition-all duration-300 ${
                       isActive
                         ? "bg-primary text-white shadow-sm"
                         : "bg-muted/65 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -490,45 +490,43 @@ export function DashboardClient() {
           </div>
 
           {/* Search bar & Radius Slider & View Toggle */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 shrink-0">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
             {/* Search Input */}
-            <div className="relative min-w-[200px]">
+            <div className="relative w-full sm:w-[220px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 type="text"
                 placeholder={t.dashboard.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 bg-muted/40 border-border focus-visible:ring-primary text-xs h-9.5"
+                className="w-full h-10 pl-9 pr-3 bg-muted/40 border-border focus-visible:ring-primary text-xs rounded-xl"
               />
             </div>
 
             {/* Radius slider panel */}
-            <div className="flex items-center space-x-3 bg-muted/20 border border-border/60 px-3 py-1.5 rounded-lg">
+            <div className="flex items-center gap-2.5 h-10 bg-muted/20 border border-border/60 px-3.5 rounded-xl shrink-0">
               <Sliders className="w-4 h-4 text-muted-foreground shrink-0" />
-              <div className="flex items-center space-x-2.5 min-w-[140px]">
-                <input
-                  type="range"
-                  min="1"
-                  max="10"
-                  value={radius}
-                  onChange={(e) => {
-                    setRadius(Number(e.target.value));
-                    setActiveProviderId(null);
-                  }}
-                  className="w-full accent-primary h-1.5 bg-muted rounded-lg appearance-none cursor-pointer"
-                />
-                <span className="text-xs font-bold text-foreground w-8 text-right shrink-0">
-                  {radius} km
-                </span>
-              </div>
+              <input
+                type="range"
+                min="1"
+                max="10"
+                value={radius}
+                onChange={(e) => {
+                  setRadius(Number(e.target.value));
+                  setActiveProviderId(null);
+                }}
+                className="w-[120px] accent-primary h-1.5 bg-muted rounded-lg appearance-none cursor-pointer"
+              />
+              <span className="text-xs font-bold text-foreground w-9 text-right shrink-0">
+                {radius} km
+              </span>
             </div>
 
             {/* View toggle button */}
-            <div className="flex bg-muted/60 p-1 rounded-lg border border-border shrink-0 self-start sm:self-auto">
+            <div className="flex bg-muted/60 p-1 rounded-xl border border-border shrink-0 h-10 self-start sm:self-auto">
               <button
                 onClick={() => setViewMode("map")}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center gap-1.5 px-3.5 rounded-lg text-xs font-semibold transition-all h-full ${
                   viewMode === "map"
                     ? "bg-white text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
@@ -539,7 +537,7 @@ export function DashboardClient() {
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center gap-1.5 px-3.5 rounded-lg text-xs font-semibold transition-all h-full ${
                   viewMode === "list"
                     ? "bg-white text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
