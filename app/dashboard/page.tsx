@@ -1,9 +1,10 @@
-﻿import { DashboardClient } from "@/components/dashboard/dashboard-client";
+import { DashboardClient } from "@/components/dashboard/dashboard-client";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "HəllVar â€” MÃ¼ÅŸtÉ™ri Ana SÉ™hifÉ™si",
-  description: "Yasamal rayonunda vÉ™ É™trafÄ±nÄ±zdakÄ± É™n yaxÅŸÄ± usta vÉ™ peÅŸÉ™karlarÄ± interaktiv xÉ™ritÉ™ vÉ™ filtr vasitÉ™silÉ™ tapÄ±n.",
+  title: "HəllVar — Müştəri Ana Səhifəsi",
+  description:
+    "Yasamal rayonunda və ətrafınızdakı ən yaxşı usta və peşəkarları interaktiv xəritə və filtr vasitəsilə tapın.",
 };
 
 export default function DashboardPage() {
@@ -13,4 +14,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

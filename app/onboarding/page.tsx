@@ -1,9 +1,10 @@
-﻿import { RegisterForm } from "@/components/auth/forms/register-form";
+import { RegisterForm } from "@/components/auth/forms/register-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Qeydiyyatdan KeÃ§",
-  description: "HəllVar platformasÄ±nda mÃ¼ÅŸtÉ™ri vÉ™ ya usta kimi qeydiyyatdan keÃ§in vÉ™ xidmÉ™tlÉ™rdÉ™n yararlanÄ±n.",
+  title: "Qeydiyyatdan Keç",
+  description:
+    "HəllVar platformasında müştəri və ya usta kimi qeydiyyatdan keçin və xidmətlərdən yararlanın.",
 };
 
 export default function OnboardingPage() {
@@ -15,10 +16,10 @@ export default function OnboardingPage() {
 
       <div className="w-full max-w-xl text-center mb-8 relative z-10 animate-fade-up">
         <h1 className="text-3xl font-extrabold text-foreground tracking-tight sm:text-4xl bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-          HəllVar-a QoÅŸulun
+          HəllVar-a Qoşulun
         </h1>
         <p className="mt-3 text-sm sm:text-base text-muted-foreground text-balance">
-          MÃ¼ÅŸtÉ™ri vÉ™ ya Usta olaraq bir neÃ§É™ sadÉ™ addÄ±mda qeydiyyatdan keÃ§in.
+          Müştəri və ya Usta olaraq bir neçə sadə addımda qeydiyyatdan keçin.
         </p>
       </div>
 
@@ -28,4 +29,3 @@ export default function OnboardingPage() {
     </main>
   );
 }
-

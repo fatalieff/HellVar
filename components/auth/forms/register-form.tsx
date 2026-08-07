@@ -209,7 +209,7 @@ export function RegisterForm() {
 
       setSuccess(true);
     } catch (err: unknown) {
-      console.error("Qeydiyyat zamanÄ± xÉ™ta baÅŸ verdi:", err);
+      console.error("Qeydiyyat zamanı xəta baş verdi:", err);
       setError(err instanceof Error ? err.message : t.auth.signUp.genericError);
     } finally {
       setLoading(false);
@@ -284,10 +284,10 @@ export function RegisterForm() {
               <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mb-4">
                 <Check className="w-8 h-8" />
               </div>
-              <h2 className="text-2xl font-bold mb-3 text-foreground">TÉ™briklÉ™r! Qeydiyyat TamamlandÄ±</h2>
+              <h2 className="text-2xl font-bold mb-3 text-foreground">Təbriklər! Qeydiyyat Tamamlandı</h2>
               <p className="text-muted-foreground max-w-sm mb-6 text-sm">
-                HesabÄ±nÄ±z uÄŸurla yaradÄ±ldÄ±. ZÉ™hmÉ™t olmasa e-poÃ§t (email) Ã¼nvanÄ±nÄ±za gÃ¶ndÉ™rilÉ™n tÉ™sdiq linkinÉ™ daxil olaraq hesabÄ± tÉ™sdiqlÉ™yin.
-                {role === "PROVIDER" && " SÉ™nÉ™dlÉ™riniz administrator tÉ™rÉ™findÉ™n yoxlanÄ±ldÄ±qdan sonra profiliniz aktivlÉ™ÅŸdirilÉ™cÉ™kdir."}
+                Hesabınız uğurla yaradıldı. Zəhmət olmasa e-poşt (email) ünvanınıza göndərilən təsdiq linkinə daxil olaraq hesabı təsdiqləyin.
+                {role === "PROVIDER" && " Sənədləriniz administrator tərəfindən yoxlanıldıqdan sonra profiliniz aktivləşdiriləcəkdir."}
               </p>
               <Button asChild className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-white shadow-glow-primary">
                 <a href="/login">Daxil ol</a>
