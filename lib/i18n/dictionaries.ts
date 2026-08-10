@@ -77,6 +77,8 @@ export type Dictionary = {
     repair_desc: string;
     moving: string;
     moving_desc: string;
+    barber: string;
+    barber_desc: string;
   };
   categoriesPage: {
     heroSubtitle: string;
@@ -272,6 +274,10 @@ export type Dictionary = {
     addressPlaceholder: string;
     bioLabel: string;
     bioPlaceholder: string;
+    priceLabel: string;
+    priceMinLabel: string;
+    priceMaxLabel: string;
+    priceHint: string;
     roleLabel: string;
     roleCustomer: string;
     roleProvider: string;
@@ -464,6 +470,87 @@ export type Dictionary = {
     notProvided: string;
     viewProfile: string;
   };
+  providerDashboard: {
+    weeklyEarnings: string;
+    completedJobs: string;
+    averageRating: string;
+    waitingOrders: string;
+    jobUnit: string;
+    waitingUnit: string;
+    currencyUnit: string;
+    ratingUnit: string;
+  };
+  bookings: {
+    badge: string;
+    titleForProvider: string;
+    subtitleTemplate: string;
+    authRequiredTitle: string;
+    authRequiredDesc: string;
+    roleRequiredTitle: string;
+    roleRequiredDesc: string;
+    successTitle: string;
+    successDesc: string;
+    serviceLabel: string;
+    servicePlaceholder: string;
+    dateLabel: string;
+    timeLabel: string;
+    timePlaceholder: string;
+    durationLabel: string;
+    durationMinutes: string;
+    priceLabel: string;
+    addressLabel: string;
+    addressPlaceholder: string;
+    noteLabel: string;
+    notePlaceholder: string;
+    optional: string;
+    cancel: string;
+    submit: string;
+    submitting: string;
+    submitted: string;
+    errorService: string;
+    errorDateTime: string;
+    errorPrice: string;
+    errorRole: string;
+    errorMissingTable: string;
+    errorSelf: string;
+    errorGeneric: string;
+    tomorrow: string;
+    days: string[];
+    months: string[];
+    providerGeneric: string;
+    customerGeneric: string;
+    tabActiveTemplate: string;
+    tabCompleted: string;
+    tabCancelled: string;
+    listEmptyTitle: string;
+    listEmptyDesc: string;
+    minutesShort: string;
+    currencySymbol: string;
+    incomingTitle: string;
+    activeTitle: string;
+    pastTitle: string;
+    emptyTitle: string;
+    emptyDesc: string;
+    incomingEmpty: string;
+    activeEmpty: string;
+    accept: string;
+    reject: string;
+    complete: string;
+    chat: string;
+    cancelBooking: string;
+    openChat: string;
+    book: string;
+    status: {
+      PENDING: string;
+      ACCEPTED: string;
+      REJECTED: string;
+      CANCELLED: string;
+      COMPLETED: string;
+      EXPIRED: string;
+    };
+    pageTitle: string;
+    pageSubtitle: string;
+  };
 };
 
 const az: Dictionary = {
@@ -610,6 +697,7 @@ const az: Dictionary = {
         "Rəngsaz": "Rəngsaz",
         "Alçipan Ustası": "Alçipan Ustası",
         "Kafel-Metlax Ustası": "Kafel-Metlax Ustası",
+        "Bərbər": "Bərbər",
         "Digər": "Digər",
       },
       avatarLabel: "Profil şəkli (istəyə bağlı)",
@@ -755,6 +843,8 @@ const az: Dictionary = {
     repair_desc: "Dəmir, ağac, şüşə, divar, qapı, qarderob, rəngsaz və alçipan işləri",
     moving: "Daşınma Xidmətləri",
     moving_desc: "Ev, ofis, bağ evi və yük daşınması, mebel sökülməsi və yüklənməsi",
+    barber: "Bərbər",
+    barber_desc: "Saç kəsimi, saqqal baxımı, üz və kişi baxım xidmətləri",
   },
   categoriesPage: {
     heroSubtitle: "HəllVar-da təklif olunan bütün xidmət kateqoriyaları. Sizə uyğun olan sahəni seçin və peşəkar ustaları kəşf edin.",
@@ -911,6 +1001,10 @@ const az: Dictionary = {
     addressPlaceholder: "Məsələn: Mətbuat pr. 24, bina 3, m. 45",
     bioLabel: "Bio / Haqqımda",
     bioPlaceholder: "Xidmətləriniz, təcrübəniz və iş sahəniz haqqında qısa məlumat yazın.",
+    priceLabel: "Qiymət aralığı (₼)",
+    priceMinLabel: "Minimum qiymət",
+    priceMaxLabel: "Maksimum qiymət",
+    priceHint: "Xidmətinizin qiymət aralığını göstərin. Müştərilər profilində bu aralığı görəcək.",
     roleLabel: "Rol",
     roleCustomer: "Müştəri",
     roleProvider: "Usta / Mütəxəssis",
@@ -942,6 +1036,87 @@ const az: Dictionary = {
     addressLabel: "Ünvan",
     notProvided: "Göstərilməyib",
     viewProfile: "Profilimi gör",
+  },
+  providerDashboard: {
+    weeklyEarnings: "Bu həftəlik qazanc",
+    completedJobs: "Tamamlanmış işlər",
+    averageRating: "Ortalama reytinq",
+    waitingOrders: "Gözləyən sifarişlər",
+    jobUnit: "{count} iş",
+    waitingUnit: "{count} gözləmədə",
+    currencyUnit: "AZN",
+    ratingUnit: "/ 5.0",
+  },
+  bookings: {
+    badge: "Sifariş / Rezervasiya",
+    titleForProvider: "{name} üçün sifariş",
+    subtitleTemplate: "{category} · Tarix və saat seçin, usta sifarişi təsdiqləyəcək",
+    authRequiredTitle: "Sifariş vermək üçün daxil olun",
+    authRequiredDesc: "Sifariş verə bilmək üçün hesabınıza daxil olun.",
+    roleRequiredTitle: "Yalnız müştərilər sifariş verə bilər",
+    roleRequiredDesc: "Sizin hesab usta/mütəxəssis kimi qeydiyyatdan keçib.",
+    successTitle: "Sifariş göndərildi!",
+    successDesc: "Usta sifarişi qəbul edən kimi bildiriş alacaqsınız.",
+    serviceLabel: "Xidmət",
+    servicePlaceholder: "Məsələn: Kran dəyişimi, Saç kəsimi...",
+    dateLabel: "Tarix seçin",
+    timeLabel: "Saat seçin",
+    timePlaceholder: "Saat seçin...",
+    durationLabel: "Müddət",
+    durationMinutes: "{count} dəqiqə",
+    priceLabel: "Qiymət təklifi (₼)",
+    addressLabel: "Ünvan",
+    addressPlaceholder: "İşin görüləcəyi ünvan",
+    noteLabel: "Əlavə qeyd",
+    notePlaceholder: "Problemi ətraflı təsvir edin",
+    optional: "(isteğe bağlı)",
+    cancel: "Ləğv Et",
+    submit: "Sifarişi Göndər",
+    submitting: "Göndərilir...",
+    submitted: "Göndərildi",
+    errorService: "Xidmət adını daxil edin (ən azı 2 simvol).",
+    errorDateTime: "Tarix və saat seçin.",
+    errorPrice: "Qiymət düzgün deyil.",
+    errorRole: "Sifariş yalnız müştərilər tərəfindən verilə bilər.",
+    errorMissingTable: "Sifariş yadda saxlanmadı — serverdə `bookings` cədvəli mövcud deyil. Migration-ı işə salın.",
+    errorSelf: "Özünüzə sifariş verə bilməzsiniz.",
+    errorGeneric: "Sifariş göndərilərkən xəta baş verdi. Yenidən cəhd edin.",
+    tomorrow: "Sabah",
+    days: ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"],
+    months: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"],
+    providerGeneric: "Usta",
+    customerGeneric: "Müştəri",
+    tabActiveTemplate: "Aktiv ({count})",
+    tabCompleted: "Bitmiş",
+    tabCancelled: "Ləğv edilmiş",
+    listEmptyTitle: "Sifarişiniz yoxdur",
+    listEmptyDesc: "Usta profillərindəki «Sifariş ver» düyməsi ilə ilk sifarişinizi yarada bilərsiniz.",
+    minutesShort: "dəq",
+    currencySymbol: "₼",
+    incomingTitle: "Gələn sifarişlər",
+    activeTitle: "Aktiv sifarişlər",
+    pastTitle: "Keçmiş sifarişlər",
+    emptyTitle: "Sifariş yoxdur",
+    emptyDesc: "Müştərilər sifariş verəndə sifarişlər burada görünəcək.",
+    incomingEmpty: "Yeni sifariş yoxdur.",
+    activeEmpty: "Qəbul edilmiş aktiv sifariş yoxdur.",
+    accept: "Qəbul et",
+    reject: "Redd et",
+    complete: "Tamamla",
+    chat: "Çat",
+    cancelBooking: "Ləğv et",
+    openChat: "Çata keç",
+    book: "Sifariş ver",
+    status: {
+      PENDING: "Gözləyir",
+      ACCEPTED: "Qəbul edildi",
+      REJECTED: "Redd edildi",
+      CANCELLED: "Ləğv edildi",
+      COMPLETED: "Tamamlandı",
+      EXPIRED: "Vaxtı keçdi",
+    },
+    pageTitle: "Sifarişlərim",
+    pageSubtitle: "Bütün sifarişlərinizi burada izləyə bilərsiniz",
   },
 };
 
@@ -1089,6 +1264,7 @@ const en: Dictionary = {
         "Rəngsaz": "Painter",
         "Alçipan Ustası": "Drywall installer",
         "Kafel-Metlax Ustası": "Tile installer",
+        "Bərbər": "Barber",
         "Digər": "Other",
       },
       avatarLabel: "Profile photo (optional)",
@@ -1234,6 +1410,8 @@ const en: Dictionary = {
     repair_desc: "Handyman, painting, drywall, door, window and home repairs",
     moving: "Relocation & Cargo",
     moving_desc: "Home, office, villa & cargo moving, furniture disassembly and loading",
+    barber: "Barber",
+    barber_desc: "Haircuts, beard grooming and men's care services",
   },
   categoriesPage: {
     heroSubtitle: "All service categories offered on HəllVar. Pick the area that fits you and discover expert pros.",
@@ -1393,6 +1571,10 @@ const en: Dictionary = {
     addressPlaceholder: "e.g. Matbuat Ave. 24, bldg 3, apt 45",
     bioLabel: "Bio / About me",
     bioPlaceholder: "Write a short description about your services and experience.",
+    priceLabel: "Price range (₼)",
+    priceMinLabel: "Minimum price",
+    priceMaxLabel: "Maximum price",
+    priceHint: "Set the price range for your service. Customers will see it on your profile.",
     roleLabel: "Role",
     roleCustomer: "Customer",
     roleProvider: "Professional / Specialist",
@@ -1424,6 +1606,87 @@ const en: Dictionary = {
     addressLabel: "Address",
     notProvided: "Not provided",
     viewProfile: "View my profile",
+  },
+  providerDashboard: {
+    weeklyEarnings: "Weekly earnings",
+    completedJobs: "Completed jobs",
+    averageRating: "Average rating",
+    waitingOrders: "Pending orders",
+    jobUnit: "{count} jobs",
+    waitingUnit: "{count} waiting",
+    currencyUnit: "AZN",
+    ratingUnit: "/ 5.0",
+  },
+  bookings: {
+    badge: "Booking / Reservation",
+    titleForProvider: "Booking for {name}",
+    subtitleTemplate: "{category} · Choose a date and time, the provider will confirm the booking",
+    authRequiredTitle: "Sign in to book",
+    authRequiredDesc: "Please sign in to your account to place a booking.",
+    roleRequiredTitle: "Only customers can place bookings",
+    roleRequiredDesc: "Your account is registered as a provider/specialist.",
+    successTitle: "Booking sent!",
+    successDesc: "You will be notified as soon as the provider accepts your booking.",
+    serviceLabel: "Service",
+    servicePlaceholder: "e.g. Faucet replacement, Haircut...",
+    dateLabel: "Select date",
+    timeLabel: "Select time",
+    timePlaceholder: "Select time...",
+    durationLabel: "Duration",
+    durationMinutes: "{count} minutes",
+    priceLabel: "Price offer (₼)",
+    addressLabel: "Address",
+    addressPlaceholder: "Address where the work will be done",
+    noteLabel: "Additional note",
+    notePlaceholder: "Describe the problem in detail",
+    optional: "(optional)",
+    cancel: "Cancel",
+    submit: "Send Booking",
+    submitting: "Sending...",
+    submitted: "Sent",
+    errorService: "Enter a service name (at least 2 characters).",
+    errorDateTime: "Choose a date and time.",
+    errorPrice: "The price is not valid.",
+    errorRole: "Bookings can only be placed by customers.",
+    errorMissingTable: "Booking was not saved — the `bookings` table does not exist on the server. Run the migration.",
+    errorSelf: "You cannot book yourself.",
+    errorGeneric: "Something went wrong while sending the booking. Please try again.",
+    tomorrow: "Tomorrow",
+    days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    providerGeneric: "Professional",
+    customerGeneric: "Customer",
+    tabActiveTemplate: "Active ({count})",
+    tabCompleted: "Completed",
+    tabCancelled: "Cancelled",
+    listEmptyTitle: "You have no bookings",
+    listEmptyDesc: "Create your first booking with the «Book» button on provider profiles.",
+    minutesShort: "min",
+    currencySymbol: "₼",
+    incomingTitle: "Incoming bookings",
+    activeTitle: "Active bookings",
+    pastTitle: "Past bookings",
+    emptyTitle: "No bookings",
+    emptyDesc: "Bookings will appear here when customers place them.",
+    incomingEmpty: "No new bookings.",
+    activeEmpty: "No accepted active bookings.",
+    accept: "Accept",
+    reject: "Reject",
+    complete: "Complete",
+    chat: "Chat",
+    cancelBooking: "Cancel",
+    openChat: "Open chat",
+    book: "Book now",
+    status: {
+      PENDING: "Pending",
+      ACCEPTED: "Accepted",
+      REJECTED: "Rejected",
+      CANCELLED: "Cancelled",
+      COMPLETED: "Completed",
+      EXPIRED: "Expired",
+    },
+    pageTitle: "My bookings",
+    pageSubtitle: "Track all your bookings here",
   },
 };
 
@@ -1571,6 +1834,7 @@ const tr: Dictionary = {
         "Rəngsaz": "Boyacı",
         "Alçipan Ustası": "Alçıpan ustası",
         "Kafel-Metlax Ustası": "Fayans ustası",
+        "Bərbər": "Berber",
         "Digər": "Diğer",
       },
       avatarLabel: "Profil fotoğrafı (isteğe bağlı)",
@@ -1716,6 +1980,8 @@ const tr: Dictionary = {
     repair_desc: "Boya, alçıpan, kapı, mobilya montajı ve ev onarım işleri",
     moving: "Nakliye & Taşıma",
     moving_desc: "Ev, ofis, yazlık ve yük taşıma, mobilya söküm ve yükleme",
+    barber: "Berber",
+    barber_desc: "Saç kesimi, sakal bakımı ve erkek bakım hizmetleri",
   },
   categoriesPage: {
     heroSubtitle: "HəllVar'ta sunulan tüm hizmet kategorileri. Size uygun alanı seçin ve profesyonel ustaları keşfedin.",
@@ -1875,6 +2141,10 @@ const tr: Dictionary = {
     addressPlaceholder: "örn. Mətbuat cad. 24, bina 3, daire 45",
     bioLabel: "Bio / Hakkımda",
     bioPlaceholder: "Hizmetleriniz, deneyiminiz ve çalışma alanınız hakkında kısa bilgi yazın.",
+    priceLabel: "Fiyat aralığı (₼)",
+    priceMinLabel: "Minimum fiyat",
+    priceMaxLabel: "Maksimum fiyat",
+    priceHint: "Hizmetinizin fiyat aralığını belirtin. Müşteriler profilinizde bu aralığı görecek.",
     roleLabel: "Rol",
     roleCustomer: "Müşteri",
     roleProvider: "Usta / Uzman",
@@ -1906,6 +2176,87 @@ const tr: Dictionary = {
     addressLabel: "Adres",
     notProvided: "Belirtilmedi",
     viewProfile: "Profilimi gör",
+  },
+  providerDashboard: {
+    weeklyEarnings: "Haftalık kazanç",
+    completedJobs: "Tamamlanan işler",
+    averageRating: "Ortalama puan",
+    waitingOrders: "Bekleyen siparişler",
+    jobUnit: "{count} iş",
+    waitingUnit: "{count} bekliyor",
+    currencyUnit: "AZN",
+    ratingUnit: "/ 5.0",
+  },
+  bookings: {
+    badge: "Rezervasyon / Sipariş",
+    titleForProvider: "{name} için sipariş",
+    subtitleTemplate: "{category} · Tarih ve saat seçin, usta siparişi onaylayacak",
+    authRequiredTitle: "Sipariş vermek için giriş yapın",
+    authRequiredDesc: "Sipariş verebilmek için hesabınıza giriş yapın.",
+    roleRequiredTitle: "Yalnızca müşteriler sipariş verebilir",
+    roleRequiredDesc: "Hesabınız usta/uzman olarak kayıtlı.",
+    successTitle: "Sipariş gönderildi!",
+    successDesc: "Usta siparişi onayladığında bildirim alacaksınız.",
+    serviceLabel: "Hizmet",
+    servicePlaceholder: "Örn: Musluk değişimi, Saç kesimi...",
+    dateLabel: "Tarih seçin",
+    timeLabel: "Saat seçin",
+    timePlaceholder: "Saat seçin...",
+    durationLabel: "Süre",
+    durationMinutes: "{count} dakika",
+    priceLabel: "Fiyat teklifi (₼)",
+    addressLabel: "Adres",
+    addressPlaceholder: "İşin yapılacağı adres",
+    noteLabel: "Ek not",
+    notePlaceholder: "Sorunu ayrıntılı olarak açıklayın",
+    optional: "(opsiyonel)",
+    cancel: "İptal Et",
+    submit: "Siparişi Gönder",
+    submitting: "Gönderiliyor...",
+    submitted: "Gönderildi",
+    errorService: "Hizmet adını girin (en az 2 karakter).",
+    errorDateTime: "Tarih ve saat seçin.",
+    errorPrice: "Fiyat geçersiz.",
+    errorRole: "Sipariş yalnızca müşteriler tarafından verilebilir.",
+    errorMissingTable: "Sipariş kaydedilemedi — sunucuda `bookings` tablosu bulunmuyor. Migration'ı çalıştırın.",
+    errorSelf: "Kendinize sipariş veremezsiniz.",
+    errorGeneric: "Sipariş gönderilirken bir hata oluştu. Lütfen tekrar deneyin.",
+    tomorrow: "Yarın",
+    days: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
+    months: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+    providerGeneric: "Usta",
+    customerGeneric: "Müşteri",
+    tabActiveTemplate: "Aktif ({count})",
+    tabCompleted: "Tamamlanan",
+    tabCancelled: "İptal edilen",
+    listEmptyTitle: "Siparişiniz yok",
+    listEmptyDesc: "Usta profillerindeki «Sipariş ver» butonuyla ilk siparişinizi oluşturabilirsiniz.",
+    minutesShort: "dk",
+    currencySymbol: "₼",
+    incomingTitle: "Gelen siparişler",
+    activeTitle: "Aktif siparişler",
+    pastTitle: "Geçmiş siparişler",
+    emptyTitle: "Sipariş yok",
+    emptyDesc: "Müşteriler sipariş verdiğinde siparişler burada görünecek.",
+    incomingEmpty: "Yeni sipariş yok.",
+    activeEmpty: "Onaylanmış aktif sipariş yok.",
+    accept: "Kabul et",
+    reject: "Reddet",
+    complete: "Tamamla",
+    chat: "Sohbet",
+    cancelBooking: "İptal et",
+    openChat: "Sohbete git",
+    book: "Sipariş ver",
+    status: {
+      PENDING: "Bekliyor",
+      ACCEPTED: "Kabul edildi",
+      REJECTED: "Reddedildi",
+      CANCELLED: "İptal edildi",
+      COMPLETED: "Tamamlandı",
+      EXPIRED: "Süresi doldu",
+    },
+    pageTitle: "Rezervasyonlarım",
+    pageSubtitle: "Tüm siparişlerinizi burada takip edebilirsiniz",
   },
 };
 

@@ -28,6 +28,7 @@ import {
   Laptop,
   Wrench,
   Truck,
+  Scissors,
   Search,
   Star,
   MapPin,
@@ -55,7 +56,8 @@ type CategoryKey =
   | "boiler"
   | "it_tech"
   | "repair"
-  | "moving";
+  | "moving"
+  | "barber";
 
 type Profile = {
   id: string;
@@ -155,6 +157,12 @@ const CATEGORY_META: Record<
     tone: "from-purple-400/20 to-indigo-500/10 text-indigo-600",
     image:
       "https://images.unsplash.com/photo-1600518464441-9154a4dea21b?q=80&w=400&auto=format&fit=crop",
+  },
+  barber: {
+    Icon: Scissors,
+    tone: "from-slate-400/20 to-zinc-500/10 text-slate-600",
+    image:
+      "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=400&auto=format&fit=crop",
   },
 };
 
@@ -259,6 +267,17 @@ const getDatabaseCategoriesForCategory = (categoryKey: string): string[] => {
         "Ofis daşınması",
         "Bağ daşınması",
         "Nakliye",
+      ];
+    case "barber":
+      return [
+        "Bərbər",
+        "bərbər",
+        "Berber",
+        "berber",
+        "Barber",
+        "barber",
+        "Saç kəsimi",
+        "Saqqal",
       ];
     default:
       return [

@@ -14,7 +14,16 @@ import { Input } from "@/components/ui/input";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { supabase } from "@/lib/supabase/client";
 import { UserAvatar } from "@/components/ui/user-avatar";
-import { ChatConversation, ChatMessage, Profile } from "@/lib/types/database";
+import {
+  ChatConversation,
+  ChatMessage,
+  Profile,
+  ProviderDetails,
+} from "@/lib/types/database";
+import {
+  ProviderProfileDialog,
+  ProviderProfile,
+} from "@/components/provider/provider-profile-dialog";
 
 // ─── Time formatting helper ──────────────────────────────────────────────────
 function formatTimeAgo(
@@ -252,20 +261,22 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
   const router = useRouter();
   const { t } = useI18n();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [currentUserRole, setCurrentUserRole] = useState<Profile["role"] | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
-  const [recipient, setRecipient] = useState<Pick<
-    Profile,
-    "first_name" | "last_name" | "avatar_url"
-  > | null>(null);
+  const [recipient, setRecipient] = useState<Profile | null>(null);
+  const [recipientProvider, setRecipientProvider] = useState<ProviderProfile | null>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -334,6 +345,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
       const [
         { data: initialMessages, error: messagesError },
         { data: recipientProfile },
+        { data: currentProfile },
       ] = await Promise.all([
         supabase
           .from("chat_messages")
@@ -342,8 +354,13 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
           .order("created_at", { ascending: true }),
         supabase
           .from("profiles")
-          .select("first_name, last_name, avatar_url")
+          .select("id, first_name, last_name, avatar_url, phone, address")
           .eq("id", recipientId)
+          .maybeSingle(),
+        supabase
+          .from("profiles")
+          .select("id, role")
+          .eq("id", user.id)
           .maybeSingle(),
       ]);
       if (!mounted) return;
@@ -352,9 +369,25 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
         setLoading(false);
         return;
       }
+
+      const { data: recipientDetails } = await supabase
+        .from("provider_details")
+        .select("*")
+        .eq("user_id", recipientId)
+        .maybeSingle();
+
       setCurrentUserId(user.id);
+      setCurrentUserRole((currentProfile?.role as Profile["role"]) ?? null);
       setConversationId(resolvedConversationId);
-      setRecipient(recipientProfile ?? null);
+      setRecipient(recipientProfile as Profile | null);
+      setRecipientProvider(
+        recipientDetails
+          ? {
+              ...(recipientDetails as ProviderDetails),
+              profiles: (recipientProfile as Profile) ?? null,
+            }
+          : null,
+      );
       setMessages((initialMessages ?? []) as ChatMessage[]);
       setLoading(false);
 
@@ -430,21 +463,35 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
           >
             <ArrowLeft />
           </Button>
-          <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
-            <UserAvatar
-              avatarUrl={recipient?.avatar_url}
-              name={title}
-              className="size-10"
-              fallbackClassName="bg-primary/10 text-primary"
-            />
-          </div>
-          <div>
-            <h1 className="font-bold">{title}</h1>
-            <p className="text-xs text-emerald-600">{t.chatPage.liveChat}</p>
-          </div>
+          <button
+            type="button"
+            onClick={() => recipientProvider && setProfileOpen(true)}
+            disabled={!recipientProvider}
+            title={recipientProvider ? t.dashboard.viewProfile : undefined}
+            className={`group flex items-center gap-3 rounded-xl pr-2 text-left ${
+              recipientProvider
+                ? "cursor-pointer hover:bg-accent/40 transition-colors"
+                : "cursor-default"
+            }`}
+          >
+            <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
+              <UserAvatar
+                avatarUrl={recipient?.avatar_url}
+                name={title}
+                className="size-10"
+                fallbackClassName="bg-primary/10 text-primary"
+              />
+            </div>
+            <div className="min-w-0">
+              <h1 className="font-bold group-hover:text-primary transition-colors truncate">
+                {title}
+              </h1>
+              <p className="text-xs text-emerald-600">{t.chatPage.liveChat}</p>
+            </div>
+          </button>
         </header>
 
-        <div className="flex-1 space-y-3 overflow-y-auto p-5">
+        <div ref={messagesRef} className="flex-1 space-y-3 overflow-y-auto p-5">
           {loading ? (
             <div className="flex h-full items-center justify-center">
               <Loader2 className="animate-spin text-primary" />
@@ -483,7 +530,6 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
               </div>
             ))
           )}
-          <div ref={bottomRef} />
         </div>
 
         <form onSubmit={send} className="flex gap-2 border-t border-border p-4">
@@ -500,6 +546,14 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
           </Button>
         </form>
       </div>
+
+      <ProviderProfileDialog
+        open={profileOpen}
+        provider={recipientProvider}
+        currentUserId={currentUserId}
+        currentUserRole={currentUserRole}
+        onClose={() => setProfileOpen(false)}
+      />
     </main>
   );
 }

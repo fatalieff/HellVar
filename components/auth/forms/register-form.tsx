@@ -63,6 +63,7 @@ const PROVIDER_CATEGORIES = [
   "Rəngsaz",
   "Alçipan Ustası",
   "Kafel-Metlax Ustası",
+  "Bərbər",
   "Digər"
 ];
 

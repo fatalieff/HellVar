@@ -1,6 +1,7 @@
 export type ProfileRole = 'CUSTOMER' | 'PROVIDER';
 export type ProfileStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 export type ServiceRequestStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'COMPLETED';
+export type BookingStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED' | 'COMPLETED' | 'EXPIRED';
 
 export type Profile = {
   id: string; // matches auth.users.id
@@ -22,6 +23,8 @@ export type ProviderDetails = {
   profile_status: ProfileStatus;
   rating?: number | null;
   hourly_rate?: number | null;
+  price_min?: number | null;
+  price_max?: number | null;
   bio?: string | null;
   years_experience?: number | null;
   completed_jobs?: number | null;
@@ -68,7 +71,22 @@ export type ChatMessage = {
   created_at: string;
 };
 
-export type NotificationType = 'new_message' | 'new_review' | 'review_reply' | 'system';
+export type NotificationType = 'new_message' | 'new_review' | 'review_reply' | 'system' | 'new_booking' | 'booking_accepted' | 'booking_rejected' | 'booking_completed' | 'booking_cancelled';
+
+export type Booking = {
+  id: string;
+  customer_id: string;
+  provider_id: string;
+  service: string;
+  scheduled_at: string;
+  duration_minutes: number;
+  price_offer: number;
+  address?: string | null;
+  customer_note?: string | null;
+  status: BookingStatus;
+  created_at: string;
+  updated_at: string;
+};
 
 export type Notification = {
   id: string;
@@ -137,6 +155,17 @@ export interface Database {
         Row: Notification;
         Insert: Omit<Notification, 'id' | 'created_at' | 'is_read'> & { id?: string; created_at?: string; is_read?: boolean };
         Update: Partial<Pick<Notification, 'is_read'>>;
+        Relationships: [];
+      };
+      bookings: {
+        Row: Booking;
+        Insert: Omit<Booking, 'id' | 'created_at' | 'updated_at' | 'status'> & {
+          id?: string;
+          status?: BookingStatus;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Booking>;
         Relationships: [];
       };
     };

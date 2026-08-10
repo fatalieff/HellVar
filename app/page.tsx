@@ -16,6 +16,7 @@ import {
   Sparkles as CleaningIcon,
   Wrench,
   Truck,
+  Scissors,
   ChevronRight,
   Star,
   Loader2,
@@ -41,7 +42,8 @@ type CategoryKey =
   | "boiler"
   | "it_tech"
   | "repair"
-  | "moving";
+  | "moving"
+  | "barber";
 
 const CATEGORY_META: Record<
   CategoryKey,
@@ -87,6 +89,11 @@ const CATEGORY_META: Record<
     tone: "from-purple-400/20 to-indigo-500/10 text-indigo-600",
     image: "https://images.unsplash.com/photo-1600518464441-9154a4dea21b?q=80&w=400&auto=format&fit=crop",
   },
+  barber: {
+    Icon: Scissors,
+    tone: "from-slate-400/20 to-zinc-500/10 text-slate-600",
+    image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=400&auto=format&fit=crop",
+  },
 };
 
 const CATEGORIES: CategoryKey[] = [
@@ -98,6 +105,7 @@ const CATEGORIES: CategoryKey[] = [
   "it_tech",
   "repair",
   "moving",
+  "barber",
 ];
 
 export default function Home() {

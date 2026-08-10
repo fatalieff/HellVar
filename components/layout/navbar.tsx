@@ -26,6 +26,7 @@ import {
   Phone,
   MapPin,
   UserCog,
+  CalendarCheck2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -59,6 +60,12 @@ function NotifIcon({ type }: { type: Notification["type"] }) {
         <Star className="size-3.5" fill="currentColor" />
       </span>
     );
+  if (type === "new_booking" || type === "booking_accepted" || type === "booking_rejected" || type === "booking_completed" || type === "booking_cancelled")
+    return (
+      <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-600">
+        <CalendarCheck2 className="size-3.5" />
+      </span>
+    );
   return (
     <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
       <MessageSquare className="size-3.5" />
@@ -71,11 +78,13 @@ function NotificationsPanel({
   notifications,
   onMarkAllRead,
   onMarkRead,
+  onOpen,
   n,
 }: {
   notifications: Notification[];
   onMarkAllRead: () => void;
   onMarkRead: (id: string) => void;
+  onOpen: (notif: Notification) => void;
   n: ReturnType<typeof useI18n>["t"]["notifications"];
 }) {
   const unread = notifications.filter((x) => !x.is_read);
@@ -108,7 +117,10 @@ function NotificationsPanel({
           notifications.slice(0, 15).map((notif) => (
             <button
               key={notif.id}
-              onClick={() => onMarkRead(notif.id)}
+              onClick={() => {
+                onMarkRead(notif.id);
+                onOpen(notif);
+              }}
               className={cn(
                 "flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-accent/50",
                 !notif.is_read && "bg-primary/[0.04]"
@@ -526,14 +538,25 @@ export function Navbar() {
                   <span>{t.nav.providerPanel}</span>
                 </Button>
               ) : (
-                <Button
-                  onClick={() => router.push("/dashboard")}
-                  variant="outline"
-                  size="sm"
-                  className="hidden sm:flex border-border text-foreground hover:bg-accent font-semibold text-xs h-9 rounded-lg space-x-1"
-                >
-                  <span>{t.nav.customerPanel}</span>
-                </Button>
+                <>
+                  <Button
+                    onClick={() => router.push("/bookings")}
+                    variant="outline"
+                    size="sm"
+                    className="hidden sm:flex border-border text-foreground hover:bg-accent font-semibold text-xs h-9 rounded-lg space-x-1"
+                  >
+                    <CalendarCheck2 className="w-3.5 h-3.5" />
+                    <span>{t.nav.myBookings}</span>
+                  </Button>
+                  <Button
+                    onClick={() => router.push("/dashboard")}
+                    variant="outline"
+                    size="sm"
+                    className="hidden sm:flex border-border text-foreground hover:bg-accent font-semibold text-xs h-9 rounded-lg space-x-1"
+                  >
+                    <span>{t.nav.customerPanel}</span>
+                  </Button>
+                </>
               )}
 
               {/* ── Chat icon with unread badge ── */}
@@ -578,6 +601,13 @@ export function Navbar() {
                       notifications={notifications}
                       onMarkAllRead={handleMarkAllRead}
                       onMarkRead={handleMarkRead}
+                      onOpen={(notif) => {
+                        const isBooking = notif.type === "new_booking" || notif.type === "booking_accepted" || notif.type === "booking_rejected" || notif.type === "booking_completed" || notif.type === "booking_cancelled";
+                        if (isBooking) {
+                          setShowNotifs(false);
+                          router.push("/bookings");
+                        }
+                      }}
                       n={n}
                     />
                   </div>
@@ -791,9 +821,15 @@ export function Navbar() {
                           {t.nav.providerPanel}
                         </Button>
                       ) : (
-                        <Button onClick={() => router.push("/dashboard")} className="w-full justify-start text-xs font-semibold" variant="outline">
-                          {t.nav.customerPanel}
-                        </Button>
+                        <>
+                          <Button onClick={() => router.push("/bookings")} className="w-full justify-start text-xs font-semibold" variant="outline">
+                            <CalendarCheck2 className="w-4 h-4 mr-2" />
+                            {t.nav.myBookings}
+                          </Button>
+                          <Button onClick={() => router.push("/dashboard")} className="w-full justify-start text-xs font-semibold" variant="outline">
+                            {t.nav.customerPanel}
+                          </Button>
+                        </>
                       )}
                       
                       <Button onClick={handleSignOut} className="w-full justify-start text-red-500 hover:text-red-600 mt-2 text-xs font-semibold" variant="ghost">

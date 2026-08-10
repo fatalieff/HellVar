@@ -87,7 +87,8 @@ type CategoryKey =
   | "boiler"
   | "it_tech"
   | "repair"
-  | "moving";
+  | "moving"
+  | "barber";
 
 const CATEGORY_LOOKUP: Record<Exclude<CategoryKey, "all">, string[]> = {
   electric: ["Elektrik", "elektrik"],
@@ -115,6 +116,7 @@ const CATEGORY_LOOKUP: Record<Exclude<CategoryKey, "all">, string[]> = {
     "Nakliye",
     "Moving",
   ],
+  barber: ["Bərbər", "bərbər", "Berber", "berber", "Barber", "barber", "Saç kəsimi", "Saqqal"],
 };
 
 const TABS = [
@@ -451,6 +453,7 @@ export default function TechniciansPage() {
     { key: "it_tech", label: cats.it_tech as string },
     { key: "repair", label: cats.repair as string },
     { key: "moving", label: cats.moving as string },
+    { key: "barber", label: cats.barber as string },
   ];
 
   return (

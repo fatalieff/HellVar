@@ -79,6 +79,8 @@ export default function ProfilePage() {
   const [phone, setPhone] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [bio, setBio] = React.useState("");
+  const [priceMin, setPriceMin] = React.useState("");
+  const [priceMax, setPriceMax] = React.useState("");
 
   // Avatar state
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -137,10 +139,12 @@ export default function ProfilePage() {
       if (prof.role === "PROVIDER") {
         const { data: details } = await supabase
           .from("provider_details")
-          .select("bio")
+          .select("bio, price_min, price_max")
           .eq("user_id", prof.id)
           .maybeSingle();
         setBio(details?.bio ?? "");
+        setPriceMin(details?.price_min != null ? String(details.price_min) : "");
+        setPriceMax(details?.price_max != null ? String(details.price_max) : "");
       }
 
       // Email təsdiqlənmədən əvvəl qeydiyyatda seçilən gözləyən avatarı tətbiq et
@@ -248,11 +252,17 @@ export default function ProfilePage() {
       if (error) throw error;
 
       if (profile?.role === "PROVIDER") {
-        const { error: bioError } = await supabase
+        const parsedMin = priceMin.trim() !== "" ? Number(priceMin.trim()) : null;
+        const parsedMax = priceMax.trim() !== "" ? Number(priceMax.trim()) : null;
+        const { error: detailsError } = await supabase
           .from("provider_details")
-          .update({ bio: bio.trim() || null })
+          .update({
+            bio: bio.trim() || null,
+            price_min: parsedMin,
+            price_max: parsedMax,
+          })
           .eq("user_id", user.id);
-        if (bioError) throw bioError;
+        if (detailsError) throw detailsError;
       }
 
       setProfile((prev) =>
@@ -623,18 +633,65 @@ export default function ProfilePage() {
                 </div>
 
                 {isProvider && (
-                  <div className="space-y-2">
-                    <Label htmlFor="profile-bio">{p.bioLabel}</Label>
-                    <Textarea
-                      id="profile-bio"
-                      value={bio}
-                      onChange={(e) => setBio(e.target.value)}
-                      placeholder={p.bioPlaceholder}
-                      rows={4}
-                      maxLength={500}
-                      className="resize-none bg-white border-border focus-visible:ring-primary"
-                    />
-                  </div>
+                  <>
+                    <div className="space-y-3 rounded-xl border border-border/60 bg-slate-50/60 p-4">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">{p.priceLabel}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{p.priceHint}</p>
+                      </div>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label htmlFor="profile-price-min">{p.priceMinLabel}</Label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">
+                              ₼
+                            </span>
+                            <Input
+                              id="profile-price-min"
+                              type="number"
+                              inputMode="decimal"
+                              min={0}
+                              value={priceMin}
+                              onChange={(e) => setPriceMin(e.target.value)}
+                              placeholder="20"
+                              className="bg-white pl-9 border-border focus-visible:ring-primary"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="profile-price-max">{p.priceMaxLabel}</Label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">
+                              ₼
+                            </span>
+                            <Input
+                              id="profile-price-max"
+                              type="number"
+                              inputMode="decimal"
+                              min={0}
+                              value={priceMax}
+                              onChange={(e) => setPriceMax(e.target.value)}
+                              placeholder="50"
+                              className="bg-white pl-9 border-border focus-visible:ring-primary"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="profile-bio">{p.bioLabel}</Label>
+                      <Textarea
+                        id="profile-bio"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                        placeholder={p.bioPlaceholder}
+                        rows={4}
+                        maxLength={500}
+                        className="resize-none bg-white border-border focus-visible:ring-primary"
+                      />
+                    </div>
+                  </>
                 )}
 
                 <div className="flex items-center justify-between gap-4 border-t border-border/60 pt-5">

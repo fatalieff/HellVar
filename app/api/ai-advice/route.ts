@@ -8,6 +8,7 @@ const CATEGORIES = [
   "Mebel Ustası",
   "Rəngsaz",
   "Təmizlik xidməti",
+  "Bərbər",
   "Digər",
 ] as const;
 
