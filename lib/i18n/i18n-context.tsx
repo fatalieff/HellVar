@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import {
-  dictionaries,
   defaultLocale,
+  getDictionary,
   type Dictionary,
   type Locale,
   locales,
@@ -58,31 +58,50 @@ function persistLocale(locale: Locale) {
   }
 }
 
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = React.useState<Locale>(defaultLocale);
+export function I18nProvider({
+  children,
+  initialLocale,
+  initialDictionary,
+}: {
+  children: React.ReactNode;
+  initialLocale: Locale;
+  initialDictionary: Dictionary;
+}) {
+  const [locale, setLocaleState] = React.useState<Locale>(initialLocale);
+  const [t, setT] = React.useState<Dictionary>(initialDictionary);
   const hydrated = React.useRef(false);
 
   React.useEffect(() => {
     if (!hydrated.current) {
       hydrated.current = true;
       const detected = detectStoredLocale();
-      if (detected !== defaultLocale) {
+      if (detected !== locale) {
         setLocaleState(detected);
       }
     }
-  }, []);
+  }, [locale]);
 
   React.useEffect(() => {
     persistLocale(locale);
+  }, [locale]);
+
+  React.useEffect(() => {
+    let active = true;
+    getDictionary(locale).then((dictionary) => {
+      if (active) setT(dictionary);
+    });
+    return () => {
+      active = false;
+    };
   }, [locale]);
 
   const value = React.useMemo<I18nContextValue>(
     () => ({
       locale,
       setLocale: (next: Locale) => setLocaleState(next),
-      t: dictionaries[locale] ?? dictionaries[defaultLocale],
+      t,
     }),
-    [locale]
+    [locale, t]
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
@@ -95,4 +114,3 @@ export function useI18n(): I18nContextValue {
   }
   return ctx;
 }
-

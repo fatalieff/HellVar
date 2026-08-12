@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   ArrowRight,
   Bolt,
@@ -33,6 +34,13 @@ import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { TiltCard } from "@/components/home/tilt-card";
+
+const Hero3DScene = dynamic(
+  () => import("@/components/home/hero-3d-scene").then((m) => m.Hero3DScene),
+  { ssr: false, loading: () => null }
+);
 
 type CategoryKey =
   | "electric"
@@ -112,6 +120,7 @@ export default function Home() {
   const { t } = useI18n();
   const cats = t.categories;
   const [query, setQuery] = React.useState("");
+  const [searchFocused, setSearchFocused] = React.useState(false);
   const [advice, setAdvice] = React.useState<{ category: string; advice: string; urgent: boolean } | null>(null);
   const [adviceError, setAdviceError] = React.useState<string | null>(null);
   const [adviceLoading, setAdviceLoading] = React.useState(false);
@@ -140,6 +149,7 @@ export default function Home() {
               "radial-gradient(circle at 12% -10%, oklch(0.7900 0.1400 70.00 / 0.10), transparent 45%), radial-gradient(circle at 92% 0%, oklch(0.6231 0.1880 41.11 / 0.10), transparent 42%), linear-gradient(180deg, oklch(0.9880 0.0030 90.00) 0%, oklch(0.9850 0.0020 90.00) 100%)",
           }}
         />
+        <Hero3DScene />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent"
@@ -180,28 +190,51 @@ export default function Home() {
               onSubmit={(e) => { e.preventDefault(); void getAdvice(); }}
               className="mt-3 w-full max-w-2xl mx-auto animate-lift [animation-delay:240ms]"
             >
-              <div className="group relative flex items-center rounded-2xl border border-border/80 bg-card shadow-premium-lg p-1.5 transition-all duration-300 hover:shadow-[0_20px_60px_-20px_oklch(0.6231_0.1880_41.11_/_0.35)] focus-within:shadow-[0_0_0_4px_oklch(0.6231_0.1880_41.11_/_0.12)] focus-within:border-primary/40">
-                <div className="flex items-center gap-2 pl-3 pr-2 text-muted-foreground">
-                  <Search className="size-5" />
-                </div>
-                <Input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  type="search"
-                  placeholder={t.hero.searchPlaceholder}
-                  className="h-12 border-0 bg-transparent shadow-none focus-visible:ring-0 text-base px-1 placeholder:text-muted-foreground/80"
+              <motion.div
+                className="relative"
+                animate={{ rotateY: searchFocused ? [0, -8, 0] : 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                style={{ transformPerspective: 900, transformStyle: "preserve-3d" }}
+              >
+                <motion.div
+                  aria-hidden
+                  className="pointer-events-none absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-primary/35 via-accent/30 to-primary/25 blur-xl"
+                  initial={false}
+                  animate={{ opacity: searchFocused ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
                 />
-                <Button
-                  type="submit"
-                  variant="premium"
-                  size="lg"
-                  className="h-12 shrink-0 rounded-xl px-5 gap-1.5"
-                >
-                  <Zap className="size-4" data-icon="inline-start" />
-                  {adviceLoading ? <Loader2 className="size-4 animate-spin" /> : t.hero.searchButton}
-                  <ArrowRight className="size-4" data-icon="inline-end" />
-                </Button>
-              </div>
+                <div className="group relative flex items-center overflow-hidden rounded-2xl border border-border/80 bg-card shadow-premium-lg p-1.5 transition-all duration-300 hover:shadow-[0_20px_60px_-20px_oklch(0.6231_0.1880_41.11_/_0.35)] focus-within:shadow-[0_0_0_4px_oklch(0.6231_0.1880_41.11_/_0.12)] focus-within:border-primary/40">
+                  <div className="flex items-center gap-2 pl-3 pr-2 text-muted-foreground">
+                    <Search className="size-5" />
+                  </div>
+                  <Input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onFocus={() => setSearchFocused(true)}
+                    onBlur={() => setSearchFocused(false)}
+                    type="search"
+                    placeholder={t.hero.searchPlaceholder}
+                    className="h-12 border-0 bg-transparent shadow-none focus-visible:ring-0 text-base px-1 placeholder:text-muted-foreground/80"
+                  />
+                  <Button
+                    type="submit"
+                    variant="premium"
+                    size="lg"
+                    className="h-12 shrink-0 rounded-xl px-5 gap-1.5"
+                  >
+                    <Zap className="size-4" data-icon="inline-start" />
+                    {adviceLoading ? <Loader2 className="size-4 animate-spin" /> : t.hero.searchButton}
+                    <ArrowRight className="size-4" data-icon="inline-end" />
+                  </Button>
+                  <motion.div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/50 to-transparent"
+                    style={{ transformPerspective: 600, rotateX: -22, rotateZ: 6 }}
+                    animate={searchFocused ? { x: ["-220%", "420%"] } : { x: "-220%" }}
+                    transition={{ duration: 0.7, ease: "easeInOut" }}
+                  />
+                </div>
+              </motion.div>
             </form>
             {(advice || adviceError) && (
               <div
@@ -338,11 +371,11 @@ export default function Home() {
               {CATEGORIES.map((k, i) => {
                 const { Icon, tone, image } = CATEGORY_META[k];
                 return (
-                  <Card
-                    key={k}
-                    className="group flex flex-col h-full overflow-hidden border border-border/60 bg-card shadow-sm transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/20 animate-lift"
-                    style={{ animationDelay: `${420 + i * 50}ms` }}
-                  >
+                  <TiltCard key={k} className="h-full" maxTilt={11} scale={1.03}>
+                    <Card
+                      className="group flex flex-col h-full overflow-hidden border border-border/60 bg-card shadow-sm transition-all duration-300 hover:shadow-premium-lg hover:border-primary/20 animate-lift"
+                      style={{ animationDelay: `${420 + i * 50}ms` }}
+                    >
                     {/* Image Header */}
                     <div className="relative h-44 w-full overflow-hidden bg-slate-100/50">
                       <img
@@ -402,14 +435,16 @@ export default function Home() {
                       </div>
                     </CardContent>
                   </Card>
+                  </TiltCard>
                 );
               })}
 
               {/* View All Categories Card */}
-              <Card
-                className="group flex flex-col h-full overflow-hidden border border-dashed border-primary/40 bg-gradient-to-b from-primary/5 to-transparent transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/60 animate-lift"
-                style={{ animationDelay: `${420 + CATEGORIES.length * 50}ms` }}
-              >
+              <TiltCard className="h-full" maxTilt={11} scale={1.03}>
+                <Card
+                  className="group flex flex-col h-full overflow-hidden border border-dashed border-primary/40 bg-gradient-to-b from-primary/5 to-transparent transition-all duration-300 hover:shadow-premium-lg hover:border-primary/60 animate-lift"
+                  style={{ animationDelay: `${420 + CATEGORIES.length * 50}ms` }}
+                >
                 <div className="relative h-44 w-full overflow-hidden bg-primary/5 flex items-center justify-center">
                   <div className="size-16 rounded-2xl bg-gradient-primary text-white flex items-center justify-center shadow-glow-primary transition-transform duration-300 group-hover:scale-110">
                     <LayoutGrid className="size-7" />
@@ -437,6 +472,7 @@ export default function Home() {
                   </Button>
                 </CardContent>
               </Card>
+              </TiltCard>
             </div>
           </div>
         </Container>
@@ -522,27 +558,29 @@ function StepCard({
   delay: number;
 }) {
   return (
-    <Card
-      className="relative border-border/60 animate-lift overflow-hidden"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <CardContent className="p-6 sm:p-7 flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <div className="size-11 rounded-xl grid place-items-center bg-gradient-primary/10 text-primary">
-            <Icon className="size-5" />
+    <TiltCard className="h-full" maxTilt={8} scale={1.02} glare={false}>
+      <Card
+        className="relative border-border/60 animate-lift overflow-hidden h-full"
+        style={{ animationDelay: `${delay}ms` }}
+      >
+        <CardContent className="p-6 sm:p-7 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div className="size-11 rounded-xl grid place-items-center bg-gradient-primary/10 text-primary">
+              <Icon className="size-5" />
+            </div>
+            <span className="text-3xl font-bold tracking-tighter text-muted-foreground/25">
+              {step}
+            </span>
           </div>
-          <span className="text-3xl font-bold tracking-tighter text-muted-foreground/25">
-            {step}
-          </span>
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
-          <p className="text-sm text-muted-foreground leading-6 line-clamp-3">
-            {desc}
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+          <div className="flex flex-col gap-1.5">
+            <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
+            <p className="text-sm text-muted-foreground leading-6 line-clamp-3">
+              {desc}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </TiltCard>
   );
 }
 

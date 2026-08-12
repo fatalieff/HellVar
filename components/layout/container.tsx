@@ -16,8 +16,11 @@ const sizeClasses: Record<NonNullable<ContainerProps["size"]>, string> = {
 
 export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
   ({ className, size = "lg", as: Comp = "div", ...props }, ref) => {
+    const Component = Comp as React.ComponentType<
+      React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement> }
+    >;
     return (
-      <Comp
+      <Component
         ref={ref}
         className={cn(
           "w-full mx-auto px-4 sm:px-6 lg:px-8",

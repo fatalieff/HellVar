@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/layout/providers";
 import { SiteLayout } from "@/components/layout/site-layout";
+import { getDictionary, type Locale } from "@/lib/i18n/dictionaries";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -59,7 +60,11 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const localeCookie = cookieStore.get("hellvar.locale")?.value;
-  const locale = localeCookie && ["az", "en", "tr", "ru"].includes(localeCookie) ? localeCookie : "az";
+  const locale: Locale =
+    localeCookie && ["az", "en", "tr", "ru"].includes(localeCookie)
+      ? (localeCookie as Locale)
+      : "az";
+  const dictionary = await getDictionary(locale);
 
   return (
     <html
@@ -68,7 +73,7 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <Providers>
+        <Providers initialLocale={locale} initialDictionary={dictionary}>
           <SiteLayout>{children}</SiteLayout>
         </Providers>
       </body>

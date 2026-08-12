@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import {
   ArrowRight,
@@ -18,6 +19,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { cn } from "@/lib/utils";
+import { TiltCard } from "@/components/home/tilt-card";
+
+const Hero3DScene = dynamic(
+  () => import("@/components/home/hero-3d-scene").then((m) => m.Hero3DScene),
+  { ssr: false, loading: () => null }
+);
 
 // Animation Variants for a cohesive premium look
 const containerVariants: Variants = {
@@ -40,19 +47,6 @@ const fadeUpVariants: Variants = {
       type: "spring" as const,
       stiffness: 90,
       damping: 14,
-    },
-  },
-};
-
-const scaleInVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.96 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      type: "spring" as const,
-      stiffness: 80,
-      damping: 15,
     },
   },
 };
@@ -116,13 +110,20 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col overflow-hidden">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[linear-gradient(135deg,oklch(0.99_0.004_85)_0%,oklch(0.985_0.006_75)_100%)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,oklch(0.6231_0.1880_41.11_/_0.12),transparent_35%),radial-gradient(circle_at_bottom_right,oklch(0.79_0.14_70_/_0.12),transparent_38%)]" />
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -left-10 top-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-amber-400/15 blur-3xl" />
-          <div className="absolute bottom-0 left-1/3 h-48 w-48 rounded-full bg-sky-400/10 blur-3xl" />
-        </div>
+      <section className="relative overflow-hidden bg-background">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 12% -10%, oklch(0.7900 0.1400 70.00 / 0.10), transparent 45%), radial-gradient(circle at 92% 0%, oklch(0.6231 0.1880 41.11 / 0.10), transparent 42%), linear-gradient(180deg, oklch(0.9880 0.0030 90.00) 0%, oklch(0.9850 0.0020 90.00) 100%)",
+          }}
+        />
+        <Hero3DScene />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent"
+        />
         
         <Container size="xl" className="relative py-18 sm:py-24 lg:py-28">
           <motion.div 
@@ -177,38 +178,40 @@ export default function AboutPage() {
 
             {/* Right Card (Stats card) */}
             <motion.div variants={slideInRightVariants}>
-              <Card className="border border-white/70 bg-white/80 shadow-[0_24px_70px_-30px_oklch(0.2_0.02_250_/_0.35)] backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_90px_-32px_oklch(0.2_0.02_250_/_0.45)]">
-                <CardContent className="space-y-5 p-6 sm:p-8">
-                  <div className="rounded-2xl bg-gradient-primary p-5 text-white shadow-glow-primary transition-transform duration-500 hover:scale-[1.02]">
-                    <div className="flex items-center gap-3">
-                      <div className="rounded-2xl bg-white/20 p-2.5">
-                        <ShieldCheck className="size-6" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">{t.aboutPage.trustTitle}</p>
-                        <p className="text-xl font-semibold">{t.aboutPage.trustSubtitle}</p>
+              <TiltCard className="h-full" maxTilt={6} scale={1.02}>
+                <Card className="h-full border border-border/60 bg-card/95 shadow-[0_24px_70px_-30px_oklch(0.2_0.02_250_/_0.35)] backdrop-blur transition-all duration-500 hover:shadow-[0_30px_90px_-32px_oklch(0.2_0.02_250_/_0.45)]">
+                  <CardContent className="space-y-5 p-6 sm:p-8">
+                    <div className="rounded-2xl bg-gradient-primary p-5 text-white shadow-glow-primary transition-transform duration-500 hover:scale-[1.02]">
+                      <div className="flex items-center gap-3">
+                        <div className="rounded-2xl bg-white/20 p-2.5">
+                          <ShieldCheck className="size-6" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">{t.aboutPage.trustTitle}</p>
+                          <p className="text-xl font-semibold">{t.aboutPage.trustSubtitle}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-2xl border border-border bg-slate-50 p-4 transition-all duration-300 hover:bg-slate-100/80">
-                      <div className="flex items-center gap-2 text-primary">
-                        <Users className="size-4" />
-                        <span className="text-sm font-semibold">{t.aboutPage.statProviders}</span>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-2xl border border-border bg-card p-4 transition-all duration-300 hover:bg-slate-100/80">
+                        <div className="flex items-center gap-2 text-primary">
+                          <Users className="size-4" />
+                          <span className="text-sm font-semibold">{t.aboutPage.statProviders}</span>
+                        </div>
+                        <p className="mt-2 text-sm text-foreground/70">{t.aboutPage.statProvidersText}</p>
                       </div>
-                      <p className="mt-2 text-sm text-foreground/70">{t.aboutPage.statProvidersText}</p>
-                    </div>
-                    <div className="rounded-2xl border border-border bg-slate-50 p-4 transition-all duration-300 hover:bg-slate-100/80">
-                      <div className="flex items-center gap-2 text-primary">
-                        <Clock3 className="size-4" />
-                        <span className="text-sm font-semibold">{t.aboutPage.statSpeed}</span>
+                      <div className="rounded-2xl border border-border bg-card p-4 transition-all duration-300 hover:bg-slate-100/80">
+                        <div className="flex items-center gap-2 text-primary">
+                          <Clock3 className="size-4" />
+                          <span className="text-sm font-semibold">{t.aboutPage.statSpeed}</span>
+                        </div>
+                        <p className="mt-2 text-sm text-foreground/70">{t.aboutPage.statSpeedText}</p>
                       </div>
-                      <p className="mt-2 text-sm text-foreground/70">{t.aboutPage.statSpeedText}</p>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </TiltCard>
             </motion.div>
           </motion.div>
         </Container>
@@ -242,15 +245,17 @@ export default function AboutPage() {
               },
             ].map(({ title, text, icon: Icon }) => (
               <motion.div key={title} variants={fadeUpVariants}>
-                <Card className="group border-border/70 bg-background/80 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/25 hover:shadow-premium-lg hover:bg-white/90">
-                  <CardContent className="p-6">
-                    <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/15">
-                      <Icon className="size-5" />
-                    </div>
-                    <h3 className="mt-4 text-lg font-semibold text-foreground">{title}</h3>
-                    <p className="mt-2 text-sm leading-7 text-foreground/70">{text}</p>
-                  </CardContent>
-                </Card>
+                <TiltCard className="h-full" maxTilt={8} scale={1.02}>
+                  <Card className="group h-full border border-border/60 bg-card shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-premium-lg">
+                    <CardContent className="p-6">
+                      <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/15">
+                        <Icon className="size-5" />
+                      </div>
+                      <h3 className="mt-4 text-lg font-semibold text-foreground">{title}</h3>
+                      <p className="mt-2 text-sm leading-7 text-foreground/70">{text}</p>
+                    </CardContent>
+                  </Card>
+                </TiltCard>
               </motion.div>
             ))}
           </motion.div>
@@ -285,10 +290,12 @@ export default function AboutPage() {
           >
             {benefits.map((item) => (
               <motion.div key={item.title} variants={fadeUpVariants}>
-                <div className="rounded-3xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/20 hover:shadow-premium-lg hover:bg-gradient-to-br hover:from-white hover:to-amber-50/70 h-full">
-                  <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-foreground/70">{item.text}</p>
-                </div>
+                <TiltCard className="h-full" maxTilt={8} scale={1.02}>
+                  <div className="h-full rounded-3xl border border-border/60 bg-card p-6 shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-premium-lg">
+                    <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
+                    <p className="mt-3 text-sm leading-7 text-foreground/70">{item.text}</p>
+                  </div>
+                </TiltCard>
               </motion.div>
             ))}
           </motion.div>
@@ -329,7 +336,7 @@ export default function AboutPage() {
                   <motion.div 
                     key={faq.question} 
                     variants={fadeUpVariants}
-                    className="overflow-hidden rounded-2xl border border-border/70 bg-white shadow-sm transition-all duration-300 hover:shadow-premium"
+                    className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm transition-all duration-300 hover:shadow-premium"
                   >
                     <button
                       type="button"
@@ -386,7 +393,7 @@ export default function AboutPage() {
                   </p>
                 </div>
                 
-                <div className="rounded-3xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-premium">
+                <div className="rounded-3xl border border-border/70 bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-premium">
                   <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3 text-sm text-foreground/80 hover:bg-slate-100 transition-colors duration-200">
                     <MessageCircleQuestion className="size-5 text-primary" />
                     <span>{t.aboutPage.contactEmail}</span>
