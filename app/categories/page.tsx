@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { supabase } from "@/lib/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { TiltCard } from "@/components/home/tilt-card";
 import {
   Bolt,
   Droplets,
@@ -17,12 +19,16 @@ import {
   Wrench,
   Truck,
   Scissors,
-  ArrowRight,
   Loader2,
   Users,
   Grid,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+const Hero3DScene = dynamic(
+  () => import("@/components/home/hero-3d-scene").then((m) => m.Hero3DScene),
+  { ssr: false, loading: () => null }
+);
 
 type CategoryKey =
   | "electric"
@@ -200,19 +206,23 @@ export default function CategoriesPage() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50/50">
-      {/* Background decoration */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 50% -10%, oklch(0.7900 0.1400 70.00 / 0.08), transparent 50%), radial-gradient(circle at 10% 40%, oklch(0.6231 0.1880 41.11 / 0.05), transparent 40%)",
-        }}
-      />
+    <div className="flex flex-col min-h-screen bg-background">
+      <section className="relative overflow-hidden bg-background">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 12% -10%, oklch(0.7900 0.1400 70.00 / 0.10), transparent 45%), radial-gradient(circle at 92% 0%, oklch(0.6231 0.1880 41.11 / 0.10), transparent 42%), linear-gradient(180deg, oklch(0.9880 0.0030 90.00) 0%, oklch(0.9850 0.0020 90.00) 100%)",
+          }}
+        />
+        <Hero3DScene />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent"
+        />
 
-      <section className="py-12 sm:py-16">
-        <Container size="xl">
+        <Container size="xl" className="relative py-12 sm:py-16">
           <div className="max-w-3xl mx-auto text-center flex flex-col gap-4 mb-12 sm:mb-16 animate-fade-in">
             <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-foreground flex items-center justify-center gap-2">
               <Grid className="size-8 text-primary" />
@@ -229,11 +239,11 @@ export default function CategoriesPage() {
               const count = counts[k];
 
               return (
-                <Card
-                  key={k}
-                  className="group flex flex-col h-full overflow-hidden border border-border/60 bg-card shadow-sm transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1.5 hover:border-primary/30 animate-lift"
-                  style={{ animationDelay: `${i * 80}ms` }}
-                >
+                <TiltCard key={k} className="h-full" maxTilt={11} scale={1.03}>
+                  <Card
+                    className="group flex flex-col h-full overflow-hidden border border-border/60 bg-card shadow-sm transition-all duration-300 hover:shadow-premium-lg hover:border-primary/30 animate-lift"
+                    style={{ animationDelay: `${i * 80}ms` }}
+                  >
                   {/* Card Image Cover */}
                   <div className="relative h-48 w-full overflow-hidden bg-slate-100/50">
                     <img
@@ -301,6 +311,7 @@ export default function CategoriesPage() {
                     </div>
                   </CardContent>
                 </Card>
+                </TiltCard>
               );
             })}
           </div>

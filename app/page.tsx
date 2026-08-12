@@ -36,6 +36,7 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { TiltCard } from "@/components/home/tilt-card";
+import { TypewriterText } from "@/components/home/typewriter-text";
 
 const Hero3DScene = dynamic(
   () => import("@/components/home/hero-3d-scene").then((m) => m.Hero3DScene),
@@ -165,19 +166,11 @@ export default function Home() {
               {t.hero.eyebrow}
             </Badge>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-balance leading-[1.1] text-foreground animate-lift [animation-delay:120ms]">
-              {t.hero.title.split(" ").map((word, idx, arr) =>
-                idx === arr.length - 1 ? (
-                  <span
-                    key={idx}
-                    className="bg-gradient-primary bg-clip-text text-transparent drop-shadow-[0_0_1px_oklch(0.6231_0.1880_41.11_/_0.15)]"
-                  >
-                    {word}
-                  </span>
-                ) : (
-                  <React.Fragment key={idx}>{word} </React.Fragment>
-                )
-              )}
+            <h1
+              aria-label={t.hero.title}
+              className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-balance leading-[1.1] text-foreground animate-lift [animation-delay:120ms]"
+            >
+              <TypewriterText aria-hidden text={t.hero.title} />
             </h1>
 
             <p className="text-base sm:text-lg text-foreground/70 max-w-xl mx-auto leading-7 animate-lift [animation-delay:180ms]">
