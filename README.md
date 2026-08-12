@@ -19,6 +19,25 @@
 
 **Az · EN · TR · RU** &nbsp;·&nbsp; 🟢 Realtime &nbsp;·&nbsp; 🤖 AI Dəstəkli &nbsp;·&nbsp; 📅 Rezervasiya &nbsp;·&nbsp; ⭐ Reytinq & Rəylər
 
+---
+
+<!-- 📊 Canlı GitHub statistikaları (avtomatik yenilənir) -->
+<div align="center">
+
+[![Stars](https://img.shields.io/github/stars/fatalieff/UstaTap?style=for-the-badge&logo=github&color=1f6feb)](https://github.com/fatalieff/UstaTap/stargazers)
+[![Forks](https://img.shields.io/github/forks/fatalieff/UstaTap?style=for-the-badge&logo=github&color=238636)](https://github.com/fatalieff/UstaTap/forks)
+[![Watchers](https://img.shields.io/github/watchers/fatalieff/UstaTap?style=for-the-badge&logo=github&color=8957e5)](https://github.com/fatalieff/UstaTap/watchers)
+[![Issues](https://img.shields.io/github/issues/fatalieff/UstaTap?style=for-the-badge&logo=github&color=d29922)](https://github.com/fatalieff/UstaTap/issues)
+
+[![Last Commit](https://img.shields.io/github/last-commit/fatalieff/UstaTap?style=for-the-badge&logo=githubactions&logoColor=white&color=bf3989)](https://github.com/fatalieff/UstaTap/commits)
+[![Commit Activity](https://img.shields.io/github/commit-activity/m/fatalieff/UstaTap?style=for-the-badge&logo=githubactions&logoColor=white&color=9e6a03)](https://github.com/fatalieff/UstaTap/commits)
+[![Top Language](https://img.shields.io/github/languages/top/fatalieff/UstaTap?style=for-the-badge&logo=typescript&logoColor=white&color=3178c6)](https://github.com/fatalieff/UstaTap)
+[![Repo Size](https://img.shields.io/github/languages/code-size/fatalieff/UstaTap?style=for-the-badge&logo=files&logoColor=white&color=3fb950)](https://github.com/fatalieff/UstaTap)
+
+[![Visitors](https://visitor-badge.laobi.icu/badge?page_id=fatalieff.UstaTap&left_color=df5309&right_color=0e1116&left_text=Görüntüləmə)](https://github.com/fatalieff/UstaTap)
+
+</div>
+
 </div>
 
 ---
@@ -28,6 +47,54 @@
 **UstaTap** — Azərbaycanda (Bakı və ətrafı) **ev xidmətləri** bazarını rəqəmsallaşdıran bir **onlayn xidmət platformasıdır**. Bu, sadəcə "usta axtarma" saytı deyil; müştəri ilə peşəkar ustaları etibarlı şəkildə birləşdirən, **axtarış → seçim → rezervasiya → realtime əlaqə → tamamlama** prosesinin hamısını bir yerdə idarə edən tam funksiyalı ekosistemdir.
 
 Müştəri problemi yazır, **AI** uyğun istiqaməti təyin edir, sistem təsdiqlənmiş ustaları göstərir və müştəri bir neçə dəqiqə ərzində sifarişini verir. Ustalar isə paneldən sifarişləri qəbul edir, müştərilərlə çatda danışır və peşəkar profillərini idarə edir.
+
+---
+
+## 🎬 Canlı Demo
+
+<div align="center">
+
+![UstaTap Canlı Demo](public/screenshots/demo.gif)
+
+*Ana səhifə · AI axtarış · 3D hero interaktiv səhnə*
+
+</div>
+
+---
+
+## 🖼️ Ekran görüntüləri
+
+<div align="center">
+
+**🏠 Ana səhifə — Hero & AI axtarış**
+
+![Ana səhifə Hero](public/screenshots/home-hero.png)
+
+---
+
+**🗂️ Bütün kateqoriyalar**
+
+![Ana səhifə tam](public/screenshots/home.png)
+
+---
+
+**👷 Ustalar kataloqu**
+
+![Ustalar](public/screenshots/technicians.png)
+
+---
+
+**ℹ️ Haqqımızda**
+
+![Haqqımızda](public/screenshots/about.png)
+
+---
+
+**🔐 Giriş & Qeydiyyat**
+
+![Giriş](public/screenshots/login.png) &nbsp; ![Qeydiyyat](public/screenshots/signup.png)
+
+</div>
 
 ---
 

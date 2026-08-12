@@ -41,6 +41,7 @@ yarn-error.log*
 opencode.json
 .playwright-mcp/
 *.png
+!public/screenshots/*.png
 
 # vercel
 .vercel
