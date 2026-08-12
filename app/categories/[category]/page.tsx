@@ -200,6 +200,74 @@ const calculateDistance = (
   return R * c;
 };
 
+const CATEGORY_CANONICAL_KEYS: Record<string, string> = {
+  Elektrik: "Elektrik",
+  elektrik: "Elektrik",
+  electric: "Elektrik",
+  Electric: "Elektrik",
+  Santexnik: "Santexnik",
+  santexnik: "Santexnik",
+  plumbing: "Santexnik",
+  Plumbing: "Santexnik",
+  Santexnika: "Santexnik",
+  santexnika: "Santexnik",
+  "Təmizlik xidməti": "Təmizlik xidməti",
+  "təmizlik xidməti": "Təmizlik xidməti",
+  cleaning: "Təmizlik xidməti",
+  Cleaning: "Təmizlik xidməti",
+  Təmizlik: "Təmizlik xidməti",
+  təmizlik: "Təmizlik xidməti",
+  Dayə: "Dayə",
+  dayə: "Dayə",
+  nanny: "Dayə",
+  Nanny: "Dayə",
+  "Kombi Ustası": "Kombi Ustası",
+  "kombi ustası": "Kombi Ustası",
+  boiler: "Kombi Ustası",
+  Boiler: "Kombi Ustası",
+  Kombi: "Kombi Ustası",
+  kombi: "Kombi Ustası",
+  "İT / Texniki yardım": "İT / Texniki yardım",
+  "it / texniki yardım": "İT / Texniki yardım",
+  it_tech: "İT / Texniki yardım",
+  "IT Support": "İT / Texniki yardım",
+  "Ev təmiri": "Ev təmiri",
+  "ev təmiri": "Ev təmiri",
+  repair: "Ev təmiri",
+  Repair: "Ev təmiri",
+  "Mebel Ustası": "Mebel Ustası",
+  Rəngsaz: "Rəngsaz",
+  "Alçipan Ustası": "Alçipan Ustası",
+  "Kafel-Metlax Ustası": "Kafel-Metlax Ustası",
+  "Kondisioner Ustası": "Kondisioner Ustası",
+  "Daşınma xidməti": "Daşınma xidməti",
+  "Daşınma xidmətləri": "Daşınma xidməti",
+  Daşınma: "Daşınma xidməti",
+  daşınma: "Daşınma xidməti",
+  moving: "Daşınma xidməti",
+  Moving: "Daşınma xidməti",
+  "Ev daşınması": "Daşınma xidməti",
+  "Ofis daşınması": "Daşınma xidməti",
+  "Bağ daşınması": "Daşınma xidməti",
+  Nakliye: "Daşınma xidməti",
+  Bərbər: "Bərbər",
+  bərbər: "Bərbər",
+  Berber: "Bərbər",
+  berber: "Bərbər",
+  Barber: "Bərbər",
+  barber: "Bərbər",
+  "Saç kəsimi": "Bərbər",
+  Saqqal: "Bərbər",
+  Digər: "Digər",
+  digər: "Digər",
+};
+
+const localizeCategory = (raw: string, t: Dictionary): string => {
+  const canonical = CATEGORY_CANONICAL_KEYS[raw] ?? raw;
+  const localized = t.auth?.signUp?.providerCategories?.[canonical];
+  return localized || raw;
+};
+
 const getDatabaseCategoriesForCategory = (categoryKey: string): string[] => {
   switch (categoryKey) {
     case "electric":
@@ -300,7 +368,7 @@ export default function CategoryDetailPage({
   const resolvedParams = React.use(params);
   const categoryKey = resolvedParams.category as CategoryKey;
 
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const cats = t.categories;
 
   // States
@@ -677,12 +745,10 @@ export default function CategoryDetailPage({
                 <AlertCircle className="size-5 text-primary shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <p className="text-sm font-semibold text-foreground">
-                    Xidmət Sifarişi
+                    {t.categoriesPage.requestBannerTitle}
                   </p>
                   <p className="text-xs text-muted-foreground leading-normal">
-                    Hörmətli müştəri, xidmət almaq üçün aşağıdakı peşəkar
-                    ustalardan birini seçib <strong>"İstəmək"</strong> düyməsinə
-                    klikləyərək söhbətə başlaya bilərsiniz.
+                    {t.categoriesPage.requestBannerText}
                   </p>
                 </div>
               </div>
@@ -700,7 +766,7 @@ export default function CategoryDetailPage({
               <div className="flex items-center justify-between border-b border-border/80 pb-3">
                 <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
                   <SlidersHorizontal className="size-4 text-muted-foreground" />
-                  Filtr və sıralama
+                  {t.categoriesPage.detail.filtersTitle}
                 </h2>
                 {(searchQuery ||
                   minPrice ||
@@ -721,7 +787,7 @@ export default function CategoryDetailPage({
                     }}
                     className="text-xs text-primary hover:underline font-semibold cursor-pointer"
                   >
-                    Təmizlə
+                    {t.categoriesPage.detail.clearFilters}
                   </button>
                 )}
               </div>
@@ -729,19 +795,27 @@ export default function CategoryDetailPage({
               {/* Sorting */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                  Sıralama
+                  {t.categoriesPage.detail.sortingLabel}
                 </label>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="w-full text-xs font-semibold text-foreground border border-border bg-slate-50/50 rounded-xl p-2.5 outline-none focus:border-primary transition-colors cursor-pointer"
                 >
-                  <option value="rating">Reytinq: Yüksəkdən Aşağıya</option>
-                  <option value="price_asc">Qiymət: Artan sıra</option>
-                  <option value="price_desc">Qiymət: Azalan sıra</option>
-                  <option value="experience">Təcrübə: Ən çox</option>
+                  <option value="rating">
+                    {t.categoriesPage.detail.sortOptions.ratingDesc}
+                  </option>
+                  <option value="price_asc">
+                    {t.categoriesPage.detail.sortOptions.priceAsc}
+                  </option>
+                  <option value="price_desc">
+                    {t.categoriesPage.detail.sortOptions.priceDesc}
+                  </option>
+                  <option value="experience">
+                    {t.categoriesPage.detail.sortOptions.experience}
+                  </option>
                   <option value="completed_jobs">
-                    Görülən iş sayı: Ən çox
+                    {t.categoriesPage.detail.sortOptions.completedJobs}
                   </option>
                 </select>
               </div>
@@ -750,7 +824,7 @@ export default function CategoryDetailPage({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                    Axtarış radiusu
+                    {t.categoriesPage.detail.searchRadiusLabel}
                   </label>
                   <span className="text-xs font-semibold text-primary">
                     {radiusFilter} km
@@ -769,18 +843,18 @@ export default function CategoryDetailPage({
               {/* Hourly rate range */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                  Saatlıq ödəniş (AZN)
+                  {t.categoriesPage.detail.hourlyRateLabel}
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   <Input
-                    placeholder="Min"
+                    placeholder={t.categoriesPage.detail.minPricePlaceholder}
                     type="number"
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
                     className="h-9 text-xs rounded-xl text-center"
                   />
                   <Input
-                    placeholder="Max"
+                    placeholder={t.categoriesPage.detail.maxPricePlaceholder}
                     type="number"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
@@ -793,10 +867,15 @@ export default function CategoryDetailPage({
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                    Minimum Təcrübə
+                    {t.categoriesPage.detail.minExperienceLabel}
                   </label>
                   <span className="text-xs font-semibold text-primary">
-                    {minExperience ? `${minExperience} il` : "Hamısı"}
+                    {minExperience
+                      ? t.categoriesPage.detail.experienceUnit.replace(
+                          "{count}",
+                          String(minExperience),
+                        )
+                      : t.categoriesPage.detail.allLabel}
                   </span>
                 </div>
                 <input
@@ -812,7 +891,7 @@ export default function CategoryDetailPage({
               {/* Rating */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                  Minimum Reytinq
+                  {t.categoriesPage.detail.minRatingLabel}
                 </label>
                 <div className="flex gap-2">
                   {[0, 4.0, 4.5, 4.8].map((ratingVal) => (
@@ -826,7 +905,9 @@ export default function CategoryDetailPage({
                           : "border-border bg-slate-50 text-foreground hover:bg-slate-100",
                       )}
                     >
-                      {ratingVal === 0 ? "Hamısı" : `${ratingVal} ★`}
+                      {ratingVal === 0
+                        ? t.categoriesPage.detail.allLabel
+                        : `${ratingVal} ★`}
                     </button>
                   ))}
                 </div>
@@ -838,7 +919,7 @@ export default function CategoryDetailPage({
                   htmlFor="online-filter-toggle"
                   className="text-xs font-bold text-muted-foreground uppercase tracking-wider cursor-pointer"
                 >
-                  İndi Online
+                  {t.categoriesPage.detail.onlineOnlyLabel}
                 </label>
                 <button
                   id="online-filter-toggle"
@@ -864,7 +945,7 @@ export default function CategoryDetailPage({
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-4.5" />
                 <Input
-                  placeholder="Usta adı və ya ünvanı ilə axtar..."
+                  placeholder={t.categoriesPage.detail.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-11 h-12 bg-white rounded-2xl border border-border/60 shadow-sm text-sm"
@@ -875,9 +956,12 @@ export default function CategoryDetailPage({
                 <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-700 animate-fade-in shadow-sm">
                   <AlertCircle className="size-5 shrink-0 mt-0.5" />
                   <div className="space-y-1">
-                    <p className="text-sm font-semibold">Xəta baş verdi</p>
+                    <p className="text-sm font-semibold">{t.common.error}</p>
                     <p className="text-xs text-red-650/90 leading-normal">
-                      Məlumatlar yüklənərkən xəta baş verdi: {error}
+                      {t.categoriesPage.detail.loadError.replace(
+                        "{error}",
+                        error,
+                      )}
                     </p>
                   </div>
                 </div>
@@ -885,7 +969,7 @@ export default function CategoryDetailPage({
                 <div className="flex flex-col items-center justify-center py-20 text-center">
                   <Loader2 className="size-10 animate-spin text-primary" />
                   <p className="mt-4 text-sm font-semibold text-muted-foreground">
-                    Ustalar yüklənir, zəhmət olmasa gözləyin...
+                    {t.categoriesPage.detail.loading}
                   </p>
                 </div>
               ) : filteredAndSortedProviders.length === 0 ? (
@@ -894,12 +978,10 @@ export default function CategoryDetailPage({
                     <Search className="size-7" />
                   </div>
                   <h3 className="text-base font-bold text-foreground">
-                    Uyğun usta tapılmadı
+                    {t.categoriesPage.detail.emptyTitle}
                   </h3>
                   <p className="text-sm text-muted-foreground mt-2 max-w-sm">
-                    Seçdiyiniz süzgəc parametrlərinə uyğun usta yoxdur.
-                    Süzgəcləri təmizləyərək və ya axtarış məsafəsini
-                    genişləndirərək yenidən yoxlayın.
+                    {t.categoriesPage.detail.emptyDescription}
                   </p>
                 </div>
               ) : (
@@ -937,7 +1019,7 @@ export default function CategoryDetailPage({
                                 {provider.profiles?.last_name}
                               </h3>
                               <span className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-semibold border mt-0.5 inline-block">
-                                {provider.category}
+                                {localizeCategory(provider.category, t)}
                               </span>
                             </div>
                           </div>
@@ -962,16 +1044,19 @@ export default function CategoryDetailPage({
                           <div className="flex items-center gap-1.5">
                             <Clock3 className="size-3.5 text-primary" />
                             <span>
-                              Təcrübə:{" "}
+                              {t.dashboard.experienceLabel}:{" "}
                               {provider.years_experience
-                                ? `${provider.years_experience} il`
+                                ? t.categoriesPage.detail.experienceUnit.replace(
+                                    "{count}",
+                                    String(provider.years_experience),
+                                  )
                                 : "—"}
                             </span>
                           </div>
                           <div className="flex items-center gap-1.5">
                             <BriefcaseBusiness className="size-3.5 text-primary" />
                             <span>
-                              İşlər:{" "}
+                              {t.techniciansPage.card.jobsLabel}:{" "}
                               {provider.completed_jobs
                                 ? `${provider.completed_jobs}`
                                 : "—"}
@@ -981,34 +1066,34 @@ export default function CategoryDetailPage({
                             <MapPin className="size-3.5 text-primary shrink-0" />
                             <span className="truncate">
                               {provider.profiles?.address ||
-                                "Ünvan qeyd edilməyib"}
+                                t.techniciansPage.card.addressNotProvided}
                             </span>
                           </div>
                         </div>
 
                         {/* Price & Actions row */}
-                        <div className="flex items-center justify-between gap-4 mt-auto pt-2">
-                          <div>
+                        <div className="flex items-end justify-between gap-1.5 mt-auto pt-2">
+                          <div className="min-w-0 shrink">
                             <span className="text-[10px] text-muted-foreground block font-semibold uppercase tracking-wider">
-                              Saatlıq Qiymət
+                              {t.techniciansPage.card.hourlyLabel}
                             </span>
-                            <span className="text-base font-extrabold text-foreground">
+                            <span className="text-sm font-extrabold text-foreground leading-tight">
                               {provider.hourly_rate
                                 ? `${provider.hourly_rate} AZN`
-                                : "Danışıqla"}
+                                : t.techniciansPage.card.negotiable}
                             </span>
                           </div>
 
-                          <div className="flex gap-2">
+                          <div className="flex gap-1.5 shrink-0">
                             <Button
                               onClick={() =>
                                 setSelectedProviderId(provider.user_id)
                               }
                               variant="outline"
                               size="sm"
-                              className="h-9 px-3 rounded-lg text-xs font-bold border-border hover:bg-slate-50 cursor-pointer"
+                              className="h-8 min-w-0 px-2 rounded-lg text-[11px] font-bold border-border hover:bg-slate-50 cursor-pointer"
                             >
-                              Bax
+                              {t.categoriesPage.viewButton}
                             </Button>
                             <Button
                               onClick={() =>
@@ -1018,10 +1103,10 @@ export default function CategoryDetailPage({
                               }
                               variant="premium"
                               size="sm"
-                              className="h-9 px-3 rounded-lg text-xs font-bold gap-1 cursor-pointer"
+                              className="h-8 min-w-0 px-2 rounded-lg text-[11px] font-bold gap-1 cursor-pointer"
                             >
-                              <MessageSquare className="size-3.5" />
-                              İstəmək
+                              <MessageSquare className="size-3 shrink-0" />
+                              {t.categoriesPage.requestButton}
                             </Button>
                           </div>
                         </div>
@@ -1072,9 +1157,12 @@ export default function CategoryDetailPage({
                         {selectedProvider.profiles?.last_name}
                       </DialogTitle>
                       <DialogDescription className="text-xs font-semibold text-muted-foreground mt-0.5">
-                        {selectedProvider.category} ·{" "}
+                        {localizeCategory(selectedProvider.category, t)} ·{" "}
                         {selectedProvider.distance
-                          ? `${selectedProvider.distance} km məsafədə`
+                          ? `${t.dashboard.distance.replace(
+                              "{distance}",
+                              String(selectedProvider.distance),
+                            )}`
                           : "Baku"}
                       </DialogDescription>
                     </div>
@@ -1131,17 +1219,17 @@ export default function CategoryDetailPage({
                   {/* Real reviews listing */}
                   <div className="space-y-3 pt-2">
                     <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                      Müştəri Rəyləri ({reviews.length})
+                      {t.dashboard.customerReviews} ({reviews.length})
                     </h4>
 
                     {reviewsLoading ? (
                       <div className="flex items-center gap-2 text-xs text-muted-foreground py-4">
                         <Loader2 className="size-4 animate-spin text-primary" />
-                        <span>Rəylər yüklənir...</span>
+                        <span>{t.categoriesPage.detail.reviewsLoading}</span>
                       </div>
                     ) : reviews.length === 0 ? (
                       <p className="text-xs text-muted-foreground border border-dashed border-border rounded-xl bg-slate-50/50 p-4">
-                        Bu usta üçün hələ heç bir müştəri rəyi yoxdur.
+                        {t.dashboard.noReviewsYet}
                       </p>
                     ) : (
                       <div className="space-y-2.5 max-h-[220px] overflow-y-auto pr-1">
@@ -1154,7 +1242,7 @@ export default function CategoryDetailPage({
                               <span className="text-xs font-bold text-foreground">
                                 {review.customer
                                   ? `${review.customer.first_name} ${review.customer.last_name}`
-                                  : "Müştəri"}
+                                  : t.bookings.customerGeneric}
                               </span>
                               <div className="flex items-center gap-0.5 text-amber-500 font-bold text-xs">
                                 <Star className="size-3 fill-amber-500 text-amber-500" />
@@ -1167,9 +1255,9 @@ export default function CategoryDetailPage({
                               </p>
                             )}
                             <span className="text-[9px] text-muted-foreground text-right block">
-                              {new Date(review.created_at).toLocaleDateString(
-                                "az-AZ",
-                              )}
+                              {new Date(
+                                review.created_at,
+                              ).toLocaleDateString(locale)}
                             </span>
                           </div>
                         ))}
@@ -1182,12 +1270,12 @@ export default function CategoryDetailPage({
                 <div className="space-y-4 bg-slate-50 border border-border/80 rounded-2xl p-4 self-start">
                   <div className="space-y-1">
                     <span className="text-[10px] text-muted-foreground block font-bold uppercase tracking-wider">
-                      Saatlıq Qiymət
+                      {t.techniciansPage.card.hourlyLabel}
                     </span>
                     <span className="text-lg font-black text-foreground">
                       {selectedProvider.hourly_rate
                         ? `${selectedProvider.hourly_rate} AZN`
-                        : "Danışıqla"}
+                        : t.techniciansPage.card.negotiable}
                     </span>
                   </div>
 
@@ -1196,23 +1284,26 @@ export default function CategoryDetailPage({
                   <div className="space-y-2 text-xs font-semibold text-foreground/80">
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground font-medium">
-                        İş radiusu:
+                        {t.dashboard.radius}:
                       </span>
                       <span>{selectedProvider.working_radius_km} km</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground font-medium">
-                        Təcrübə:
+                        {t.dashboard.experienceLabel}:
                       </span>
                       <span>
                         {selectedProvider.years_experience
-                          ? `${selectedProvider.years_experience} il`
+                          ? t.categoriesPage.detail.experienceUnit.replace(
+                              "{count}",
+                              String(selectedProvider.years_experience),
+                            )
                           : "—"}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground font-medium">
-                        Tamamlanmış iş:
+                        {t.dashboard.completedJobsLabel}:
                       </span>
                       <span>
                         {selectedProvider.completed_jobs
@@ -1222,11 +1313,12 @@ export default function CategoryDetailPage({
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground font-medium">
-                        Təsdiqlənmə:
+                        {t.categoriesPage.detail.verificationLabel ??
+                          t.dashboard.verified}:
                       </span>
                       <span className="text-emerald-600 font-bold flex items-center gap-0.5">
                         <ShieldCheck className="size-3.5 fill-emerald-100" />
-                        Aktiv
+                        {t.categoriesPage.detail.activeStatus ?? t.common.active}
                       </span>
                     </div>
                   </div>
@@ -1235,10 +1327,11 @@ export default function CategoryDetailPage({
 
                   <div className="space-y-1">
                     <span className="text-[10px] text-muted-foreground block font-bold uppercase tracking-wider">
-                      Ünvan
+                      {t.dashboard.addressLabel}
                     </span>
                     <p className="text-xs leading-normal font-semibold text-foreground/85">
-                      {selectedProvider.profiles?.address || "Məlumat yoxdur"}
+                      {selectedProvider.profiles?.address ||
+                        t.profileMenu.notProvided}
                     </p>
                   </div>
                 </div>

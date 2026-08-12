@@ -59,7 +59,7 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const localeCookie = cookieStore.get("hellvar.locale")?.value;
-  const locale = localeCookie && ["az", "en", "tr"].includes(localeCookie) ? localeCookie : "az";
+  const locale = localeCookie && ["az", "en", "tr", "ru"].includes(localeCookie) ? localeCookie : "az";
 
   return (
     <html

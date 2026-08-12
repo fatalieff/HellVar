@@ -16,7 +16,7 @@ type Advice = { category: (typeof CATEGORIES)[number]; advice: string; urgent: b
 
 // ─── Language detection ──────────────────────────────────────────────────────
 // Decides the reply language purely from the user's input text.
-function detectLanguage(text: string): "az" | "tr" | "en" {
+function detectLanguage(text: string): "az" | "tr" | "en" | "ru" {
   const lower = text.toLowerCase();
 
   // ə is unique to Azerbaijani
@@ -39,6 +39,12 @@ function detectLanguage(text: string): "az" | "tr" | "en" {
     "water", "heating", "please", "help", "issue", "problem", "boiler",
     "conditioner", "nanny", "cleaning", "leaking", "stopped", "doesn't", "no",
   ];
+  const ruWords = [
+    "не работает", "не работает", "сломано", "починить", "ремонт", "сантехник",
+    "электрик", "течёт", "протечка", "вода", "отопление", "кран", "помогите",
+    "проблема", "не включается", "не греет", "котёл", "кондиционер", "уборка",
+    "няня", "холодильник", "стиральная", "плита", "плитк", "нет света", "розетка",
+  ];
 
   const count = (words: string[]) =>
     words.reduce((acc, w) => (lower.includes(w) ? acc + 1 : acc), 0);
@@ -46,18 +52,22 @@ function detectLanguage(text: string): "az" | "tr" | "en" {
   const az = count(azWords);
   const tr = count(trWords);
   const en = count(enWords);
+  const ru = count(ruWords);
 
-  if (az > tr && az >= en) return "az";
-  if (tr > az && tr >= en) return "tr";
-  if (en > az && en >= tr) return "en";
+  if (az > tr && az >= en && az >= ru) return "az";
+  if (tr > az && tr >= en && tr >= ru) return "tr";
+  if (ru > az && ru >= tr && ru >= en) return "ru";
+  if (en > az && en >= tr && en >= ru) return "en";
+  if (/[ъыёэ]/.test(lower)) return "ru";
   if (/[ğşçöü]/.test(lower)) return "tr";
   return "az";
 }
 
-const LANGUAGE_HINTS: Record<"az" | "tr" | "en", string> = {
+const LANGUAGE_HINTS: Record<"az" | "tr" | "en" | "ru", string> = {
   az: "Bu sorğu azərbaycan dilində yazılıb. Cavabın advice hissəsini yalnız azərbaycan dilində yaz.",
   tr: "Bu sorğu türk dilində yazılıb. Cavabın advice hissəsini yalnız türk dilində yaz.",
   en: "This request is written in English. Write the advice field only in English.",
+  ru: "Этот запрос написан на русском языке. Напишите поле advice только на русском языке.",
 };
 
 export async function POST(request: Request) {
@@ -100,7 +110,7 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "system",
-          content: `Sən HəllVar üçün xidmət yönləndiricisən. ƏN VACİB QAYDA: İstifadəçinin sorğusu hansı dildə yazılıbsa, cavabın advice hissəsini mütləq yalnız o dildə yaz. İstifadəçi türkcə yazıbsa → türkcə cavablandır, azərbaycanca yazıbsa → azərbaycanca, ingiliscə yazıbsa → ingiliscə. Bu qayda heç bir halda pozulmamalıdır; advice üçün başqa dil istifadə etmə. Yalnız etibarlı JSON qaytar: {"category":"...","advice":"...","urgent":true/false}. category bu siyahıdan biri olmalıdır: ${CATEGORIES.join(", ")}. advice ən çox 2 qısa cümlə olsun. Tibbi, hüquqi və ya peşəkar təhlükəsizlik zəmanəti vermə. Qaz qoxusu, qığılcım, tüstü, güclü su sızması və ya elektrik vurması riski varsa urgent=true de və uyğun olaraq elektrik/su/qaz xəttini təhlükəsiz şəkildə bağlamağı, təcili xidmətə müraciət etməyi tövsiyə et.`,
+          content: `Sən HəllVar üçün xidmət yönləndiricisən. ƏN VACİB QAYDA: İstifadəçinin sorğusu hansı dildə yazılıbsa, cavabın advice hissəsini mütləq yalnız o dildə yaz. İstifadəçi türkcə yazıbsa → türkcə cavablandır, azərbaycanca yazıbsa → azərbaycanca, ingiliscə yazıbsa → ingiliscə, rusca yazıbsa → rusca cavablandır. Bu qayda heç bir halda pozulmamalıdır; advice üçün başqa dil istifadə etmə. Yalnız etibarlı JSON qaytar: {"category":"...","advice":"...","urgent":true/false}. category bu siyahıdan biri olmalıdır: ${CATEGORIES.join(", ")}. advice ən çox 2 qısa cümlə olsun. Tibbi, hüquqi və ya peşəkar təhlükəsizlik zəmanəti vermə. Qaz qoxusu, qığılcım, tüstü, güclü su sızması və ya elektrik vurması riski varsa urgent=true de və uyğun olaraq elektrik/su/qaz xəttini təhlükəsiz şəkildə bağlamağı, təcili xidmətə müraciət etməyi tövsiyə et.`,
         },
         {
           role: "user",

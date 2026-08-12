@@ -62,8 +62,7 @@ const slideInRightVariants: Variants = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: {
-      type: "spring" as const,
+    transition: {      type: "spring" as const,
       stiffness: 85,
       damping: 14,
     },

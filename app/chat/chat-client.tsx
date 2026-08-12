@@ -25,6 +25,17 @@ import {
   ProviderProfile,
 } from "@/components/provider/provider-profile-dialog";
 
+// ─── Shared "chat read" marker (same key as navbar) ─────────────────────────
+const CHAT_READ_KEY = "hellvar.chatReadAt";
+
+function persistChatReadAt(timestamp: number) {
+  try {
+    window.localStorage.setItem(CHAT_READ_KEY, String(timestamp));
+  } catch {
+    /* ignore storage errors */
+  }
+}
+
 // ─── Time formatting helper ──────────────────────────────────────────────────
 function formatTimeAgo(
   dateStr: string,
@@ -278,6 +289,13 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Mark chat as read while the conversation is on screen. Keeps the navbar
+  // red dot consistent when entering the chat via a direct link (e.g. bookings).
+  useEffect(() => {
+    if (!conversationId) return;
+    persistChatReadAt(Date.now());
+  }, [conversationId, messages]);
 
   useEffect(() => {
     let mounted = true;

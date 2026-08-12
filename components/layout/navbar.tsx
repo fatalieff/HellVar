@@ -43,6 +43,26 @@ const NAV_LINKS: (keyof ReturnType<typeof useI18n>["t"]["nav"])[] = [
   "about",
 ];
 
+const CHAT_READ_KEY = "hellvar.chatReadAt";
+
+function getChatReadAt(): number {
+  if (typeof window === "undefined") return 0;
+  try {
+    return Number(window.localStorage.getItem(CHAT_READ_KEY)) || 0;
+  } catch {
+    return 0;
+  }
+}
+
+function persistChatReadAt(timestamp: number) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(CHAT_READ_KEY, String(timestamp));
+  } catch {
+    /* ignore storage errors */
+  }
+}
+
 // ─── Time formatting helper ──────────────────────────────────────────────────
 function formatTimeAgo(dateStr: string, n: Record<string, string>): string {
   const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -285,6 +305,7 @@ export function Navbar() {
   const [showProfileMenu, setShowProfileMenu] = React.useState(false);
   const notifsRef = React.useRef<HTMLDivElement>(null);
   const profileRef = React.useRef<HTMLDivElement>(null);
+  const seenUnreadMessageIds = React.useRef<Set<string>>(new Set());
   const userAvatarUrl = getAvatarPublicUrl(profile?.avatar_url);
 
   // Scroll effect
@@ -376,10 +397,25 @@ export function Navbar() {
           table: "chat_messages",
         },
         (payload) => {
-          const msg = payload.new as { sender_id: string };
-          if (msg.sender_id !== user.id) {
-            setUnreadMessages((prev) => prev + 1);
+          const msg = payload.new as {
+            sender_id: string;
+            id?: string;
+            created_at?: string;
+          };
+          if (msg.sender_id === user.id) return;
+          // Ignore messages that were already read (e.g. redelivered on reconnect)
+          if (
+            msg.created_at &&
+            new Date(msg.created_at).getTime() <= getChatReadAt()
+          ) {
+            return;
           }
+          // Dedupe: realtime can redeliver the same INSERT after a reconnect
+          if (msg.id) {
+            if (seenUnreadMessageIds.current.has(msg.id)) return;
+            seenUnreadMessageIds.current.add(msg.id);
+          }
+          setUnreadMessages((prev) => prev + 1);
         }
       )
       .subscribe();
@@ -417,7 +453,10 @@ export function Navbar() {
 
   const fetchUnreadMessages = async (userId: string) => {
     try {
-      // Count messages in conversations where user participates and sender != user
+      // Count messages in conversations where user participates and sender != user.
+      // Only messages newer than the last time the chat was opened count as unread;
+      // the last-read timestamp is persisted so a page reload / tab re-focus does
+      // not resurrect the red dot for already-seen messages.
       const { data: convs } = await supabase
         .from("chat_conversations")
         .select("id")
@@ -426,13 +465,14 @@ export function Navbar() {
       if (!convs || convs.length === 0) return;
 
       const convIds = convs.map((c) => c.id);
+      const lastReadAt = getChatReadAt();
+      const cutoff = Math.max(Date.now() - 86400_000, lastReadAt);
       const { count } = await supabase
         .from("chat_messages")
         .select("id", { count: "exact", head: true })
         .in("conversation_id", convIds)
         .neq("sender_id", userId)
-        // Only show messages from last 24 hours as "unread indicator"
-        .gte("created_at", new Date(Date.now() - 86400_000).toISOString());
+        .gt("created_at", new Date(cutoff).toISOString());
 
       setUnreadMessages(count ?? 0);
     } catch (err) {
@@ -468,6 +508,7 @@ export function Navbar() {
 
   const handleChatClick = () => {
     setUnreadMessages(0);
+    persistChatReadAt(Date.now());
     router.push("/chat");
   };
 

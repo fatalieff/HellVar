@@ -32,7 +32,7 @@ type Props = {
   userId: string;
 };
 
-const INTL_LOCALE: Record<Locale, string> = { az: "az-AZ", en: "en-GB", tr: "tr-TR" };
+const INTL_LOCALE: Record<Locale, string> = { az: "az-AZ", en: "en-GB", tr: "tr-TR", ru: "ru-RU" };
 
 const STATUS_CLASSES: Record<BookingStatus, string> = {
   PENDING: "bg-amber-50 text-amber-700 border-amber-200",

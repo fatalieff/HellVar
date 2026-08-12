@@ -37,6 +37,7 @@ function detectStoredLocale(): Locale {
     const nav = window.navigator.language?.toLowerCase() ?? "";
     if (nav.startsWith("az")) return "az";
     if (nav.startsWith("tr")) return "tr";
+    if (nav.startsWith("ru")) return "ru";
     if (nav.startsWith("en")) return "en";
   } catch {
     /* ignore storage errors */
