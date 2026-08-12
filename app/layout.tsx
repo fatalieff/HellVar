@@ -47,6 +47,9 @@ export const metadata: Metadata = {
     title: "HəllVar",
     description: "Trusted home services in Azerbaijan.",
   },
+  icons: {
+    icon: "/logo.jpg",
+  },
   robots: {
     index: true,
     follow: true,

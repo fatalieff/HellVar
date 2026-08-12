@@ -17,12 +17,12 @@ type Advice = { category: (typeof CATEGORIES)[number]; advice: string; urgent: b
 // ─── Language detection ──────────────────────────────────────────────────────
 // Decides the reply language purely from the user's input text.
 function detectLanguage(text: string): "az" | "tr" | "en" | "ru" {
-  const lower = text.toLowerCase();
+  const lower = text.toLowerCase().trim();
 
-  // ə is unique to Azerbaijani
+  // ə exists only in Azerbaijani — decisive
   if (/ə/.test(lower)) return "az";
-  // Undotted ı is a strong Turkish signal
-  if (/ı/.test(lower)) return "tr";
+  // Cyrillic script → Russian
+  if (/[а-яё]/.test(lower)) return "ru";
 
   const azWords = [
     "işləmir", "təmir", "elektrik", "santexnik", "sızır", "yoxdur", "olmur",
@@ -35,31 +35,47 @@ function detectLanguage(text: string): "az" | "tr" | "en" | "ru" {
     "elektrikçi", "su", "çalış", "gayri", "istiyorum", "çok", "hep",
   ];
   const enWords = [
-    "not working", "broken", "fix", "repair", "leak", "plumber", "electrician",
+    "not", "broken", "fix", "repair", "leak", "plumber", "electrician",
     "water", "heating", "please", "help", "issue", "problem", "boiler",
-    "conditioner", "nanny", "cleaning", "leaking", "stopped", "doesn't", "no",
+    "conditioner", "nanny", "cleaning", "leaking", "stopped", "doesn't",
+    "cooling", "air", "power", "light", "clogged", "drain", "move",
+    "washing", "fridge", "error", "temperature", "stuck",
   ];
   const ruWords = [
-    "не работает", "не работает", "сломано", "починить", "ремонт", "сантехник",
+    "не работает", "сломано", "починить", "ремонт", "сантехник",
     "электрик", "течёт", "протечка", "вода", "отопление", "кран", "помогите",
     "проблема", "не включается", "не греет", "котёл", "кондиционер", "уборка",
     "няня", "холодильник", "стиральная", "плита", "плитк", "нет света", "розетка",
   ];
 
+  // Whole-word match short tokens ("not", "su", "qaz"…) to avoid false positives.
   const count = (words: string[]) =>
-    words.reduce((acc, w) => (lower.includes(w) ? acc + 1 : acc), 0);
+    words.reduce((acc, w) => {
+      if (w.length <= 3)
+        return new RegExp(`\\b${w}\\b`).test(lower) ? acc + 1 : acc;
+      return lower.includes(w) ? acc + 1 : acc;
+    }, 0);
 
   const az = count(azWords);
-  const tr = count(trWords);
+  let tr = count(trWords);
   const en = count(enWords);
   const ru = count(ruWords);
 
-  if (az > tr && az >= en && az >= ru) return "az";
-  if (tr > az && tr >= en && tr >= ru) return "tr";
-  if (ru > az && ru >= tr && ru >= en) return "ru";
-  if (en > az && en >= tr && en >= ru) return "en";
-  if (/[ъыёэ]/.test(lower)) return "ru";
-  if (/[ğşçöü]/.test(lower)) return "tr";
+  // Turkish-specific characters
+  if (/[ğşçöü]/.test(lower)) tr += 2;
+
+  const scores: Array<{ lang: "az" | "tr" | "en" | "ru"; n: number }> = [
+    { lang: "az", n: az },
+    { lang: "tr", n: tr },
+    { lang: "en", n: en },
+    { lang: "ru", n: ru },
+  ];
+  scores.sort((a, b) => b.n - a.n);
+
+  if (scores[0].n > 0 && scores[0].n > scores[1].n) return scores[0].lang;
+  if (az > 0 && az >= tr) return "az";
+  if (tr > 0) return "tr";
+  if (en > 0) return "en";
   return "az";
 }
 
@@ -68,6 +84,13 @@ const LANGUAGE_HINTS: Record<"az" | "tr" | "en" | "ru", string> = {
   tr: "Bu sorğu türk dilində yazılıb. Cavabın advice hissəsini yalnız türk dilində yaz.",
   en: "This request is written in English. Write the advice field only in English.",
   ru: "Этот запрос написан на русском языке. Напишите поле advice только на русском языке.",
+};
+
+const LANGUAGE_NAMES: Record<"az" | "tr" | "en" | "ru", string> = {
+  az: "Azerbaijani (Azərbaycan dili)",
+  tr: "Turkish (Türkçe)",
+  en: "English",
+  ru: "Russian (Русский)",
 };
 
 export async function POST(request: Request) {
@@ -98,6 +121,7 @@ export async function POST(request: Request) {
   const userText = problem.trim();
   const detectedLang = detectLanguage(userText);
   const langHint = LANGUAGE_HINTS[detectedLang];
+  const langName = LANGUAGE_NAMES[detectedLang];
 
   const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
@@ -110,7 +134,10 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "system",
-          content: `Sən HəllVar üçün xidmət yönləndiricisən. ƏN VACİB QAYDA: İstifadəçinin sorğusu hansı dildə yazılıbsa, cavabın advice hissəsini mütləq yalnız o dildə yaz. İstifadəçi türkcə yazıbsa → türkcə cavablandır, azərbaycanca yazıbsa → azərbaycanca, ingiliscə yazıbsa → ingiliscə, rusca yazıbsa → rusca cavablandır. Bu qayda heç bir halda pozulmamalıdır; advice üçün başqa dil istifadə etmə. Yalnız etibarlı JSON qaytar: {"category":"...","advice":"...","urgent":true/false}. category bu siyahıdan biri olmalıdır: ${CATEGORIES.join(", ")}. advice ən çox 2 qısa cümlə olsun. Tibbi, hüquqi və ya peşəkar təhlükəsizlik zəmanəti vermə. Qaz qoxusu, qığılcım, tüstü, güclü su sızması və ya elektrik vurması riski varsa urgent=true de və uyğun olaraq elektrik/su/qaz xəttini təhlükəsiz şəkildə bağlamağı, təcili xidmətə müraciət etməyi tövsiyə et.`,
+          content: `You are HəllVar's AI service router.
+CRITICAL LANGUAGE RULE — this must NEVER be violated: The user's request is written in ${langName}. You MUST write the "advice" field ONLY in ${langName}. English request → English advice, Azerbaijani → Azerbaijani, Turkish → Turkish, Russian → Russian. Never write the advice in a language different from the user's request, no matter what.
+
+Return ONLY valid JSON: {"category":"...","advice":"...","urgent":true/false}. category must be one of these exact values: ${CATEGORIES.join(", ")}. advice: at most 2 short sentences. Do not give medical, legal, or professional safety guarantees. If the problem involves a gas smell, sparks, smoke, a strong water leak, or electric shock risk, set urgent=true and advise safely shutting off the gas/water/power line and contacting emergency services.`,
         },
         {
           role: "user",

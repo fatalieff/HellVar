@@ -37,6 +37,11 @@ yarn-error.log*
 .env*
 .env.local
 
+# opencode local config (contains tokens)
+opencode.json
+.playwright-mcp/
+*.png
+
 # vercel
 .vercel
 

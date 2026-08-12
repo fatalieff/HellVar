@@ -1,2 +1,3 @@
-C:\Users\Murad Fataliyev\GLOBAL_AI_RULES.md 
-Always strictly read and follow both the local `ui-pro-max-skills` for design and visual UI/UX, AND the global rules from `GLOBAL_AI_RULES.md` located in the user home directory for code architecture, Playwright E2E testing, and security.
+Always strictly read and follow the `ui-ux-pro-max` skills for design and visual UI/UX.
+
+The `ui-ux-pro-max` skills live at: `C:\Users\murad\~\.ui-ux-pro-max-skill\.claude\skills\`
