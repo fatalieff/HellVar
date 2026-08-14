@@ -29,7 +29,6 @@ export type Dictionary = {
     logout: string;
   };
   hero: {
-    eyebrow: string;
     title: string;
     subtitle: string;
     searchPlaceholder: string;

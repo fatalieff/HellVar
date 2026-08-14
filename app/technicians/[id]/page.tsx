@@ -12,7 +12,7 @@ import { Profile, ProviderDetails, ProviderReview } from "@/lib/types/database";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useFavoritesStore } from "@/lib/store/favorites-store";
 import { cn } from "@/lib/utils";
 import {
@@ -31,7 +31,8 @@ import {
   ChevronRight,
   Award,
   CheckCircle2,
-  ImageIcon,
+  Camera,
+  ArrowUpRight,
   FileCheck2,
   CircleDollarSign,
   Share2,
@@ -338,28 +339,24 @@ export default function TechnicianProfilePage({
   };
 
   if (loading || !provider) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] p-12 space-y-4">
-        <Loader2 className="w-10 h-10 text-primary animate-spin" />
-        <p className="text-sm font-semibold text-muted-foreground">
-          Usta profili yüklənir...
-        </p>
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   const isFav = isFavorite(provider.user_id);
   const fullName =
     `${provider.profiles?.first_name} ${provider.profiles?.last_name}`.trim();
+  const displayRating =
+    (Number(reviewStats.avg) || Number(provider.rating) || 5).toFixed(1);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50/50">
+    <div className="flex flex-col min-h-screen bg-slate-50/60">
+      {/* Ambient background */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none fixed inset-0 -z-10"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 20% 0%, oklch(0.7900 0.1400 70.00 / 0.08), transparent 50%)",
+            "radial-gradient(circle at 15% 0%, oklch(0.7900 0.1400 70.00 / 0.10), transparent 45%), radial-gradient(circle at 90% 12%, oklch(0.6231 0.1880 41.11 / 0.06), transparent 40%)",
         }}
       />
 
@@ -369,9 +366,9 @@ export default function TechnicianProfilePage({
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <Link
               href="/technicians"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
+              className="group inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
             >
-              <ArrowLeft className="size-4" />
+              <ArrowLeft className="size-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
               Bütün ustalara qayıt
             </Link>
 
@@ -414,42 +411,58 @@ export default function TechnicianProfilePage({
       {/* ===== PROFILE HEADER / HERO ===== */}
       <section className="pb-6 sm:pb-10">
         <Container size="xl">
-          <Card className="border-border/60 overflow-hidden shadow-premium">
+          <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-white shadow-premium">
             {/* Gradient Banner */}
-            <div className="relative h-40 sm:h-52 bg-gradient-primary">
+            <div className="relative h-44 sm:h-56 bg-gradient-primary overflow-hidden">
               <div
-                className="absolute inset-0 opacity-40 mix-blend-overlay"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle at 20% 80%, rgba(255,255,255,0.25) 0, transparent 45%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0, transparent 45%)",
-                }}
+                aria-hidden
+                className="absolute -top-20 -right-16 size-72 rounded-full bg-white/20 blur-3xl"
               />
-              <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:24px_24px] opacity-40" />
+              <div
+                aria-hidden
+                className="absolute -bottom-28 left-1/4 size-80 rounded-full bg-white/10 blur-3xl"
+              />
+              <div
+                aria-hidden
+                className="absolute top-0 right-1/3 size-44 rounded-full bg-accent/40 blur-3xl"
+              />
+              <div
+                aria-hidden
+                className="absolute -left-24 -top-28 size-80 rounded-full border-[3px] border-white/10"
+              />
+              <div
+                aria-hidden
+                className="absolute -left-10 -top-14 size-56 rounded-full border-2 border-white/10"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:28px_28px]" />
+              <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/10 to-transparent" />
             </div>
 
-            <CardContent className="p-5 sm:p-8 -mt-20 sm:-mt-28 relative">
+            <div className="p-5 sm:p-8 -mt-20 sm:-mt-28 relative">
               <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
                 {/* Avatar + Name */}
-                <div className="flex flex-col sm:flex-row sm:items-end gap-5">
-                  <div className="relative">
+                <div className="flex flex-col sm:flex-row sm:items-end gap-5 min-w-0">
+                  <div className="relative shrink-0">
+                    <div
+                      aria-hidden
+                      className="absolute -inset-1.5 rounded-[22px] bg-gradient-primary opacity-90 blur-md"
+                    />
                     <UserAvatar
                       avatarUrl={provider.profiles?.avatar_url}
                       name={fullName}
-                      className="size-28 sm:size-36 rounded-3xl border-4 border-white shadow-premium-lg"
+                      className="relative size-28 sm:size-36 rounded-3xl border-4 border-white shadow-premium-lg"
                       fallbackClassName="rounded-3xl bg-white text-foreground text-4xl sm:text-5xl font-black"
                     />
                     <span
                       className={cn(
                         "absolute bottom-2 right-2 size-5 rounded-full border-4 border-white shadow-sm",
-                        provider.is_online
-                          ? "bg-emerald-500"
-                          : "bg-slate-300",
+                        provider.is_online ? "bg-emerald-500" : "bg-slate-300",
                       )}
                     />
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <div className="flex-1 min-w-0 pb-1">
+                    <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
                       {provider.profile_status === "APPROVED" && (
                         <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 rounded-full text-[11px] font-bold">
                           <ShieldCheck className="size-3.5 mr-1" />
@@ -465,66 +478,87 @@ export default function TechnicianProfilePage({
                           Sənədlər yüklənib
                         </Badge>
                       )}
-                      {provider.is_online ? (
-                        <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 rounded-full text-[11px] font-bold">
-                          <Activity className="size-3.5 mr-1" />
-                          {t.dashboard.onlineNow}
-                        </Badge>
-                      ) : (
-                        <Badge className="bg-slate-50 text-slate-600 border-slate-200 rounded-full text-[11px] font-bold">
-                          <Activity className="size-3.5 mr-1" />
-                          {t.dashboard.offlineNow}
-                        </Badge>
-                      )}
                     </div>
 
                     <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
                       {fullName}
                     </h1>
 
-                    <div className="flex flex-wrap items-center gap-3 mt-2">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mt-3">
                       <div className="flex items-center gap-1.5">
-                        <Star className="size-4.5 fill-amber-400 text-amber-400" />
-                        <span className="text-base font-black text-foreground">
-                          {Number(reviewStats.avg) ||
-                            provider.rating?.toFixed(1) ||
-                            "5.0"}
-                        </span>
-                        <span className="text-xs font-semibold text-muted-foreground">
-                          ({reviewStats.total || 0} rəy)
+                        <div className="flex items-center gap-1 bg-amber-50 text-amber-600 px-2 py-1 rounded-lg text-xs font-black">
+                          <Star className="size-3.5 fill-amber-400 text-amber-400" />
+                          <span className="tabular-nums">{displayRating}</span>
+                        </div>
+                        <span className="text-xs font-semibold text-muted-foreground tabular-nums">
+                          ({reviewStats.total} rəy)
                         </span>
                       </div>
-                      <Separator orientation="vertical" className="h-4 w-px" />
+                      <span className="size-1 rounded-full bg-border" />
                       <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-                        <MapPin className="size-4 text-primary" />
-                        {provider.distance} km məsafədə
+                        <MapPin className="size-3.5 text-primary" />
+                        <span className="tabular-nums">{provider.distance} km</span>
+                        məsafədə
                       </div>
-                      <Separator orientation="vertical" className="h-4 w-px" />
+                      <span className="size-1 rounded-full bg-border" />
                       <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-                        <Navigation className="size-4 text-primary" />
-                        {provider.working_radius_km} km işləyir
+                        <Navigation className="size-3.5 text-primary" />
+                        <span className="tabular-nums">{provider.working_radius_km} km</span>
+                        işləyir
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Price + CTA Buttons */}
-                <div className="flex flex-col gap-3 sm:min-w-[280px]">
-                  <div className="rounded-2xl border border-border bg-slate-50/80 px-4 py-3">
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                      Saatlıq Qiymət
-                    </div>
-                    <div className="text-3xl font-black tracking-tight text-foreground mt-0.5">
-                      {provider.hourly_rate ? (
-                        <>
-                          {provider.hourly_rate}
-                          <span className="text-lg text-muted-foreground ml-1">
-                            ₼
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-xl text-primary">Danışıqla</span>
-                      )}
+                <div className="flex flex-col gap-3 sm:min-w-[300px]">
+                  <div className="relative overflow-hidden rounded-2xl bg-slate-900 text-white p-4">
+                    <div
+                      aria-hidden
+                      className="absolute -right-8 -top-12 size-32 rounded-full bg-primary/50 blur-2xl"
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute -left-6 -bottom-14 size-28 rounded-full bg-accent/30 blur-2xl"
+                    />
+                    <div className="relative flex items-end justify-between gap-4">
+                      <div className="min-w-0">
+                        <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/55">
+                          Saatlıq Qiymət
+                        </div>
+                        <div className="text-3xl sm:text-4xl font-black tracking-tight mt-1.5 tabular-nums">
+                          {provider.hourly_rate ? (
+                            <>
+                              {provider.hourly_rate}
+                              <span className="text-lg font-bold text-white/55 ml-1">
+                                ₼
+                              </span>
+                            </>
+                          ) : (
+                            <span className="text-2xl">Danışıqla</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-1.5 shrink-0">
+                        <span
+                          className={cn(
+                            "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black ring-1",
+                            provider.is_online
+                              ? "bg-emerald-400/15 text-emerald-300 ring-emerald-300/25"
+                              : "bg-white/10 text-white/60 ring-white/10",
+                          )}
+                        >
+                          <Activity className="size-3" />
+                          {provider.is_online
+                            ? t.dashboard.onlineNow
+                            : t.dashboard.offlineNow}
+                        </span>
+                        <span className="text-[10px] font-semibold text-white/45">
+                          {provider.hourly_rate
+                            ? "saat üçün · danışıqla mümkündür"
+                            : "qiymət üçün əlaqə saxlayın"}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -552,22 +586,20 @@ export default function TechnicianProfilePage({
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </Container>
       </section>
 
       {/* ===== STATS STRIP ===== */}
-      <section className="pb-8">
+      <section className="pb-8 sm:pb-10">
         <Container size="xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <MetricCard
               Icon={Star}
               tone="from-amber-400/20 to-yellow-500/10 text-amber-600"
               label="Orta Reytinq"
-              value={String(
-                Number(reviewStats.avg) || provider.rating?.toFixed(1) || "5.0",
-              )}
+              value={displayRating}
               sub={`${reviewStats.total} rəy əsasında`}
             />
             <MetricCard
@@ -603,18 +635,17 @@ export default function TechnicianProfilePage({
       {/* ===== MAIN 2 COLUMN LAYOUT ===== */}
       <section className="pb-12">
         <Container size="xl">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 lg:gap-8">
             {/* LEFT COLUMN */}
-            <div className="space-y-6">
+            <div className="space-y-6 order-last lg:order-none">
               {/* About */}
-              <Card className="border-border/60 shadow-sm">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <User className="size-5 text-primary" />
-                    <h2 className="text-lg font-bold tracking-tight">
-                      {t.dashboard.aboutLabel}
-                    </h2>
-                  </div>
+              <Card className="border-border/60">
+                <CardContent className="p-5 sm:p-6">
+                  <SectionHeader
+                    Icon={User}
+                    title={t.dashboard.aboutLabel}
+                    subtitle="Usta özü haqqında"
+                  />
                   <p className="text-sm leading-7 text-foreground/80 whitespace-pre-line">
                     {provider.bio ||
                       `Bu usta haqqında ətraflı məlumat hələ əlavə edilməyib. ${provider.category} sahəsində peşəkar xidmət göstərir.`}
@@ -622,20 +653,19 @@ export default function TechnicianProfilePage({
                 </CardContent>
               </Card>
 
-              {/* Gallery placeholder */}
-              <Card className="border-border/60 shadow-sm">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <ImageIcon className="size-5 text-primary" />
-                      <h2 className="text-lg font-bold tracking-tight">
-                        İşdən Nümunələr
-                      </h2>
-                    </div>
-                    <Badge className="bg-muted text-muted-foreground rounded-full text-[10px] font-bold">
-                      6 şəkil
-                    </Badge>
-                  </div>
+              {/* Gallery */}
+              <Card className="border-border/60">
+                <CardContent className="p-5 sm:p-6">
+                  <SectionHeader
+                    Icon={Camera}
+                    title="İşdən Nümunələr"
+                    subtitle="Son tamamlanmış layihələrdən seçmə"
+                    action={
+                      <Badge className="bg-muted text-muted-foreground rounded-full text-[10px] font-bold">
+                        6 şəkil
+                      </Badge>
+                    }
+                  />
 
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {[
@@ -648,32 +678,36 @@ export default function TechnicianProfilePage({
                     ].map((id, i) => (
                       <div
                         key={i}
-                        className="relative aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-border/60 group"
+                        className="group relative aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-border/60"
                       >
                         <img
                           src={`https://images.unsplash.com/${id}?q=80&w=400&auto=format&fit=crop`}
                           alt={`İş nümunəsi ${i + 1}`}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                           loading="lazy"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+                          <span className="flex items-center gap-1.5 text-[10px] font-bold text-white">
+                            <Camera className="size-3" />
+                            İş nümunəsi {i + 1}
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Working Hours / Info */}
-              <Card className="border-border/60 shadow-sm">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-5">
-                    <CalendarClock className="size-5 text-primary" />
-                    <h2 className="text-lg font-bold tracking-tight">
-                      Əlaqə və Xidmət Məlumatları
-                    </h2>
-                  </div>
+              {/* Contact / Service Info */}
+              <Card className="border-border/60">
+                <CardContent className="p-5 sm:p-6">
+                  <SectionHeader
+                    Icon={CalendarClock}
+                    title="Əlaqə və Xidmət Məlumatları"
+                    subtitle="Usta ilə əlaqə və xidmət şərtləri"
+                  />
 
-                  <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="grid sm:grid-cols-2 gap-3">
                     <InfoRow
                       Icon={Phone}
                       label="Telefon"
@@ -721,54 +755,75 @@ export default function TechnicianProfilePage({
               </Card>
 
               {/* REVIEWS */}
-              <Card className="border-border/60 shadow-sm">
-                <CardContent className="p-6">
-                  {/* Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-                    <div className="flex items-start gap-3">
-                      <div className="size-14 rounded-2xl bg-amber-50 border border-amber-100 grid place-items-center shrink-0">
-                        <Star className="size-7 fill-amber-400 text-amber-400" />
-                      </div>
-                      <div>
-                        <h2 className="text-lg font-bold tracking-tight">
-                          Müştəri Rəyləri
-                        </h2>
-                        <div className="text-sm text-muted-foreground mt-0.5">
-                          {reviewStats.total} rəy · Ortalama {reviewStats.avg} ★
+              <Card className="border-border/60">
+                <CardContent className="p-5 sm:p-6">
+                  {reviewStats.total > 0 ? (
+                    <div className="rounded-2xl border border-border/70 bg-gradient-to-br from-slate-50 to-white p-5 sm:p-6 mb-6 grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center">
+                      {/* Big average */}
+                      <div className="flex items-center gap-4 sm:flex-col sm:items-start sm:gap-1">
+                        <div className="text-5xl font-black tracking-tight text-foreground tabular-nums leading-none">
+                          {reviewStats.avg}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-0.5 mt-1 sm:mt-2">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <Star
+                                key={i}
+                                className={cn(
+                                  "size-4",
+                                  i <= Math.round(Number(reviewStats.avg))
+                                    ? "fill-amber-400 text-amber-400"
+                                    : "fill-slate-200 text-slate-200",
+                                )}
+                              />
+                            ))}
+                          </div>
+                          <div className="text-xs font-semibold text-muted-foreground mt-1.5 sm:mt-1 tabular-nums">
+                            {reviewStats.total} rəy ·{" "}
+                            {t.dashboard.customerReviews}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="text-xs font-bold text-muted-foreground text-right">
-                      {t.dashboard.customerReviews}
-                    </div>
-                  </div>
-
-                  {/* Distribution Bars */}
-                  {reviewStats.total > 0 && (
-                    <div className="space-y-2 pb-6 mb-6 border-b border-border/60">
-                      {[5, 4, 3, 2, 1].map((stars) => {
-                        const count = reviewStats.distribution[stars - 1];
-                        const pct = (count / reviewStats.total) * 100;
-                        return (
-                          <div key={stars} className="flex items-center gap-3">
-                            <span className="text-xs font-bold w-8 shrink-0 flex items-center gap-1">
-                              {stars}{" "}
-                              <Star className="size-3 fill-amber-400 text-amber-400" />
-                            </span>
-                            <div className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
-                              <div
-                                className="h-full rounded-full bg-gradient-primary transition-all duration-500"
-                                style={{ width: `${pct}%` }}
-                              />
+                      {/* Distribution */}
+                      <div className="space-y-1.5">
+                        {[5, 4, 3, 2, 1].map((stars) => {
+                          const count = reviewStats.distribution[stars - 1];
+                          const pct = (count / reviewStats.total) * 100;
+                          return (
+                            <div
+                              key={stars}
+                              className="flex items-center gap-2.5"
+                            >
+                              <span className="text-[11px] font-bold w-7 shrink-0 flex items-center gap-0.5">
+                                {stars}
+                                <Star className="size-2.5 fill-amber-400 text-amber-400" />
+                              </span>
+                              <div className="flex-1 h-1.5 rounded-full bg-slate-200/80 overflow-hidden">
+                                <div
+                                  className="h-full rounded-full bg-gradient-primary transition-all duration-500"
+                                  style={{ width: `${pct}%` }}
+                                />
+                              </div>
+                              <span className="text-[10px] font-bold text-muted-foreground w-6 shrink-0 text-right tabular-nums">
+                                {count}
+                              </span>
                             </div>
-                            <span className="text-[10px] font-bold text-muted-foreground w-8 shrink-0 text-right">
-                              {count}
-                            </span>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
+                  ) : (
+                    <SectionHeader
+                      Icon={Star}
+                      title="Müştəri Rəyləri"
+                      subtitle="Hələ heç bir rəy yoxdur"
+                      action={
+                        <Badge className="bg-muted text-muted-foreground rounded-full text-[10px] font-bold">
+                          {reviewStats.total} rəy
+                        </Badge>
+                      }
+                    />
                   )}
 
                   {/* Review Composer */}
@@ -864,15 +919,15 @@ export default function TechnicianProfilePage({
                       </p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {reviews.map((review) => (
                         <div
                           key={review.id}
-                          className="rounded-2xl border border-border bg-white p-4 sm:p-5"
+                          className="rounded-2xl border border-border bg-white p-4 sm:p-5 shadow-sm transition-all duration-200 hover:shadow-premium"
                         >
                           <div className="flex items-start justify-between gap-3 mb-3">
                             <div className="flex items-center gap-3 min-w-0">
-                              <div className="size-10 rounded-xl bg-gradient-primary text-white flex items-center justify-center font-bold text-sm shrink-0">
+                              <div className="size-10 rounded-xl bg-gradient-primary text-white flex items-center justify-center font-black text-sm shadow-sm shrink-0">
                                 {review.customer?.first_name?.[0] || "M"}
                               </div>
                               <div className="min-w-0">
@@ -881,7 +936,8 @@ export default function TechnicianProfilePage({
                                     ? `${review.customer.first_name} ${review.customer.last_name}`
                                     : "Anonim Müştəri"}
                                 </div>
-                                <div className="text-[10px] font-semibold text-muted-foreground mt-0.5">
+                                <div className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-foreground mt-0.5">
+                                  <Clock3 className="size-3" />
                                   {new Date(
                                     review.updated_at,
                                   ).toLocaleDateString("az-AZ")}
@@ -889,9 +945,11 @@ export default function TechnicianProfilePage({
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-1 bg-amber-50 text-amber-600 px-2.5 py-1 rounded-xl text-xs font-black shrink-0">
+                            <div className="flex items-center gap-1 bg-amber-50 text-amber-600 px-2.5 py-1 rounded-lg text-xs font-black shrink-0">
                               <Star className="size-3.5 fill-amber-400 text-amber-400" />
-                              <span>{review.rating.toFixed(1)}</span>
+                              <span className="tabular-nums">
+                                {review.rating.toFixed(1)}
+                              </span>
                             </div>
                           </div>
                           {review.comment && (
@@ -908,58 +966,82 @@ export default function TechnicianProfilePage({
             </div>
 
             {/* RIGHT COLUMN (Sticky) */}
-            <div className="space-y-6 lg:sticky lg:top-28 self-start">
+            <div className="space-y-6 lg:sticky lg:top-28 self-start order-first lg:order-none">
               {/* Quick Booking Summary */}
-              <Card className="border-border/60 shadow-sm overflow-hidden">
-                <div className="p-5 bg-gradient-primary text-white">
-                  <h3 className="font-bold text-lg tracking-tight">
-                    Xidmət Sifarişi
-                  </h3>
-                  <p className="text-sm text-white/90 mt-1 leading-relaxed">
-                    Usta ilə əlaqə qurmaq üçün aşağıdakı variantlardan istifadə
-                    edin.
-                  </p>
+              <Card className="border-border/60 overflow-hidden">
+                <div className="relative overflow-hidden bg-gradient-primary p-5 text-white">
+                  <div
+                    aria-hidden
+                    className="absolute -right-8 -top-10 size-28 rounded-full bg-white/15 blur-2xl"
+                  />
+                  <div
+                    aria-hidden
+                    className="absolute -left-6 -bottom-12 size-24 rounded-full bg-white/10 blur-2xl"
+                  />
+                  <div className="relative flex items-center gap-3">
+                    <div className="size-11 rounded-2xl bg-white/15 ring-1 ring-white/25 grid place-items-center backdrop-blur-sm shrink-0">
+                      <CalendarClock className="size-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg tracking-tight leading-none">
+                        Xidmət Sifarişi
+                      </h3>
+                      <p className="text-[11px] text-white/80 mt-1">
+                        Sürətli və birbaşa əlaqə
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <CardContent className="p-5 space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground font-semibold">
-                      Saatlıq
-                    </span>
-                    <span className="font-black text-foreground">
-                      {provider.hourly_rate
-                        ? `${provider.hourly_rate} ₼`
-                        : "Danışıqla"}
-                    </span>
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground font-semibold">
-                      Məsafə
-                    </span>
-                    <span className="font-bold text-foreground">
-                      {provider.distance} km
-                    </span>
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground font-semibold">
-                      Status
-                    </span>
-                    <span
-                      className={cn(
-                        "font-bold text-xs px-2 py-0.5 rounded-full",
-                        provider.is_online
-                          ? "bg-emerald-50 text-emerald-600"
-                          : "bg-slate-100 text-slate-600",
-                      )}
-                    >
-                      {provider.is_online
-                        ? t.dashboard.onlineNow
-                        : t.dashboard.offlineNow}
-                    </span>
+                <CardContent className="p-5">
+                  <div className="space-y-3.5">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground font-semibold">
+                        Saatlıq qiymət
+                      </span>
+                      <span className="font-black text-foreground tabular-nums">
+                        {provider.hourly_rate
+                          ? `${provider.hourly_rate} ₼`
+                          : "Danışıqla"}
+                      </span>
+                    </div>
+                    <div className="h-px bg-border/60" />
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground font-semibold">
+                        Məsafə
+                      </span>
+                      <span className="font-bold text-foreground tabular-nums">
+                        {provider.distance} km
+                      </span>
+                    </div>
+                    <div className="h-px bg-border/60" />
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground font-semibold">
+                        Status
+                      </span>
+                      <span
+                        className={cn(
+                          "flex items-center gap-1 font-bold text-[11px] px-2.5 py-1 rounded-full",
+                          provider.is_online
+                            ? "bg-emerald-50 text-emerald-600"
+                            : "bg-slate-100 text-slate-600",
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "size-1.5 rounded-full",
+                            provider.is_online
+                              ? "bg-emerald-500"
+                              : "bg-slate-400",
+                          )}
+                        />
+                        {provider.is_online
+                          ? t.dashboard.onlineNow
+                          : t.dashboard.offlineNow}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="pt-2 space-y-2.5">
+                  <div className="pt-4 space-y-2.5">
                     <Button
                       asChild
                       className="w-full h-11 rounded-xl font-bold"
@@ -981,13 +1063,18 @@ export default function TechnicianProfilePage({
                       Sifariş Üçün Yaz
                     </Button>
                   </div>
+
+                  <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground mt-3">
+                    <Clock3 className="size-3.5 shrink-0" />
+                    Usta adətən 5 dəqiqə ərzində cavab verir
+                  </p>
                 </CardContent>
               </Card>
 
               {/* Verified Badge */}
-              <Card className="border-emerald-200 bg-emerald-50/40 shadow-sm">
+              <Card className="border-emerald-200 bg-emerald-50/40">
                 <CardContent className="p-5 flex items-start gap-3">
-                  <div className="size-11 rounded-xl bg-emerald-100 border border-emerald-200 grid place-items-center shrink-0 text-emerald-600">
+                  <div className="size-11 rounded-xl bg-emerald-100 border border-emerald-200 grid place-items-center shrink-0 text-emerald-600 shadow-sm">
                     <ShieldCheck className="size-5" />
                   </div>
                   <div>
@@ -1064,21 +1151,21 @@ function MetricCard({
   truncate?: boolean;
 }) {
   return (
-    <Card className="border-border/60 bg-white shadow-sm transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-0.5 hover:border-primary/20">
-      <CardContent className="p-4 sm:p-5 flex items-start gap-3.5">
+    <Card className="group border-border/60 bg-white shadow-sm transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-0.5 hover:border-primary/20">
+      <CardContent className="p-4 sm:p-5 flex items-center gap-4">
         <div
           className={cn(
-            "size-11 rounded-2xl grid place-items-center bg-gradient-to-br shrink-0 shadow-sm",
+            "size-12 rounded-2xl grid place-items-center bg-gradient-to-br ring-1 ring-black/5 shadow-sm shrink-0 transition-transform duration-300 group-hover:scale-105",
             tone,
           )}
         >
-          <Icon className="size-5" />
+          <Icon className="size-5.5" />
         </div>
         <div className="min-w-0 flex-1">
           <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             {label}
           </div>
-          <div className="text-xl sm:text-2xl font-black tracking-tight text-foreground mt-0.5">
+          <div className="text-xl sm:text-2xl font-black tracking-tight text-foreground mt-0.5 tabular-nums">
             {value}
           </div>
           <div
@@ -1110,9 +1197,9 @@ function InfoRow({
   success?: boolean;
 }) {
   const content = (
-    <div className="flex items-center gap-3 rounded-xl border border-border bg-white px-4 py-3 hover:border-primary/30 transition-colors">
-      <div className="size-9 rounded-xl bg-slate-50 grid place-items-center shrink-0 text-primary">
-        <Icon className="size-4.5" />
+    <div className="group/info flex items-center gap-3.5 rounded-2xl border border-border/70 bg-white px-4 py-3.5 transition-all duration-200 hover:border-primary/25 hover:shadow-sm">
+      <div className="size-10 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/10 grid place-items-center shrink-0">
+        <Icon className="size-5" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -1128,6 +1215,9 @@ function InfoRow({
           {value}
         </div>
       </div>
+      {href ? (
+        <ArrowUpRight className="size-4 text-muted-foreground/60 group-hover/info:text-primary transition-colors shrink-0" />
+      ) : null}
     </div>
   );
   return href ? (
@@ -1171,7 +1261,9 @@ function RelatedCard({
               </h3>
               <div className="flex items-center gap-1 mt-1 text-[10px] font-bold text-muted-foreground">
                 <Star className="size-3 fill-amber-400 text-amber-400" />
-                <span>{provider.rating?.toFixed(1) || "5.0"}</span>
+                <span className="tabular-nums">
+                  {provider.rating?.toFixed(1) || "5.0"}
+                </span>
                 <span className="mx-1">·</span>
                 <span className="truncate">{provider.category}</span>
               </div>
@@ -1184,7 +1276,7 @@ function RelatedCard({
               {provider.profiles?.address || "Bakı"}
             </span>
             <span>·</span>
-            <span className="shrink-0">{provider.distance} km</span>
+            <span className="shrink-0 tabular-nums">{provider.distance} km</span>
           </div>
 
           <div className="mt-auto flex items-center justify-between">
@@ -1192,7 +1284,7 @@ function RelatedCard({
               <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
                 Qiymət
               </div>
-              <div className="text-base font-black text-foreground">
+              <div className="text-base font-black text-foreground tabular-nums">
                 {provider.hourly_rate
                   ? `${provider.hourly_rate} ₼`
                   : "Danışıqla"}
@@ -1214,5 +1306,89 @@ function RelatedCard({
         </Button>
       </div>
     </Card>
+  );
+}
+
+function SectionHeader({
+  Icon,
+  title,
+  subtitle,
+  action,
+}: {
+  Icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  subtitle?: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 mb-5">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="size-10 rounded-xl bg-gradient-to-br from-primary/10 to-accent/15 text-primary ring-1 ring-primary/10 grid place-items-center shrink-0">
+          <Icon className="size-5" />
+        </div>
+        <div className="min-w-0">
+          <h2 className="text-base sm:text-lg font-bold tracking-tight">
+            {title}
+          </h2>
+          {subtitle ? (
+            <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>
+          ) : null}
+        </div>
+      </div>
+      {action}
+    </div>
+  );
+}
+
+function ProfileSkeleton() {
+  return (
+    <div className="flex flex-col min-h-screen bg-slate-50/60">
+      <div className="pt-8 pb-4">
+        <Container size="xl">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <Skeleton className="h-4 w-40" />
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-9 w-36 rounded-xl" />
+              <Skeleton className="h-9 w-24 rounded-xl" />
+            </div>
+          </div>
+        </Container>
+      </div>
+
+      <section className="pt-6 pb-6 sm:pb-10">
+        <Container size="xl">
+          <div className="overflow-hidden rounded-3xl border border-border/60 bg-white shadow-premium">
+            <Skeleton className="h-44 sm:h-56 w-full rounded-none bg-gradient-primary/10" />
+            <div className="p-5 sm:p-8 -mt-20 sm:-mt-28 relative">
+              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                <div className="flex flex-col sm:flex-row sm:items-end gap-5">
+                  <Skeleton className="size-28 sm:size-36 rounded-3xl border-4 border-white shrink-0" />
+                  <div className="flex-1 min-w-0 space-y-3 pt-14 sm:pt-16 pb-1">
+                    <Skeleton className="h-6 w-64 max-w-full" />
+                    <Skeleton className="h-4 w-52 max-w-full" />
+                    <Skeleton className="h-4 w-40 max-w-full" />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-3 sm:min-w-[300px]">
+                  <Skeleton className="h-24 rounded-2xl" />
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <Skeleton className="h-11 rounded-xl" />
+                    <Skeleton className="h-11 rounded-xl" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <Container size="xl">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 rounded-2xl" />
+          ))}
+        </div>
+      </Container>
+    </div>
   );
 }

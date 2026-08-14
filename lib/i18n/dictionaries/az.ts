@@ -19,7 +19,6 @@ const az: Dictionary = {
     logout: "Çıxış et",
   },
   hero: {
-    eyebrow: "Sürətli · Etibarlı · Professional",
     title: "Ev probleminə uyğun ustanı tap",
     subtitle:
       "Sadəcə problemini yaz, biz sənə uyğun ustaları göstərək. 5 dəqiqədə rezervasiya et.",

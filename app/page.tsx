@@ -158,14 +158,6 @@ export default function Home() {
 
         <Container size="xl" className="relative py-16 sm:py-20 lg:py-28">
           <div className="max-w-3xl mx-auto text-center flex flex-col gap-6 animate-fade-up">
-            <Badge
-              variant="accent"
-              className="mx-auto gap-1.5 px-3 py-1 rounded-full animate-lift [animation-delay:50ms]"
-            >
-              <Sparkles className="size-3.5" data-icon="inline-start" />
-              {t.hero.eyebrow}
-            </Badge>
-
             <h1
               aria-label={t.hero.title}
               className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-balance leading-[1.1] text-foreground animate-lift [animation-delay:120ms]"

@@ -19,7 +19,6 @@ const en: Dictionary = {
     logout: "Sign out",
   },
   hero: {
-    eyebrow: "Fast · Trusted · Professional",
     title: "Find the right pro for your home",
     subtitle:
       "Just describe your problem and we'll match you with verified technicians. Book in 5 minutes.",

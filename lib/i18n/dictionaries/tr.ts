@@ -19,7 +19,6 @@ const tr: Dictionary = {
     logout: "Çıkış yap",
   },
   hero: {
-    eyebrow: "Hızlı · Güvenilir · Profesyonel",
     title: "Ev sorununa uygun ustayı bul",
     subtitle:
       "Sorununu yaz, sana uygun ustaları gösterelim. 5 dakikada rezervasyon yap.",
