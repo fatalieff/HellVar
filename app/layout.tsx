@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/layout/providers";
 import { SiteLayout } from "@/components/layout/site-layout";
@@ -62,11 +62,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
+  const headerStore = await headers();
   const localeCookie = cookieStore.get("hellvar.locale")?.value;
+  // Middleware URL prefiksindən dili x-locale header-ə yazır — o prioritetlidir
+  const headerLocale = headerStore.get("x-locale");
   const locale: Locale =
-    localeCookie && ["az", "en", "tr", "ru"].includes(localeCookie)
-      ? (localeCookie as Locale)
-      : "az";
+    headerLocale && ["az", "en", "tr", "ru"].includes(headerLocale)
+      ? (headerLocale as Locale)
+      : localeCookie && ["az", "en", "tr", "ru"].includes(localeCookie)
+        ? (localeCookie as Locale)
+        : "az";
   const dictionary = await getDictionary(locale);
 
   return (

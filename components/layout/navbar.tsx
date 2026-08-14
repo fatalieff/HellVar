@@ -34,6 +34,7 @@ import { Separator } from "@/components/ui/separator";
 import { LanguageSwitcher } from "./language-switcher";
 import { Container } from "./container";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS: (keyof ReturnType<typeof useI18n>["t"]["nav"])[] = [
@@ -293,7 +294,8 @@ function ProfileMenu({
 
 // ─── Main Navbar component ───────────────────────────────────────────────────
 export function Navbar() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = React.useCallback((p: string) => localizedPath(p, locale), [locale]);
   const n = t.notifications;
   const router = useRouter();
   const [scrolled, setScrolled] = React.useState(false);
@@ -482,7 +484,7 @@ export function Navbar() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    router.push("/login");
+    router.push(loc("/login"));
     router.refresh();
   };
 
@@ -509,7 +511,7 @@ export function Navbar() {
   const handleChatClick = () => {
     setUnreadMessages(0);
     persistChatReadAt(Date.now());
-    router.push("/chat");
+    router.push(loc("/chat"));
   };
 
   const unreadNotifs = notifications.filter((n) => !n.is_read).length;
@@ -525,7 +527,7 @@ export function Navbar() {
     >
       <Container size="xl" className="h-16 flex items-center gap-4">
         <Link
-          href="/"
+          href={loc("/")}
           className="flex items-center gap-2 shrink-0 group"
           aria-label={t.brand.name}
         >
@@ -547,8 +549,8 @@ export function Navbar() {
           {NAV_LINKS.map((k) => {
             const href =
               k === "home"
-                ? "/"
-                : `/${String(k).replace(/^./, (c) => c.toLowerCase())}`;
+                ? loc("/")
+                : loc(`/${String(k).replace(/^./, (c) => c.toLowerCase())}`);
             return (
               <Link
                 key={k}
@@ -570,7 +572,7 @@ export function Navbar() {
               {/* Role-based dashboard button */}
               {profile?.role === "PROVIDER" ? (
                 <Button
-                  onClick={() => router.push("/provider/dashboard")}
+onClick={() => router.push(loc("/provider/dashboard"))}
                   variant="outline"
                   size="sm"
                   className="hidden sm:flex border-primary/30 text-primary hover:bg-primary/5 font-semibold text-xs h-9 rounded-lg space-x-1"
@@ -581,7 +583,7 @@ export function Navbar() {
               ) : (
                 <>
                   <Button
-                    onClick={() => router.push("/bookings")}
+onClick={() => router.push(loc("/bookings"))}
                     variant="outline"
                     size="sm"
                     className="hidden sm:flex border-border text-foreground hover:bg-accent font-semibold text-xs h-9 rounded-lg space-x-1"
@@ -590,7 +592,7 @@ export function Navbar() {
                     <span>{t.nav.myBookings}</span>
                   </Button>
                   <Button
-                    onClick={() => router.push("/dashboard")}
+onClick={() => router.push(loc("/dashboard"))}
                     variant="outline"
                     size="sm"
                     className="hidden sm:flex border-border text-foreground hover:bg-accent font-semibold text-xs h-9 rounded-lg space-x-1"
@@ -646,7 +648,7 @@ export function Navbar() {
                         const isBooking = notif.type === "new_booking" || notif.type === "booking_accepted" || notif.type === "booking_rejected" || notif.type === "booking_completed" || notif.type === "booking_cancelled";
                         if (isBooking) {
                           setShowNotifs(false);
-                          router.push("/bookings");
+                          router.push(loc("/bookings"));
                         }
                       }}
                       n={n}
@@ -695,7 +697,7 @@ export function Navbar() {
                         profile={profile}
                         onViewProfile={() => {
                           setShowProfileMenu(false);
-                          router.push("/profile");
+                          router.push(loc("/profile"));
                         }}
                         onSignOut={() => {
                           setShowProfileMenu(false);
@@ -714,7 +716,7 @@ export function Navbar() {
                 <Link href="/login">{t.nav.login}</Link>
               </Button>
               <Button variant="premium" size="sm" asChild>
-                <Link href="/signup" className="gap-1.5">
+                <Link href={loc("/signup")} className="gap-1.5">
                   {t.nav.signup}
                   <ArrowRight className="size-3.5" data-icon="inline-end" />
                 </Link>
@@ -849,7 +851,7 @@ export function Navbar() {
 
                     <nav className="flex flex-col gap-1">
                       <Button
-                        onClick={() => router.push("/profile")}
+                        onClick={() => router.push(loc("/profile"))}
                         className="w-full justify-start text-xs font-semibold"
                         variant="outline"
                       >
@@ -857,17 +859,17 @@ export function Navbar() {
                         {t.profileMenu.viewProfile}
                       </Button>
                       {profile?.role === "PROVIDER" ? (
-                        <Button onClick={() => router.push("/provider/dashboard")} className="w-full justify-start text-xs font-semibold" variant="premium">
+                        <Button onClick={() => router.push(loc("/provider/dashboard"))} className="w-full justify-start text-xs font-semibold" variant="premium">
                           <Sparkles className="w-4 h-4 mr-2" />
                           {t.nav.providerPanel}
                         </Button>
                       ) : (
                         <>
-                          <Button onClick={() => router.push("/bookings")} className="w-full justify-start text-xs font-semibold" variant="outline">
+                          <Button onClick={() => router.push(loc("/bookings"))} className="w-full justify-start text-xs font-semibold" variant="outline">
                             <CalendarCheck2 className="w-4 h-4 mr-2" />
                             {t.nav.myBookings}
                           </Button>
-                          <Button onClick={() => router.push("/dashboard")} className="w-full justify-start text-xs font-semibold" variant="outline">
+                          <Button onClick={() => router.push(loc("/dashboard"))} className="w-full justify-start text-xs font-semibold" variant="outline">
                             {t.nav.customerPanel}
                           </Button>
                         </>
@@ -888,7 +890,7 @@ export function Navbar() {
                     </div>
                     <div className="mt-auto flex flex-col gap-2">
                       <Button asChild variant="ghost" className="w-full">
-                        <Link href="/login">{t.nav.login}</Link>
+<Link href={loc("/login")}>{t.nav.login}</Link>
                       </Button>
                       <Button asChild variant="premium" className="w-full">
                         <Link href="/signup">{t.nav.signup}</Link>

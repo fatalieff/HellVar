@@ -162,3 +162,124 @@
     background-size: 200% 100%;
   }
 }
+
+/* ============================================================
+   Leaflet xəritə markerləri (dashboard map-view)
+   ============================================================ */
+.leaflet-container {
+  font-family: var(--font-sans);
+  z-index: 0;
+}
+
+.hv-user-wrap {
+  background: transparent;
+  border: none;
+}
+
+.hv-user-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: oklch(0.6231 0.1880 41.11 / 0.35);
+  animation: hv-user-pulse 2s ease-out infinite;
+}
+
+.hv-user-pin {
+  position: absolute;
+  inset: 8px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, oklch(0.6231 0.1880 41.11), oklch(0.7900 0.1400 70.00));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid #fff;
+  box-shadow: 0 8px 20px -6px oklch(0.1450 0 0 / 0.45);
+}
+
+@keyframes hv-user-pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  70% { transform: scale(2.1); opacity: 0; }
+  100% { transform: scale(2.1); opacity: 0; }
+}
+
+.hv-pin-wrap {
+  background: transparent;
+  border: none;
+}
+
+.hv-pin {
+  position: relative;
+  width: 42px;
+  height: 54px;
+  cursor: pointer;
+  filter: drop-shadow(0 8px 12px oklch(0 0 0 / 0.25));
+  transition: transform 0.2s ease;
+  transform-origin: bottom center;
+}
+
+.hv-pin:hover {
+  transform: scale(1.12);
+}
+
+.hv-pin-body {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 2.5px solid oklch(0.1450 0 0 / 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.hv-pin-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.hv-pin-initials {
+  font-size: 12px;
+  font-weight: 800;
+  color: oklch(0.1450 0 0 / 0.8);
+}
+
+.hv-pin-badge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: oklch(0.1450 0 0);
+  border: 1.5px solid #fff;
+  color: #fff;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hv-pin-tip {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: oklch(0.1450 0 0 / 0.75);
+  border-radius: 2px;
+}
+
+.hv-pin-active .hv-pin-body {
+  border-color: oklch(0.6231 0.1880 41.11);
+  box-shadow: 0 0 0 4px oklch(0.6231 0.1880 41.11 / 0.25);
+}
+
+.hv-pin-active {
+  transform: scale(1.15);
+}

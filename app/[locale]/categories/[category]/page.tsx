@@ -1,0 +1,1 @@
+export { default } from "../../../categories/[category]/page";

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { BAKU_DISTRICTS, getDistrictCoordinates } from "@/lib/locations";
 import { 
   User, 
   Briefcase, 
@@ -32,21 +33,6 @@ import {
   Camera,
   X
 } from "lucide-react";
-
-// Baku districts for address selection
-const BAKU_DISTRICTS = [
-  "Yasamal",
-  "Nərimanov",
-  "Nəsimi",
-  "Xətai",
-  "Səbail",
-  "Binəqədi",
-  "Sabunçu",
-  "Suraxanı",
-  "Qaradağ",
-  "Xəzər",
-  "Pirallahı"
-];
 
 // Provider categories (canonical values stored in DB, labels localized)
 const PROVIDER_CATEGORIES = [
@@ -202,6 +188,11 @@ export function RegisterForm() {
         : `${district} ${su.districtSuffix}`
       : addressDetail;
 
+    if (!district) {
+      setError(su.addressRequired);
+      setLoading(false);
+      return;
+    }
     if (role === "CUSTOMER" && !combinedAddress) {
       setError(su.addressRequired);
       setLoading(false);
@@ -220,6 +211,7 @@ export function RegisterForm() {
       }
     }
 
+    const location = getDistrictCoordinates(district);
     const sanitizedPhone = phone.replace(/\D/g, "");
     const formattedPhone = `+994${sanitizedPhone}`;
 
@@ -234,7 +226,10 @@ export function RegisterForm() {
             last_name: lastName,
             phone: formattedPhone,
             role,
-            address: role === "CUSTOMER" ? combinedAddress : null,
+            address: combinedAddress,
+            district: district,
+            latitude: location?.lat ?? null,
+            longitude: location?.lng ?? null,
             category: role === "PROVIDER" ? category : null,
             working_radius_km: role === "PROVIDER" ? workingRadius : null,
             documents_uploaded: role === "PROVIDER" && selectedFiles.length > 0
@@ -278,6 +273,21 @@ export function RegisterForm() {
             setAvatarPending(true);
           } catch (avatarErr) {
             console.warn("Avatar gözləyən kimi saxlanılmadı:", avatarErr);
+          }
+        }
+      }
+
+      // Lokasiya profildə saxlanılsın (session varsa dərhal yaz)
+      if (location) {
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (sessionData.session) {
+          try {
+            await supabase
+              .from("profiles")
+              .update({ latitude: location.lat, longitude: location.lng })
+              .eq("id", userId);
+          } catch (locationErr) {
+            console.warn("Lokasiya yazılarkən xəta baş verdi:", locationErr);
           }
         }
       }
@@ -603,51 +613,52 @@ export function RegisterForm() {
                       </div>
                     </label>
                   </div>
-                  {role === "CUSTOMER" ? (
-                    <div className="space-y-4">
-                      <div className="text-left">
-                        <h2 className="text-xl font-bold text-foreground">{su.addressTitle}</h2>
-                        <p className="text-sm text-muted-foreground">{su.addressSubtitle}</p>
-                      </div>
+                  {/* Lokasiya bölməsi - həm müştəri, həm usta üçün */}
+                  <div className="space-y-4">
+                    <div className="text-left">
+                      <h2 className="text-xl font-bold text-foreground">{su.addressTitle}</h2>
+                      <p className="text-sm text-muted-foreground">{su.addressSubtitle}</p>
+                    </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="address-select">{su.districtLabel}</Label>
-                        <div className="relative">
-                          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                          <select
-                            id="address-select"
-                            value={district}
-                            onChange={(e) => setDistrict(e.target.value)}
-                            className="w-full rounded-md border border-border bg-white pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none"
-                          >
-                            <option value="">{su.districtPlaceholder}</option>
-                            {BAKU_DISTRICTS.map((d) => (
-                              <option key={d} value={d}>
-                                {d} {su.districtSuffix}
-                              </option>
-                            ))}
-                          </select>
-                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground">
-                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                            </svg>
-                          </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="address-select">{su.districtLabel}</Label>
+                      <div className="relative">
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                        <select
+                          id="address-select"
+                          value={district}
+                          onChange={(e) => setDistrict(e.target.value)}
+                          className="w-full rounded-md border border-border bg-white pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none"
+                        >
+                          <option value="">{su.districtPlaceholder}</option>
+                          {BAKU_DISTRICTS.map((d) => (
+                            <option key={d} value={d}>
+                              {d} {su.districtSuffix}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground">
+                          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                          </svg>
                         </div>
                       </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="address-detail">{su.fullAddressLabel}</Label>
-                        <Input
-                          id="address-detail"
-                          type="text"
-                          placeholder={su.fullAddressPlaceholder}
-                          className="bg-white border-border focus-visible:ring-primary"
-                          value={addressDetail}
-                          onChange={(e) => setAddressDetail(e.target.value)}
-                        />
-                      </div>
                     </div>
-                  ) : (
+
+                    <div className="space-y-2">
+                      <Label htmlFor="address-detail">{su.fullAddressLabel}</Label>
+                      <Input
+                        id="address-detail"
+                        type="text"
+                        placeholder={su.fullAddressPlaceholder}
+                        className="bg-white border-border focus-visible:ring-primary"
+                        value={addressDetail}
+                        onChange={(e) => setAddressDetail(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  {role === "PROVIDER" && (
                     <div className="space-y-4">
                       <div className="text-left">
                         <h2 className="text-xl font-bold text-foreground">{su.providerTitle}</h2>

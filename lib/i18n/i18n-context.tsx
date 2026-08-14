@@ -8,6 +8,7 @@ import {
   type Locale,
   locales,
 } from "./dictionaries";
+import { getLocaleFromPath, localizedPath } from "./url";
 
 type I18nContextValue = {
   locale: Locale;
@@ -28,6 +29,10 @@ function normalizeLocale(value: string | null | undefined): Locale | null {
 function detectStoredLocale(): Locale {
   if (typeof window === "undefined") return defaultLocale;
   try {
+    // URL-dəki dil prefiksi həmişə prioritetlidir (/tr/about -> tr)
+    const fromPath = getLocaleFromPath(window.location.pathname);
+    if (fromPath) return fromPath;
+
     const fromStorage = normalizeLocale(window.localStorage.getItem(STORAGE_KEY));
     if (fromStorage) return fromStorage;
 
@@ -98,7 +103,17 @@ export function I18nProvider({
   const value = React.useMemo<I18nContextValue>(
     () => ({
       locale,
-      setLocale: (next: Locale) => setLocaleState(next),
+      setLocale: (next: Locale) => {
+        setLocaleState(next);
+        persistLocale(next);
+        // URL-i yeni dilin prefiksinə uyğunlaşdır (server cookie-ni oxusun deyə tam yükləmə)
+        if (typeof window !== "undefined") {
+          const target = localizedPath(window.location.pathname, next) + window.location.search;
+          if (target !== window.location.pathname + window.location.search) {
+            window.location.assign(target);
+          }
+        }
+      },
       t,
     }),
     [locale, t]

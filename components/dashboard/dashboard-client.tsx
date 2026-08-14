@@ -10,6 +10,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProviderProfileDialog } from "@/components/provider/provider-profile-dialog";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { BAKU_CENTER, calculateDistance, getDistrictCoordinates } from "@/lib/locations";
+import dynamic from "next/dynamic";
+
+// Leaflet SSR-də işləmir — yalnız brauzerdə yüklə
+const MapView = dynamic(() => import("@/components/dashboard/map-view").then((m) => m.MapView), {
+  ssr: false,
+  loading: () => null,
+});
 import { 
   Search, 
   MapPin, 
@@ -19,7 +27,6 @@ import {
   Star, 
   Phone, 
   MessageSquare, 
-  User, 
   Loader2,
   ShieldCheck,
   Compass,
@@ -32,39 +39,7 @@ type ProviderWithProfile = ProviderDetails & {
   coordinates?: { lat: number; lng: number };
 };
 
-// Baku / Yasamal User Center Coordinate
-const USER_COORDINATES = { lat: 40.3894, lng: 49.8032 };
-
 type DashboardCategory = "all" | "urgent" | "plumbing" | "electric" | "nanny" | "cleaning" | "boiler" | "it_tech" | "repair" | "moving" | "barber";
-
-// Helper: Stable mock coordinate generator based on User ID
-const getStableCoordinates = (userId: string) => {
-  let hash = 0;
-  for (let i = 0; i < userId.length; i++) {
-    hash = userId.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const latOffset = ((Math.abs(hash) % 100) / 100) * 0.05 - 0.025;
-  const lngOffset = ((Math.abs(hash >> 8) % 100) / 100) * 0.05 - 0.025;
-  return {
-    lat: USER_COORDINATES.lat + latOffset,
-    lng: USER_COORDINATES.lng + lngOffset
-  };
-};
-
-// Helper: Haversine distance calculator in km
-const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-  const R = 6371; // Earth radius
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-};
 
 export function DashboardClient() {
   const router = useRouter();
@@ -75,6 +50,7 @@ export function DashboardClient() {
   const [providers, setProviders] = useState<ProviderWithProfile[]>([]);
   const [reviewCounts, setReviewCounts] = useState<Record<string, number>>({});
   const [userAddress, setUserAddress] = useState("Yasamal, İnşaatçılar m/s");
+  const [userCoordinates, setUserCoordinates] = useState<{ lat: number; lng: number }>(BAKU_CENTER);
 
   // Filtering state
   const [searchQuery, setSearchQuery] = useState("");
@@ -110,16 +86,50 @@ export function DashboardClient() {
     setReviewCounts(counts);
   }, []);
 
+  // Müştərinin real lokasiyasını brauzer geolocation ilə almaq
+  const locateUser = useCallback(async (fallback: { lat: number; lng: number }, userId: string | null) => {
+    if (typeof window === "undefined" || !("geolocation" in navigator)) return;
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000,
+        });
+      });
+      const newCoords = {
+        lat: Number(position.coords.latitude.toFixed(6)),
+        lng: Number(position.coords.longitude.toFixed(6)),
+      };
+      setUserCoordinates(newCoords);
+
+      // DB-yə yaz yalnız əhəmiyyətli hərəkət olduqda (realtime sonsuz dövrü olmasın)
+      if (userId) {
+        const moved = calculateDistance(fallback.lat, fallback.lng, newCoords.lat, newCoords.lng);
+        if (moved > 0.1) {
+          await supabase
+            .from("profiles")
+            .update({ latitude: newCoords.lat, longitude: newCoords.lng })
+            .eq("id", userId);
+        }
+      }
+    } catch {
+      // İcazə verilmədi və ya xəta — fallback (rayon mərkəzi) davam edir
+    }
+  }, []);
+
   const loadDashboard = useCallback(async () => {
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
+      let userCoords = BAKU_CENTER;
+
       if (user) {
         setCurrentUserId(user.id);
 
         const { data: profile } = await supabase
           .from("profiles")
-          .select("address, role")
+          .select("address, role, latitude, longitude")
           .eq("id", user.id)
           .single();
 
@@ -130,6 +140,15 @@ export function DashboardClient() {
         if (profile?.role) {
           setCurrentUserRole(profile.role);
         }
+
+        userCoords =
+          (typeof profile?.latitude === "number" && typeof profile?.longitude === "number")
+            ? { lat: profile.latitude, lng: profile.longitude }
+            : getDistrictCoordinates(profile?.address) ?? BAKU_CENTER;
+        setUserCoordinates(userCoords);
+
+        // Brauzer geolocation ilə real yerini almağa çalış
+        void locateUser(userCoords, user.id);
       }
 
       let providersQuery = supabase
@@ -162,7 +181,7 @@ export function DashboardClient() {
       if (providerIds.length > 0) {
         const { data: profileRows, error: profileError } = await supabase
           .from("profiles")
-          .select("id, first_name, last_name, phone, role, address, avatar_url")
+          .select("id, first_name, last_name, phone, role, address, avatar_url, latitude, longitude")
           .in("id", providerIds);
 
         if (profileError) throw profileError;
@@ -173,17 +192,21 @@ export function DashboardClient() {
       }
 
       const formattedDbProviders = ((dbProviders || []) as ProviderDetails[]).map((provider) => {
-        const coords = getStableCoordinates(provider.user_id);
+        const profile = profilesById[provider.user_id];
+        const coords =
+          (profile && typeof profile.latitude === "number" && typeof profile.longitude === "number")
+            ? { lat: profile.latitude, lng: profile.longitude }
+            : getDistrictCoordinates(profile?.address) ?? BAKU_CENTER;
         const distance = calculateDistance(
-          USER_COORDINATES.lat,
-          USER_COORDINATES.lng,
+          userCoords.lat,
+          userCoords.lng,
           coords.lat,
           coords.lng
         );
 
         return {
           ...provider,
-          profiles: profilesById[provider.user_id] ?? null,
+          profiles: profile ?? null,
           coordinates: coords,
           distance: Number(distance.toFixed(1))
         } as ProviderWithProfile;
@@ -198,7 +221,7 @@ export function DashboardClient() {
     } finally {
       setLoading(false);
     }
-  }, [loadReviewCounts]);
+  }, [loadReviewCounts, locateUser]);
 
   // Fetch Session & Approved Providers
   useEffect(() => {
@@ -258,6 +281,9 @@ export function DashboardClient() {
 
     // 1. Radius filter
     if (p.distance && p.distance > radius) return false;
+
+    // 1b. Ustanın öz iş radiusu (working_radius_km) — xidmət sahəsindən kənar müştərilərə görünməsin
+    if (p.working_radius_km != null && p.distance != null && p.distance > p.working_radius_km) return false;
 
     // 2. Category filter
     if (selectedCategory !== "all") {
@@ -488,91 +514,16 @@ export function DashboardClient() {
                   </div>
                 </div>
 
-                {/* INTERACTIVE VECTOR MAP CONTAINER */}
-                <div className="flex-1 h-full relative bg-slate-900 overflow-hidden flex items-center justify-center">
-                  
-                  {/* Grid Lines Overlay */}
-                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-                  
-                  {/* Radar Circles */}
-                  <div className="absolute w-[240px] h-[240px] border border-white/5 rounded-full flex items-center justify-center pointer-events-none">
-                    <span className="text-[10px] text-white/20 -mt-[236px] absolute">1 km</span>
-                  </div>
-                  <div className="absolute w-[440px] h-[440px] border border-white/5 rounded-full flex items-center justify-center pointer-events-none">
-                    <span className="text-[10px] text-white/20 -mt-[436px] absolute">3 km</span>
-                  </div>
-                  <div className="absolute w-[680px] h-[680px] border border-white/5 rounded-full flex items-center justify-center pointer-events-none">
-                    <span className="text-[10px] text-white/20 -mt-[676px] absolute">5 km</span>
-                  </div>
-                  <div className="absolute w-[980px] h-[980px] border border-white/5 rounded-full flex items-center justify-center pointer-events-none">
-                    <span className="text-[10px] text-white/20 -mt-[976px] absolute">10 km</span>
-                  </div>
-
-                  {/* Baku Yasamal Mock Roads & Districts Drawing */}
-                  <svg className="absolute inset-0 w-full h-full text-white/5 pointer-events-none opacity-40" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M-100,200 L900,600" stroke="currentColor" strokeWidth="6" fill="none" />
-                    <path d="M200,-100 L300,900" stroke="currentColor" strokeWidth="8" fill="none" />
-                    <circle cx="350" cy="300" r="280" stroke="currentColor" strokeWidth="4" fill="none" strokeDasharray="6 6" />
-                    <text x="120" y="80" fill="currentColor" fontSize="12" className="font-semibold select-none">YASAMAL RAYONU</text>
-                    <text x="450" y="480" fill="currentColor" fontSize="12" className="font-semibold select-none">YENİ YASAMAL</text>
-                  </svg>
-
-                  {/* USER CENTER MARKER */}
-                  <div className="absolute z-10 flex flex-col items-center justify-center">
-                    <span className="absolute w-12 h-12 rounded-full bg-primary/20 animate-ping" />
-                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white border-2 border-white shadow-premium relative z-10">
-                      <User className="w-4 h-4" />
-                    </div>
-                    <span className="bg-primary text-[9px] font-bold text-white px-2 py-0.5 rounded-full shadow-sm mt-1 z-10 whitespace-nowrap">
-                      {t.dashboard.yourLocation}
-                    </span>
-                  </div>
-
-                  {/* PROVIDER PINS MARKERS ON MAP */}
-                  {filteredProviders.map((p) => {
-                    const coords = p.coordinates || USER_COORDINATES;
-                    const xOffset = (coords.lng - USER_COORDINATES.lng) * 9000;
-                    const yOffset = (USER_COORDINATES.lat - coords.lat) * 9000;
-                    
-                    const isSelected = activeProvider?.user_id === p.user_id;
-
-                    return (
-                      <motion.div
-                        key={p.user_id}
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="absolute z-20 cursor-pointer"
-                        style={{
-                          transform: `translate(${xOffset}px, ${yOffset}px)`
-                        }}
-                        onClick={() => openProviderProfile(p)}
-                      >
-                        <div className="relative flex flex-col items-center group">
-                          <div className={`absolute bottom-full mb-1.5 px-2 py-1 bg-slate-800 text-white rounded-lg flex items-center space-x-1.5 shadow-lg scale-90 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 pointer-events-none whitespace-nowrap z-30`}>
-                            <span className="text-[10px] font-bold">{p.profiles?.first_name}</span>
-                            <span className="text-[8px] bg-primary px-1 rounded text-white">{p.rating} ★</span>
-                          </div>
-
-                          <div className={`w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-lg border-2 transition-all duration-300 relative ${
-                            isSelected 
-                              ? "border-primary scale-125 ring-4 ring-primary/20" 
-                              : "border-slate-700 hover:border-primary hover:scale-110"
-                          }`}>
-                            <UserAvatar
-                              avatarUrl={p.profiles?.avatar_url}
-                              name={`${p.profiles?.first_name} ${p.profiles?.last_name}`}
-                              className="size-full"
-                              fallbackClassName="bg-transparent text-slate-800 font-bold text-xs"
-                            />
-                            <span className="absolute -bottom-1.5 -right-1 w-4 h-4 rounded-full bg-slate-900 border border-white flex items-center justify-center text-[8px] text-white">
-                              ⚙️
-                            </span>
-                          </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-
+                {/* LEAFLET CANLI XƏRİTƏ */}
+                <div className="flex-1 h-full relative overflow-hidden">
+                  <MapView
+                    center={userCoordinates}
+                    providers={filteredProviders}
+                    radiusKm={radius}
+                    activeProviderId={activeProviderId}
+                    userLabel={t.dashboard.yourLocation}
+                    onSelectProvider={(id) => setActiveProviderId(id)}
+                  />
                 </div>
               </motion.div>
             ) : (

@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { supabase } from "@/lib/supabase/client";
 import { Profile } from "@/lib/types/database";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { getDistrictCoordinates } from "@/lib/locations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -240,6 +241,8 @@ export default function ProfilePage() {
     setSaving(true);
     setMessage(null);
     try {
+      // Ünvandan rayonu çıxarıb koordinatı yenilə
+      const location = getDistrictCoordinates(address.trim());
       const { error } = await supabase
         .from("profiles")
         .update({
@@ -247,6 +250,8 @@ export default function ProfilePage() {
           last_name: lastName.trim(),
           phone: normalizePhone(phone),
           address: address.trim() || null,
+          latitude: location?.lat ?? null,
+          longitude: location?.lng ?? null,
         })
         .eq("id", user.id);
       if (error) throw error;
@@ -267,7 +272,15 @@ export default function ProfilePage() {
 
       setProfile((prev) =>
         prev
-          ? { ...prev, first_name: firstName.trim(), last_name: lastName.trim(), phone: normalizePhone(phone), address: address.trim() || null }
+          ? {
+              ...prev,
+              first_name: firstName.trim(),
+              last_name: lastName.trim(),
+              phone: normalizePhone(phone),
+              address: address.trim() || null,
+              latitude: location?.lat ?? null,
+              longitude: location?.lng ?? null,
+            }
           : prev,
       );
       setMessage({ type: "success", text: p.savedSuccess });

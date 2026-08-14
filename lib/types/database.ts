@@ -11,6 +11,8 @@ export type Profile = {
   role: ProfileRole;
   address?: string | null;
   avatar_url?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   created_at?: string;
   updated_at?: string;
 };
