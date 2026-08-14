@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { supabase } from "@/lib/supabase/client";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import {
@@ -75,7 +76,8 @@ function InboxView({
   const [conversations, setConversations] = useState<ConversationPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
 
   const loadConversations = useCallback(
     async (userId: string) => {
@@ -139,7 +141,7 @@ function InboxView({
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        router.replace(`/login?redirectTo=${encodeURIComponent("/chat")}`);
+        router.replace(loc(`/login?redirectTo=${encodeURIComponent(loc("/chat"))}`));
         return;
       }
       if (mounted) {
@@ -270,7 +272,8 @@ function InboxView({
 // =============================================================================
 function ActiveChatView({ recipientId }: { recipientId: string }) {
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [currentUserRole, setCurrentUserRole] = useState<Profile["role"] | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
@@ -476,7 +479,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => router.push("/chat")}
+            onClick={() => router.push(loc("/chat"))}
             aria-label={t.chatPage.backAriaLabel}
           >
             <ArrowLeft />
@@ -583,12 +586,14 @@ export function ChatClient() {
   const params = useSearchParams();
   const recipientId = params.get("recipient");
   const router = useRouter();
+  const { locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
 
   if (recipientId) {
     return <ActiveChatView recipientId={recipientId} />;
   }
 
   return (
-    <InboxView onOpenChat={(id) => router.push(`/chat?recipient=${id}`)} />
+    <InboxView onOpenChat={(id) => router.push(loc(`/chat?recipient=${id}`))} />
   );
 }

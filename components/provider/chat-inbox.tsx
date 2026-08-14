@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { Loader2, MessageCircle, Send } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { UserAvatar } from "@/components/ui/user-avatar";
@@ -17,6 +19,8 @@ type Preview = {
 
 export function ChatInbox({ userId }: { userId: string }) {
   const router = useRouter();
+  const { locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const [conversations, setConversations] = useState<Preview[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -145,7 +149,7 @@ export function ChatInbox({ userId }: { userId: string }) {
             ({ conversation, contactId, contactName, contactAvatarUrl, lastMessage }) => (
               <button
                 key={conversation.id}
-                onClick={() => router.push(`/chat?recipient=${contactId}`)}
+                onClick={() => router.push(loc(`/chat?recipient=${contactId}`))}
                 className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-slate-50"
               >
                 <UserAvatar

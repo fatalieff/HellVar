@@ -4,12 +4,14 @@ import Link from "next/link";
 import { ArrowRight, MessageCircleQuestion } from "lucide-react";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 
 export function ContactSection() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
 
   return (
     <section className="bg-background">
@@ -46,7 +48,7 @@ export function ContactSection() {
                     </a>
                   </Button>
                   <Button asChild variant="outline" className="rounded-2xl px-5 hover:scale-102 transition-transform duration-200">
-                    <Link href="/signup">{t.aboutPage.signupButton}</Link>
+                    <Link href={loc("/signup")}>{t.aboutPage.signupButton}</Link>
                   </Button>
                 </div>
               </div>

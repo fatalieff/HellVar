@@ -713,7 +713,7 @@ onClick={() => router.push(loc("/dashboard"))}
             // Unauthenticated view
             <div className="hidden sm:flex items-center gap-1.5">
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/login">{t.nav.login}</Link>
+                <Link href={loc("/login")}>{t.nav.login}</Link>
               </Button>
               <Button variant="premium" size="sm" asChild>
                 <Link href={loc("/signup")} className="gap-1.5">
@@ -885,7 +885,7 @@ onClick={() => router.push(loc("/dashboard"))}
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
                       <Button asChild variant="outline" className="w-full">
-                        <Link href="/become-technician">{t.nav.becomeTechnician}</Link>
+                        <Link href={loc("/become-technician")}>{t.nav.becomeTechnician}</Link>
                       </Button>
                     </div>
                     <div className="mt-auto flex flex-col gap-2">
@@ -893,7 +893,7 @@ onClick={() => router.push(loc("/dashboard"))}
 <Link href={loc("/login")}>{t.nav.login}</Link>
                       </Button>
                       <Button asChild variant="premium" className="w-full">
-                        <Link href="/signup">{t.nav.signup}</Link>
+                        <Link href={loc("/signup")}>{t.nav.signup}</Link>
                       </Button>
                     </div>
                   </div>

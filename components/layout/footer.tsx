@@ -5,9 +5,11 @@ import Image from "next/image";
 import { Container } from "./container";
 import { Separator } from "@/components/ui/separator";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 
 export function Footer() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const year = new Date().getFullYear();
 
   return (
@@ -16,7 +18,7 @@ export function Footer() {
       <Container size="xl" className="py-12 lg:py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2 flex flex-col gap-4">
-            <Link href="/" className="flex items-center gap-2 w-fit">
+            <Link href={loc("/")} className="flex items-center gap-2 w-fit">
               <span className="grid size-9 place-items-center rounded-xl overflow-hidden shadow-glow-primary">
                 <Image src="/logo.jpg" alt="HəllVar" width={36} height={36} className="rounded-xl object-cover" />
               </span>
@@ -33,13 +35,13 @@ export function Footer() {
           <div className="flex flex-col gap-3">
             <h4 className="text-sm font-semibold text-foreground">{t.footer.sections.company}</h4>
             <div className="flex flex-col gap-2">
-              <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link href={loc("/about")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t.footer.links.aboutUs}
               </Link>
-              <Link href="/how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link href={loc("/how-it-works")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t.footer.links.howItWorks}
               </Link>
-              <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link href={loc("/contact")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t.footer.links.contact}
               </Link>
             </div>
@@ -48,10 +50,10 @@ export function Footer() {
           <div className="flex flex-col gap-3">
             <h4 className="text-sm font-semibold text-foreground">{t.footer.sections.support}</h4>
             <div className="flex flex-col gap-2">
-              <Link href="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link href={loc("/help")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t.footer.links.helpCenter}
               </Link>
-              <Link href="/become-technician" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link href={loc("/become-technician")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t.nav.becomeTechnician}
               </Link>
             </div>
@@ -60,13 +62,13 @@ export function Footer() {
           <div className="flex flex-col gap-3">
             <h4 className="text-sm font-semibold text-foreground">{t.footer.sections.legal}</h4>
             <div className="flex flex-col gap-2">
-              <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link href={loc("/terms")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t.footer.links.terms}
               </Link>
-              <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link href={loc("/privacy")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t.footer.links.privacy}
               </Link>
-              <Link href="/cookies" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link href={loc("/cookies")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t.footer.links.cookies}
               </Link>
             </div>

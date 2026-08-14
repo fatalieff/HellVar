@@ -32,6 +32,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -118,7 +119,8 @@ const CATEGORIES: CategoryKey[] = [
 ];
 
 export default function Home() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = React.useCallback((p: string) => localizedPath(p, locale), [locale]);
   const cats = t.categories;
   const [query, setQuery] = React.useState("");
   const [searchFocused, setSearchFocused] = React.useState(false);
@@ -305,7 +307,7 @@ export default function Home() {
                           variant="premium"
                           className="h-11 rounded-2xl px-5 shadow-premium"
                         >
-                          <Link href="/dashboard">
+                          <Link href={loc("/dashboard")}>
                             {t.homePage.showMatchingProviders}
                             <ArrowRight className="size-4" data-icon="inline-end" />
                           </Link>
@@ -344,7 +346,7 @@ export default function Home() {
                 </h2>
               </div>
               <Link
-                href="/categories"
+                href={loc("/categories")}
                 className="group hidden sm:inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t.common.viewAll}
@@ -403,7 +405,7 @@ export default function Home() {
                           size="sm"
                           className="h-9 rounded-lg text-xs font-semibold border-border hover:bg-slate-50 transition-colors cursor-pointer"
                         >
-                          <Link href={`/categories/${k}`}>
+                          <Link href={loc(`/categories/${k}`)}>
                             {t.homePage.viewButtonLabel}
                           </Link>
                         </Button>
@@ -413,7 +415,7 @@ export default function Home() {
                           size="sm"
                           className="h-9 rounded-lg text-xs font-semibold transition-transform duration-200 hover:scale-[1.02] cursor-pointer"
                         >
-                          <Link href={`/categories/${k}?action=request`}>
+                          <Link href={loc(`/categories/${k}?action=request`)}>
                             {t.homePage.requestButtonLabel}
                           </Link>
                         </Button>
@@ -450,7 +452,7 @@ export default function Home() {
                     size="sm"
                     className="w-full h-9 rounded-lg text-xs font-semibold mt-auto gap-1.5 cursor-pointer"
                   >
-                    <Link href="/categories">
+                    <Link href={loc("/categories")}>
                       {t.common.viewAll}
                       <ArrowRight className="size-3.5" />
                     </Link>
@@ -515,7 +517,7 @@ export default function Home() {
                   size="lg"
                   className="bg-white text-foreground hover:bg-white/90 shadow-none"
                 >
-                  <Link href="/become-technician">
+                  <Link href={loc("/become-technician")}>
                     {t.nav.becomeTechnician}
                     <ArrowRight className="size-4" data-icon="inline-end" />
                   </Link>

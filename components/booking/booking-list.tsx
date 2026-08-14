@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { Locale } from "@/lib/i18n/dictionaries";
 import { Booking, BookingStatus } from "@/lib/types/database";
 import { UserAvatar } from "@/components/ui/user-avatar";
@@ -45,6 +46,7 @@ function formatPrice(value: number): string {
 export function BookingList() {
   const router = useRouter();
   const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const [bookings, setBookings] = useState<BookingWithProvider[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -98,7 +100,7 @@ export function BookingList() {
     void (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.replace("/login");
+        router.replace(loc("/login"));
         return;
       }
       setUserId(user.id);
@@ -281,7 +283,7 @@ export function BookingList() {
                         <Button
                           size="sm"
                           className="rounded-xl"
-                          onClick={() => router.push(`/chat?recipient=${booking.provider_id}`)}
+                          onClick={() => router.push(loc(`/chat?recipient=${booking.provider_id}`))}
                         >
                           <MessageSquare className="size-3.5" />
                           {t.bookings.openChat}

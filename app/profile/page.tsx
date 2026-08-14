@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { supabase } from "@/lib/supabase/client";
 import { Profile } from "@/lib/types/database";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { getDistrictCoordinates } from "@/lib/locations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,6 +69,7 @@ function formatMemberDate(dateStr?: string, locale?: string): string {
 export default function ProfilePage() {
   const router = useRouter();
   const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const p = t.profile;
 
   const [loading, setLoading] = React.useState(true);
@@ -220,11 +222,11 @@ export default function ProfilePage() {
             <h1 className="mb-2 text-xl font-bold text-foreground">{p.title}</h1>
             <p className="mb-6 text-sm text-muted-foreground">{p.notSignedIn}</p>
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-              <Button variant="premium" onClick={() => router.push("/login")}>
+              <Button variant="premium" onClick={() => router.push(loc("/login"))}>
                 {p.signIn}
               </Button>
               <Button variant="ghost" asChild>
-                <Link href="/">
+                <Link href={loc("/")}>
                   <ArrowLeft className="size-4" />
                   {p.backHome}
                 </Link>
@@ -368,7 +370,7 @@ export default function ProfilePage() {
         >
           <div>
             <Link
-              href="/"
+              href={loc("/")}
               className="mb-3 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               <ArrowLeft className="size-3.5" />

@@ -5,6 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { supabase } from "@/lib/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -149,7 +150,8 @@ const getDatabaseCategoriesForCategory = (categoryKey: string): string[] => {
 };
 
 export default function CategoriesPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const cats = t.categories;
   const [counts, setCounts] = useState<Record<CategoryKey, number>>({
     electric: 0,
@@ -295,7 +297,7 @@ export default function CategoriesPage() {
                         variant="outline"
                         className="h-10 rounded-xl text-xs font-bold border-border hover:bg-slate-50 transition-colors cursor-pointer"
                       >
-                        <Link href={`/categories/${k}`}>
+                        <Link href={loc(`/categories/${k}`)}>
                           {t.categoriesPage.viewButton}
                         </Link>
                       </Button>
@@ -304,7 +306,7 @@ export default function CategoriesPage() {
                         variant="premium"
                         className="h-10 rounded-xl text-xs font-bold transition-transform duration-200 hover:scale-[1.02] cursor-pointer"
                       >
-                        <Link href={`/categories/${k}?action=request`}>
+                        <Link href={loc(`/categories/${k}?action=request`)}>
                           {t.categoriesPage.requestButton}
                         </Link>
                       </Button>

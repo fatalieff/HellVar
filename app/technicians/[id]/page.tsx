@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { supabase } from "@/lib/supabase/client";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { Profile, ProviderDetails, ProviderReview } from "@/lib/types/database";
@@ -89,7 +90,8 @@ export default function TechnicianProfilePage({
   params: Promise<{ id: string }>;
 }) {
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const resolvedParams = React.use(params);
   const providerId = resolvedParams.id;
 
@@ -137,7 +139,7 @@ export default function TechnicianProfilePage({
           .single();
 
         if (provErr || !provRow) {
-          router.replace("/technicians");
+          router.replace(loc("/technicians"));
           return;
         }
 
@@ -365,7 +367,7 @@ export default function TechnicianProfilePage({
         <Container size="xl">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <Link
-              href="/technicians"
+              href={loc("/technicians")}
               className="group inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="size-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
@@ -575,7 +577,7 @@ export default function TechnicianProfilePage({
                     </Button>
                     <Button
                       onClick={() =>
-                        router.push(`/chat?recipient=${provider.user_id}`)
+                        router.push(loc(`/chat?recipient=${provider.user_id}`))
                       }
                       variant="premium"
                       className="h-11 rounded-xl font-bold gap-1.5 shadow-glow-primary"
@@ -1054,7 +1056,7 @@ export default function TechnicianProfilePage({
                     </Button>
                     <Button
                       onClick={() =>
-                        router.push(`/chat?recipient=${provider.user_id}`)
+                        router.push(loc(`/chat?recipient=${provider.user_id}`))
                       }
                       variant="premium"
                       className="w-full h-11 rounded-xl font-bold gap-1.5 shadow-glow-primary"
@@ -1108,7 +1110,7 @@ export default function TechnicianProfilePage({
                 </h2>
               </div>
               <Link
-                href="/technicians"
+                href={loc("/technicians")}
                 className="group hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
               >
                 Hamısını gör
@@ -1121,8 +1123,8 @@ export default function TechnicianProfilePage({
                 <RelatedCard
                   key={rp.user_id}
                   provider={rp}
-                  onClick={() => router.push(`/technicians/${rp.user_id}`)}
-                  onChat={() => router.push(`/chat?recipient=${rp.user_id}`)}
+                  onClick={() => router.push(loc(`/technicians/${rp.user_id}`))}
+                  onChat={() => router.push(loc(`/chat?recipient=${rp.user_id}`))}
                 />
               ))}
             </div>

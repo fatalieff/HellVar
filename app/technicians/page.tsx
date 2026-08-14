@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { supabase } from "@/lib/supabase/client";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { Profile, ProviderDetails } from "@/lib/types/database";
@@ -151,7 +152,8 @@ type ProviderWithProfile = ProviderDetails & {
 };
 
 export default function TechniciansPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const router = useRouter();
   const cats = t.categories;
 
@@ -797,10 +799,10 @@ export default function TechniciansPage() {
                       isFavorite={isFavorite(provider.user_id)}
                       onToggleFavorite={() => toggleFavorite(provider.user_id)}
                       onViewProfile={() =>
-                        router.push(`/technicians/${provider.user_id}`)
+                        router.push(loc(`/technicians/${provider.user_id}`))
                       }
                       onChat={() =>
-                        router.push(`/chat?recipient=${provider.user_id}`)
+                        router.push(loc(`/chat?recipient=${provider.user_id}`))
                       }
                       onWriteReview={() =>
                         setReviewDialogState({
@@ -882,7 +884,7 @@ export default function TechniciansPage() {
                   size="lg"
                   className="bg-white text-foreground hover:bg-white/95 shadow-none h-12 rounded-2xl px-6 font-bold flex-1 lg:flex-none"
                 >
-                  <Link href="/signup" className="gap-2">
+                  <Link href={loc("/signup")} className="gap-2">
                     <Sparkles className="size-4.5" />
                     {t.techniciansPage.cta.button}
                     <ArrowRight className="size-4" />
@@ -984,7 +986,8 @@ function PodiumCard({
   provider: ProviderWithProfile;
   onWriteReview: () => void;
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const colors: Record<number, string> = {
     1: "from-amber-400 via-orange-400 to-orange-500",
     2: "from-slate-300 via-slate-400 to-slate-500",
@@ -1103,7 +1106,7 @@ function PodiumCard({
 
         <div className="grid grid-cols-3 gap-2 pt-1">
           <Button
-            onClick={() => router.push(`/technicians/${provider.user_id}`)}
+            onClick={() => router.push(loc(`/technicians/${provider.user_id}`))}
             variant="outline"
             size="sm"
             className="h-10 rounded-xl text-[11px] font-bold border-border hover:bg-slate-50"
@@ -1122,7 +1125,7 @@ function PodiumCard({
             {t.techniciansPage.card.reviewButton}
           </Button>
           <Button
-            onClick={() => router.push(`/chat?recipient=${provider.user_id}`)}
+            onClick={() => router.push(loc(`/chat?recipient=${provider.user_id}`))}
             variant="premium"
             size="sm"
             className="h-10 rounded-xl text-[11px] font-bold gap-1 shadow-glow-primary"

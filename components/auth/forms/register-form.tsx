@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { BAKU_DISTRICTS, getDistrictCoordinates } from "@/lib/locations";
 import { 
   User, 
@@ -54,7 +55,8 @@ const PROVIDER_CATEGORIES = [
 ];
 
 export function RegisterForm() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const su = t.auth.signUp;
   const pr = t.profile;
   const [stage, setStage] = useState(1);
@@ -381,7 +383,7 @@ export function RegisterForm() {
                 </p>
               )}
               <Button asChild className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-white shadow-glow-primary">
-                <a href="/login">{su.successSignIn}</a>
+                <a href={loc("/login")}>{su.successSignIn}</a>
               </Button>
             </motion.div>
           ) : (

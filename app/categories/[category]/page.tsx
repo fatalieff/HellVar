@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { supabase } from "@/lib/supabase/client";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -369,6 +370,7 @@ export default function CategoryDetailPage({
   const categoryKey = resolvedParams.category as CategoryKey;
 
   const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const cats = t.categories;
 
   // States
@@ -702,7 +704,7 @@ export default function CategoryDetailPage({
         <Container size="xl">
           <div className="flex flex-col gap-4">
             <Link
-              href="/categories"
+              href={loc("/categories")}
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="size-4" />
@@ -1192,7 +1194,7 @@ export default function CategoryDetailPage({
                   </Button>
                   <Button
                     onClick={() =>
-                      router.push(`/chat?recipient=${selectedProvider.user_id}`)
+                      router.push(loc(`/chat?recipient=${selectedProvider.user_id}`))
                     }
                     variant="premium"
                     className="h-10 rounded-xl font-bold cursor-pointer"

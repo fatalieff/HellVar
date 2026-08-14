@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProviderProfileDialog } from "@/components/provider/provider-profile-dialog";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { BAKU_CENTER, calculateDistance, getDistrictCoordinates } from "@/lib/locations";
 import dynamic from "next/dynamic";
 
@@ -43,7 +44,8 @@ type DashboardCategory = "all" | "urgent" | "plumbing" | "electric" | "nanny" | 
 
 export function DashboardClient() {
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [currentUserRole, setCurrentUserRole] = useState<Profile["role"] | null>(null);
@@ -618,7 +620,7 @@ export function DashboardClient() {
                             </a>
                           </Button>
                           <Button 
-                            onClick={() => router.push(`/chat?recipient=${p.user_id}`)}
+                            onClick={() => router.push(loc(`/chat?recipient=${p.user_id}`))}
                             variant="premium" 
                             size="sm" 
                             className="w-full text-xs font-semibold h-9 rounded-lg text-white shadow-glow-primary"

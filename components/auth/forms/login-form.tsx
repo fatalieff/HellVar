@@ -16,10 +16,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 
 export function LoginForm() {
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -81,11 +83,11 @@ export function LoginForm() {
       const role = profile?.role;
       setTimeout(() => {
         if (role === "CUSTOMER") {
-          router.push("/dashboard");
+          router.push(loc("/dashboard"));
         } else if (role === "PROVIDER") {
-          router.push("/provider/dashboard");
+          router.push(loc("/provider/dashboard"));
         } else {
-          router.push("/");
+          router.push(loc("/"));
         }
         router.refresh();
       }, 1000);
@@ -135,7 +137,7 @@ export function LoginForm() {
             <div className="flex justify-between items-center">
               <Label htmlFor="password">{t.auth.signIn.passwordLabel}</Label>
               <Link 
-                href="/forgot-password" 
+                href={loc("/forgot-password")} 
                 className="text-xs text-primary hover:underline font-medium"
               >
                 {t.auth.signIn.forgotPassword}
@@ -183,7 +185,7 @@ export function LoginForm() {
           <div className="text-center mt-6 text-xs text-muted-foreground">
             {t.auth.signIn.noAccount}{" "}
             <Link 
-              href="/signup" 
+              href={loc("/signup")} 
               className="text-primary font-semibold hover:underline"
             >
               {t.auth.signIn.createAccount}

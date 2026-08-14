@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Container } from "@/components/layout/container";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import { TiltCard } from "@/components/home/tilt-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -75,7 +76,8 @@ function SkeletonSection({ className }: { className?: string }) {
 }
 
 export default function AboutPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
 
   return (
     <div className="flex flex-col overflow-hidden">
@@ -133,13 +135,13 @@ export default function AboutPage() {
                 className="flex flex-wrap gap-3"
               >
                 <Button asChild variant="premium" size="lg" className="rounded-2xl px-5 hover:scale-102 transition-transform duration-200">
-                  <Link href="/signup">
+                  <Link href={loc("/signup")}>
                     {t.aboutPage.ctaStart}
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="rounded-2xl px-5 hover:scale-102 transition-transform duration-200">
-                  <Link href="/dashboard">
+                  <Link href={loc("/dashboard")}>
                     {t.aboutPage.ctaViewProviders}
                   </Link>
                 </Button>

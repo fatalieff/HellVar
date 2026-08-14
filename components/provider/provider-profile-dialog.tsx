@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useI18n } from "@/lib/i18n/i18n-context";
+import { localizedPath } from "@/lib/i18n/url";
 import {
   Star,
   Phone,
@@ -61,7 +62,8 @@ export function ProviderProfileDialog({
   onClose,
 }: ProviderProfileDialogProps) {
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const loc = (p: string) => localizedPath(p, locale);
   const [reviews, setReviews] = useState<ProviderReviewWithCustomer[]>([]);
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState<string | null>(null);
@@ -371,7 +373,7 @@ export function ProviderProfileDialog({
                     <Button
                       variant="premium"
                       className="h-10"
-                      onClick={() => router.push(`/chat?recipient=${provider.user_id}`)}
+                      onClick={() => router.push(loc(`/chat?recipient=${provider.user_id}`))}
                     >
                       <MessageSquare className="mr-2 h-4 w-4" />
                       {t.dashboard.chat}
