@@ -199,18 +199,11 @@ export function DashboardClient() {
           (profile && typeof profile.latitude === "number" && typeof profile.longitude === "number")
             ? { lat: profile.latitude, lng: profile.longitude }
             : getDistrictCoordinates(profile?.address) ?? BAKU_CENTER;
-        const distance = calculateDistance(
-          userCoords.lat,
-          userCoords.lng,
-          coords.lat,
-          coords.lng
-        );
 
         return {
           ...provider,
           profiles: profile ?? null,
           coordinates: coords,
-          distance: Number(distance.toFixed(1))
         } as ProviderWithProfile;
       });
 
@@ -244,9 +237,25 @@ export function DashboardClient() {
     };
   }, [loadDashboard]);
 
+  // Məsafələri cari lokasiyadan (geolocation daxil) hər renderdə hesabla — xəritə ilə uyğun olsun
+  const providersWithDistance = useMemo(
+    () =>
+      providers.map((provider) => {
+        if (!provider.coordinates) return provider;
+        const distance = calculateDistance(
+          userCoordinates.lat,
+          userCoordinates.lng,
+          provider.coordinates.lat,
+          provider.coordinates.lng
+        );
+        return { ...provider, distance: Number(distance.toFixed(1)) };
+      }),
+    [providers, userCoordinates]
+  );
+
   const activeProvider = useMemo(
-    () => providers.find((provider) => provider.user_id === activeProviderId) ?? null,
-    [activeProviderId, providers]
+    () => providersWithDistance.find((provider) => provider.user_id === activeProviderId) ?? null,
+    [activeProviderId, providersWithDistance]
   );
 
   const categoryOptions: Array<{ key: DashboardCategory; label: string }> = [
@@ -277,7 +286,7 @@ export function DashboardClient() {
   };
 
   // Filter logic
-  const filteredProviders = providers.filter((p) => {
+  const filteredProviders = providersWithDistance.filter((p) => {
     // Never show the currently authenticated provider in customer mode.
     if (currentUserId && p.user_id === currentUserId) return false;
 

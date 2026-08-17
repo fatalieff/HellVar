@@ -25,10 +25,9 @@ export function middleware(request: NextRequest) {
   if (first && NON_DEFAULT_LOCALES.includes(first)) urlLocale = first;
   else if (first === 'az') urlLocale = 'az';
 
-  const internalPath =
-    urlLocale && first !== 'az'
-      ? '/' + segments.slice(1).join('/')
-      : pathname;
+  const internalPath = urlLocale
+    ? '/' + segments.slice(1).join('/')
+    : pathname;
   const internal = internalPath === '' ? '/' : internalPath;
 
   const cookieRaw = request.cookies.get(COOKIE_NAME)?.value;
