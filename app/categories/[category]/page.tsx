@@ -113,19 +113,19 @@ const CATEGORY_META: Record<
 > = {
   electric: {
     Icon: Bolt,
-    tone: "from-amber-400/20 to-yellow-500/10 text-amber-600",
+    tone: "from-amber-400/20 to-yellow-500/10 text-amber-600 dark:text-amber-400",
     image:
       "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=400&auto=format&fit=crop",
   },
   plumbing: {
     Icon: Droplets,
-    tone: "from-sky-400/20 to-blue-500/10 text-sky-600",
+    tone: "from-sky-400/20 to-blue-500/10 text-sky-600 dark:text-sky-400",
     image:
       "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400&auto=format&fit=crop",
   },
   cleaning: {
     Icon: CleaningIcon,
-    tone: "from-emerald-400/20 to-green-500/10 text-emerald-600",
+    tone: "from-emerald-400/20 to-green-500/10 text-emerald-600 dark:text-emerald-400",
     image:
       "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?q=80&w=400&auto=format&fit=crop",
   },
@@ -695,12 +695,12 @@ export default function CategoryDetailPage({
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 50% -10%, oklch(0.7900 0.1400 70.00 / 0.08), transparent 50%)",
+            "radial-gradient(circle at 50% -10%, color-mix(in oklab, var(--accent) 8%, transparent), transparent 50%)",
         }}
       />
 
       {/* Header section */}
-      <section className="border-b border-border/60 bg-white/70 backdrop-blur-md py-8">
+      <section className="border-b border-border/60 bg-white/70 dark:bg-card/50 backdrop-blur-md py-8">
         <Container size="xl">
           <div className="flex flex-col gap-4">
             <Link
