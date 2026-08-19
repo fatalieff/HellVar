@@ -124,7 +124,7 @@ export function ChatInbox({ userId }: { userId: string }) {
   }, [loadInbox, userId]);
 
   return (
-    <section className="rounded-2xl border border-border bg-white shadow-sm">
+    <section className="rounded-2xl border border-border bg-white dark:bg-card shadow-sm">
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>
           <h2 className="font-bold text-foreground">Mesajlar</h2>
@@ -150,7 +150,7 @@ export function ChatInbox({ userId }: { userId: string }) {
               <button
                 key={conversation.id}
                 onClick={() => router.push(loc(`/chat?recipient=${contactId}`))}
-                className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-slate-50"
+                className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-slate-50 dark:hover:bg-muted/40"
               >
                 <UserAvatar
                   avatarUrl={contactAvatarUrl}

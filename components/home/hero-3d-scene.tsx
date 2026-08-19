@@ -184,8 +184,12 @@ export function Hero3DScene() {
   if (reducedMotion) return null;
 
   return (
-    <div aria-hidden className="absolute inset-0">
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 top-0 h-[380px] overflow-hidden sm:h-[460px] lg:h-[520px]"
+    >
       <Scene />
+      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent" />
     </div>
   );
 }

@@ -252,19 +252,19 @@ export function WriteReviewDialog({
         <div className="px-6 py-5 space-y-5">
           {/* Auth warnings */}
           {!authState.uid ? (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 dark:border-amber-500/30 dark:bg-amber-500/10 p-4 flex items-start gap-3">
               <AlertTriangle className="size-5 text-amber-500 shrink-0 mt-0.5" />
               <div>
-                <div className="text-sm font-bold text-amber-800">
+                <div className="text-sm font-bold text-amber-800 dark:text-amber-400">
                   Rəy yazmaq üçün daxil olun
                 </div>
-                <div className="text-xs text-amber-700/90 mt-1 leading-relaxed">
+                <div className="text-xs text-amber-700/90 dark:text-amber-400/80 mt-1 leading-relaxed">
                   {t.dashboard.reviewAuthHint}
                 </div>
               </div>
             </div>
           ) : !isCustomer ? (
-            <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4 flex items-start gap-3">
+            <div className="rounded-2xl border border-sky-200 bg-sky-50 dark:border-sky-500/30 dark:bg-sky-500/10 p-4 flex items-start gap-3">
               <ShieldCheck className="size-5 text-sky-500 shrink-0 mt-0.5" />
               <div>
                 <div className="text-sm font-bold text-sky-800">
@@ -279,13 +279,13 @@ export function WriteReviewDialog({
 
           {/* Success */}
           {success && (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 flex items-start gap-3 animate-fade-up">
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 dark:border-emerald-500/30 dark:bg-emerald-500/10 p-4 flex items-start gap-3 animate-fade-up">
               <CheckCircle2 className="size-5 text-emerald-500 shrink-0 mt-0.5" />
               <div>
-                <div className="text-sm font-bold text-emerald-800">
+                <div className="text-sm font-bold text-emerald-800 dark:text-emerald-400">
                   Rəyiniz qəbul edildi! ✨
                 </div>
-                <div className="text-xs text-emerald-700/90 mt-1">
+                <div className="text-xs text-emerald-700/90 dark:text-emerald-400/80 mt-1">
                   Ustanın reytinqi yeniləndi.
                 </div>
               </div>
@@ -311,8 +311,8 @@ export function WriteReviewDialog({
                     className={cn(
                       "group relative flex items-center justify-center size-14 rounded-2xl transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed",
                       active
-                        ? "bg-gradient-to-br from-amber-100 to-amber-50 ring-2 ring-amber-200 shadow-md scale-105"
-                        : "bg-slate-50 border border-border hover:bg-amber-50 hover:border-amber-200"
+                        ? "bg-gradient-to-br from-amber-100 to-amber-50 ring-2 ring-amber-200 shadow-md scale-105 dark:from-amber-500/15 dark:to-amber-500/5 dark:ring-amber-500/30"
+                        : "bg-slate-50 border border-border hover:bg-amber-50 hover:border-amber-200 dark:bg-secondary dark:hover:bg-amber-500/10 dark:hover:border-amber-500/30"
                     )}
                     aria-label={`${val} ulduz`}
                   >
@@ -321,7 +321,7 @@ export function WriteReviewDialog({
                         "size-7 transition-transform duration-200 group-hover:scale-110",
                         active
                           ? "fill-amber-400 text-amber-500 drop-shadow-sm"
-                          : "text-slate-300"
+                          : "text-slate-300 dark:text-muted"
                       )}
                     />
                     <span
@@ -329,7 +329,7 @@ export function WriteReviewDialog({
                         "absolute -top-1.5 -right-1.5 size-4 rounded-full text-[9px] font-black flex items-center justify-center",
                         active
                           ? "bg-amber-400 text-white"
-                          : "bg-slate-200 text-slate-600"
+                          : "bg-slate-200 text-slate-600 dark:bg-muted dark:text-muted-foreground"
                       )}
                     >
                       {val}
@@ -391,7 +391,7 @@ export function WriteReviewDialog({
                   if (val.length <= 1000) setComment(val);
                 }}
                 disabled={!isCustomer || loading || success}
-                className="inline-flex items-center rounded-full border border-border bg-slate-50 px-2.5 py-1 text-[11px] font-bold text-muted-foreground hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center rounded-full border border-border bg-slate-50 dark:bg-secondary px-2.5 py-1 text-[11px] font-bold text-muted-foreground hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Sparkles className="size-3 mr-1 text-primary" />
                 {h}
@@ -400,7 +400,7 @@ export function WriteReviewDialog({
           </div>
 
           {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">
+            <div className="rounded-xl border border-red-200 bg-red-50 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400 px-4 py-3 text-xs font-semibold text-red-700">
               {error}
             </div>
           )}
@@ -410,7 +410,7 @@ export function WriteReviewDialog({
           <DialogClose asChild>
             <Button
               variant="outline"
-              className="h-11 rounded-xl font-bold border-border hover:bg-slate-50 flex-1 sm:flex-none"
+              className="h-11 rounded-xl font-bold border-border hover:bg-slate-50 dark:hover:bg-muted/40 flex-1 sm:flex-none"
               disabled={loading}
             >
               Ləğv Et

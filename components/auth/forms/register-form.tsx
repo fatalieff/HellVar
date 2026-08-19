@@ -414,7 +414,7 @@ export function RegisterForm() {
                         placeholder={su.firstNamePlaceholder}
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
-                        className="bg-white border-border focus-visible:ring-primary"
+                        className="bg-white dark:bg-card border-border focus-visible:ring-primary"
                       />
                     </div>
                     <div className="space-y-2">
@@ -425,7 +425,7 @@ export function RegisterForm() {
                         placeholder={su.lastNamePlaceholder}
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
-                        className="bg-white border-border focus-visible:ring-primary"
+                        className="bg-white dark:bg-card border-border focus-visible:ring-primary"
                       />
                     </div>
                   </div>
@@ -442,7 +442,7 @@ export function RegisterForm() {
                         placeholder={su.phonePlaceholder}
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="pl-[72px] bg-white border-border focus-visible:ring-primary"
+                        className="pl-[72px] bg-white dark:bg-card border-border focus-visible:ring-primary"
                       />
                     </div>
                   </div>
@@ -457,7 +457,7 @@ export function RegisterForm() {
                         placeholder="example@domain.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 bg-white border-border focus-visible:ring-primary"
+                        className="pl-10 bg-white dark:bg-card border-border focus-visible:ring-primary"
                       />
                     </div>
                   </div>
@@ -472,7 +472,7 @@ export function RegisterForm() {
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 bg-white border-border focus-visible:ring-primary"
+                        className="pl-10 bg-white dark:bg-card border-border focus-visible:ring-primary"
                       />
                     </div>
                   </div>
@@ -495,7 +495,7 @@ export function RegisterForm() {
                         setRole("CUSTOMER");
                         setValidationError(null);
                       }}
-                      className={`relative flex flex-col items-center justify-center p-6 text-center rounded-xl border-2 transition-all duration-300 bg-white hover:border-primary/50 hover:shadow-premium group ${
+                      className={`relative flex flex-col items-center justify-center p-6 text-center rounded-xl border-2 transition-all duration-300 bg-white dark:bg-card hover:border-primary/50 hover:shadow-premium group ${
                         role === "CUSTOMER"
                           ? "border-primary ring-2 ring-primary/20 shadow-glow-primary"
                           : "border-border"
@@ -524,7 +524,7 @@ export function RegisterForm() {
                         setRole("PROVIDER");
                         setValidationError(null);
                       }}
-                      className={`relative flex flex-col items-center justify-center p-6 text-center rounded-xl border-2 transition-all duration-300 bg-white hover:border-primary/50 hover:shadow-premium group ${
+                      className={`relative flex flex-col items-center justify-center p-6 text-center rounded-xl border-2 transition-all duration-300 bg-white dark:bg-card hover:border-primary/50 hover:shadow-premium group ${
                         role === "PROVIDER"
                           ? "border-primary ring-2 ring-primary/20 shadow-glow-primary"
                           : "border-border"
@@ -566,7 +566,7 @@ export function RegisterForm() {
                       className="group flex cursor-pointer items-center gap-4"
                     >
                       <div className="relative shrink-0">
-                        <div className="grid size-20 place-items-center overflow-hidden rounded-full border-2 border-border bg-white text-muted-foreground/60 transition-all duration-200 group-hover:border-primary/50">
+                        <div className="grid size-20 place-items-center overflow-hidden rounded-full border-2 border-border bg-white dark:bg-card text-muted-foreground/60 transition-all duration-200 group-hover:border-primary/50">
                           {avatarPreview ? (
                             <img
                               src={avatarPreview}
@@ -630,7 +630,7 @@ export function RegisterForm() {
                           id="address-select"
                           value={district}
                           onChange={(e) => setDistrict(e.target.value)}
-                          className="w-full rounded-md border border-border bg-white pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none"
+                          className="w-full rounded-md border border-border bg-white dark:bg-card pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none"
                         >
                           <option value="">{su.districtPlaceholder}</option>
                           {BAKU_DISTRICTS.map((d) => (
@@ -653,7 +653,7 @@ export function RegisterForm() {
                         id="address-detail"
                         type="text"
                         placeholder={su.fullAddressPlaceholder}
-                        className="bg-white border-border focus-visible:ring-primary"
+                        className="bg-white dark:bg-card border-border focus-visible:ring-primary"
                         value={addressDetail}
                         onChange={(e) => setAddressDetail(e.target.value)}
                       />
@@ -675,7 +675,7 @@ export function RegisterForm() {
                             id="category-select"
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
-                            className="w-full rounded-md border border-border bg-white pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none"
+                            className="w-full rounded-md border border-border bg-white dark:bg-card pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none"
                           >
                             <option value="">{su.categoryPlaceholder}</option>
                             {PROVIDER_CATEGORIES.map((cat) => (
@@ -729,7 +729,7 @@ export function RegisterForm() {
                             </p>
                             <div className="max-h-24 overflow-y-auto space-y-1.5 pr-1">
                               {selectedFiles.map((file, idx) => (
-                                <div key={idx} className="flex justify-between items-center bg-white p-2 rounded-lg border border-border text-xs">
+                                <div key={idx} className="flex justify-between items-center bg-white dark:bg-card p-2 rounded-lg border border-border text-xs">
                                   <div className="flex items-center space-x-2 truncate">
                                     <FileText className="w-3.5 h-3.5 text-primary shrink-0" />
                                     <span className="truncate text-foreground font-medium">{file.name}</span>
@@ -754,7 +754,7 @@ export function RegisterForm() {
 
               {/* Validation & Error Alerts */}
               {(validationError || error) && (
-                <div className="mt-4 p-3 bg-red-50 text-red-700 text-sm rounded-lg flex items-start space-x-2 border border-red-200">
+                <div className="mt-4 p-3 bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/30 text-sm rounded-lg flex items-start space-x-2 border border-red-200">
                   <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                   <span className="font-medium">{validationError || error}</span>
                 </div>

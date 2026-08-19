@@ -28,6 +28,10 @@ export type Dictionary = {
     providerPanel: string;
     logout: string;
   };
+  theme: {
+    toggleToLight: string;
+    toggleToDark: string;
+  };
   hero: {
     title: string;
     subtitle: string;

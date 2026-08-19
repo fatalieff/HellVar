@@ -333,7 +333,7 @@ export function DashboardClient() {
   return (
     <div className="flex-1 flex flex-col w-full">
       {/* FILTER & SEARCH PANEL */}
-      <section className="bg-white border-b border-border py-4 px-4 sm:px-6 lg:px-8 shadow-sm">
+      <section className="bg-white dark:bg-card border-b border-border py-4 px-4 sm:px-6 lg:px-8 shadow-sm">
         <div className="max-w-7xl mx-auto flex flex-col xl:flex-row xl:items-center gap-4">
           
           {/* Left Side: Address info & Categories */}
@@ -408,7 +408,7 @@ export function DashboardClient() {
                 onClick={() => setViewMode("map")}
                 className={`flex items-center justify-center gap-1.5 px-3.5 rounded-lg text-xs font-semibold transition-all h-full ${
                   viewMode === "map"
-                    ? "bg-white text-foreground shadow-sm"
+                    ? "bg-white text-foreground shadow-sm dark:bg-card"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -419,7 +419,7 @@ export function DashboardClient() {
                 onClick={() => setViewMode("list")}
                 className={`flex items-center justify-center gap-1.5 px-3.5 rounded-lg text-xs font-semibold transition-all h-full ${
                   viewMode === "list"
-                    ? "bg-white text-foreground shadow-sm"
+                    ? "bg-white text-foreground shadow-sm dark:bg-card"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -438,7 +438,7 @@ export function DashboardClient() {
           <p className="text-sm text-muted-foreground">{t.dashboard.loading}</p>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col md:flex-row relative bg-slate-50/30">
+        <div className="flex-1 flex flex-col md:flex-row relative bg-slate-50/30 dark:bg-background">
           <AnimatePresence mode="wait">
             {viewMode === "map" ? (
               // MAP VIEW LAYER
@@ -450,8 +450,8 @@ export function DashboardClient() {
                 className="flex-1 flex flex-col md:flex-row h-[calc(100vh-180px)] w-full overflow-hidden"
               >
                 {/* Desktop Sidebar (Left side) */}
-                <div className="hidden md:flex flex-col w-80 lg:w-96 border-r border-border bg-white h-full overflow-y-auto shrink-0 shadow-sm">
-                  <div className="p-4 border-b border-border bg-slate-50/50 flex justify-between items-center shrink-0">
+                <div className="hidden md:flex flex-col w-80 lg:w-96 border-r border-border bg-white dark:bg-card h-full overflow-y-auto shrink-0 shadow-sm">
+                  <div className="p-4 border-b border-border bg-slate-50/50 dark:bg-muted/40 flex justify-between items-center shrink-0">
                     <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                       {t.dashboard.providersFound} ({filteredProviders.length})
                     </span>
@@ -474,7 +474,7 @@ export function DashboardClient() {
                           <div
                             key={p.user_id}
                             onClick={() => openProviderProfile(p)}
-                            className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer hover:shadow-premium group bg-white ${
+                            className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer hover:shadow-premium group bg-white dark:bg-card ${
                               isActive
                                 ? "border-primary ring-2 ring-primary/20 shadow-glow-primary"
                                 : "border-border"
@@ -485,7 +485,7 @@ export function DashboardClient() {
                                 avatarUrl={p.profiles?.avatar_url}
                                 name={`${p.profiles?.first_name} ${p.profiles?.last_name}`}
                                 className="size-11 border border-border group-hover:border-primary/20 transition-colors"
-                                fallbackClassName="bg-slate-100 text-muted-foreground"
+                                fallbackClassName="bg-slate-100 dark:bg-secondary text-muted-foreground"
                               />
                               <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-start gap-1">
@@ -563,7 +563,7 @@ export function DashboardClient() {
                       <div
                         key={p.user_id}
                         onClick={() => openProviderProfile(p)}
-                        className="border border-border shadow-premium hover:shadow-premium-lg rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col justify-between bg-white"
+                        className="border border-border shadow-premium hover:shadow-premium-lg rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col justify-between bg-white dark:bg-card"
                       >
                         <div className="p-5 space-y-4">
                           <div className="flex justify-between items-start">
@@ -572,7 +572,7 @@ export function DashboardClient() {
                                 avatarUrl={p.profiles?.avatar_url}
                                 name={`${p.profiles?.first_name} ${p.profiles?.last_name}`}
                                 className="size-12 border border-border group-hover:border-primary/20 transition-colors"
-                                fallbackClassName="bg-slate-100 text-muted-foreground"
+                                fallbackClassName="bg-slate-100 dark:bg-secondary text-muted-foreground"
                               />
                               <div>
                                 <h3 className="font-bold text-foreground text-sm group-hover:text-primary transition-colors">
@@ -614,7 +614,7 @@ export function DashboardClient() {
                         </div>
 
                         <div
-                          className="bg-slate-50/50 p-4 border-t border-border flex space-x-2.5"
+                          className="bg-slate-50/50 dark:bg-muted/40 p-4 border-t border-border flex space-x-2.5"
                           onClick={(event) => event.stopPropagation()}
                         >
                           <Button 

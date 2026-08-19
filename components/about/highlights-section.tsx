@@ -12,7 +12,7 @@ export function HighlightsSection() {
   const { t } = useI18n();
 
   return (
-    <section className="border-b border-border/60 bg-white/70">
+    <section className="border-b border-border/60 bg-white/70 dark:bg-card/40">
       <Container size="xl" className="py-16 sm:py-20">
         <motion.div
           variants={containerVariants}

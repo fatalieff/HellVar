@@ -351,14 +351,14 @@ export default function TechnicianProfilePage({
     (Number(reviewStats.avg) || Number(provider.rating) || 5).toFixed(1);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50/60">
+    <div className="flex flex-col min-h-screen bg-slate-50/60 dark:bg-background">
       {/* Ambient background */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 15% 0%, oklch(0.7900 0.1400 70.00 / 0.10), transparent 45%), radial-gradient(circle at 90% 12%, oklch(0.6231 0.1880 41.11 / 0.06), transparent 40%)",
+            "radial-gradient(circle at 15% 0%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 45%), radial-gradient(circle at 90% 12%, color-mix(in oklab, var(--primary) 6%, transparent), transparent 40%)",
         }}
       />
 
@@ -382,7 +382,7 @@ export default function TechnicianProfilePage({
                 className={cn(
                   "h-9 rounded-xl gap-1.5 text-xs font-bold border-border",
                   isFav &&
-                    "border-rose-200 text-rose-500 bg-rose-50 hover:bg-rose-50",
+                    "border-rose-200 text-rose-500 bg-rose-50 hover:bg-rose-50 dark:border-rose-500/30 dark:text-rose-400 dark:bg-rose-500/10 dark:hover:bg-rose-500/10",
                 )}
               >
                 <Heart className={cn("size-4", isFav && "fill-current")} />
@@ -413,82 +413,106 @@ export default function TechnicianProfilePage({
       {/* ===== PROFILE HEADER / HERO ===== */}
       <section className="pb-6 sm:pb-10">
         <Container size="xl">
-          <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-white shadow-premium">
-            {/* Gradient Banner */}
-            <div className="relative h-44 sm:h-56 bg-gradient-primary overflow-hidden">
+          <div className="relative overflow-hidden rounded-[28px] border border-border/50 bg-white dark:bg-card shadow-premium">
+            {/* ============ AURORA BANNER ============ */}
+            <div className="relative h-48 sm:h-60 bg-gradient-primary overflow-hidden">
+              {/* ambient aurora blobs */}
               <div
                 aria-hidden
-                className="absolute -top-20 -right-16 size-72 rounded-full bg-white/20 blur-3xl"
+                className="absolute -top-24 -right-20 size-80 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.35),transparent_65%)] blur-3xl animate-glow-pulse"
               />
               <div
                 aria-hidden
-                className="absolute -bottom-28 left-1/4 size-80 rounded-full bg-white/10 blur-3xl"
+                className="absolute -bottom-32 left-1/4 size-96 rounded-full bg-[radial-gradient(circle,oklch(0.79 0.14 70 / 0.45),transparent_65%)] blur-3xl"
               />
               <div
                 aria-hidden
-                className="absolute top-0 right-1/3 size-44 rounded-full bg-accent/40 blur-3xl"
+                className="absolute top-6 right-1/3 size-56 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.25),transparent_70%)] blur-2xl"
+              />
+              {/* geometric ornaments */}
+              <div
+                aria-hidden
+                className="absolute -left-24 -top-32 size-96 rounded-full border-[3px] border-white/10"
               />
               <div
                 aria-hidden
-                className="absolute -left-24 -top-28 size-80 rounded-full border-[3px] border-white/10"
+                className="absolute -left-12 -top-16 size-64 rounded-full border-2 border-white/10"
               />
               <div
                 aria-hidden
-                className="absolute -left-10 -top-14 size-56 rounded-full border-2 border-white/10"
+                className="absolute right-8 bottom-4 size-14 rounded-full border-2 border-white/15"
               />
-              <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:28px_28px]" />
-              <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/10 to-transparent" />
+              <div
+                aria-hidden
+                className="absolute right-28 bottom-8 size-6 rounded-full border border-white/20"
+              />
+              {/* mesh grid */}
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0d_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0d_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_at_center,black_45%,transparent_75%)]" />
+              {/* glass sheen */}
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-[linear-gradient(115deg,transparent_32%,rgba(255,255,255,0.18)_48%,transparent_62%)]"
+              />
+              {/* soft fade into the card */}
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white dark:from-card to-transparent" />
             </div>
 
-            <div className="p-5 sm:p-8 -mt-20 sm:-mt-28 relative">
+            <div className="p-5 sm:p-8 -mt-24 sm:-mt-32 relative">
               <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
                 {/* Avatar + Name */}
                 <div className="flex flex-col sm:flex-row sm:items-end gap-5 min-w-0">
                   <div className="relative shrink-0">
+                    {/* ambient glow */}
                     <div
                       aria-hidden
-                      className="absolute -inset-1.5 rounded-[22px] bg-gradient-primary opacity-90 blur-md"
+                      className="absolute -inset-2 rounded-[26px] bg-gradient-primary opacity-70 blur-lg animate-glow-pulse"
+                    />
+                    {/* premium conic ring */}
+                    <div
+                      aria-hidden
+                      className="absolute -inset-[3px] rounded-[26px] bg-[conic-gradient(from_140deg,oklch(0.79_0.14_70),oklch(0.62_0.19_41),oklch(0.79_0.14_70))] opacity-60 blur-[2px]"
                     />
                     <UserAvatar
                       avatarUrl={provider.profiles?.avatar_url}
                       name={fullName}
-                      className="relative size-28 sm:size-36 rounded-3xl border-4 border-white shadow-premium-lg"
-                      fallbackClassName="rounded-3xl bg-white text-foreground text-4xl sm:text-5xl font-black"
+                      className="relative size-28 sm:size-36 rounded-3xl border-4 border-white dark:border-card shadow-premium-lg"
+                      fallbackClassName="rounded-3xl bg-gradient-primary text-white text-4xl sm:text-5xl font-black"
                     />
                     <span
                       className={cn(
-                        "absolute bottom-2 right-2 size-5 rounded-full border-4 border-white shadow-sm",
-                        provider.is_online ? "bg-emerald-500" : "bg-slate-300",
+                        "absolute bottom-2 right-2 size-5 rounded-full border-4 border-white dark:border-card shadow-sm",
+                        provider.is_online ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600",
                       )}
                     />
                   </div>
 
                   <div className="flex-1 min-w-0 pb-1">
-                    <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
+                    <div className="flex flex-wrap items-center gap-1.5 mb-3">
                       {provider.profile_status === "APPROVED" && (
-                        <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 rounded-full text-[11px] font-bold">
+                        <Badge className="bg-emerald-50/90 dark:bg-emerald-500/15 backdrop-blur-sm text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30 rounded-full text-[11px] font-bold shadow-sm">
                           <ShieldCheck className="size-3.5 mr-1" />
                           ŞV Təsdiqlənib
                         </Badge>
                       )}
-                      <Badge className="bg-primary/10 text-primary border-primary/20 rounded-full text-[11px] font-bold">
+                      <Badge className="bg-gradient-primary text-white border-transparent rounded-full text-[11px] font-bold shadow-glow-primary">
+                        <BriefcaseBusiness className="size-3.5 mr-1" />
                         {provider.category}
                       </Badge>
                       {provider.documents_uploaded && (
-                        <Badge className="bg-sky-50 text-sky-600 border-sky-200 rounded-full text-[11px] font-bold">
+                        <Badge className="bg-sky-50/90 dark:bg-sky-500/15 backdrop-blur-sm text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-500/30 rounded-full text-[11px] font-bold shadow-sm">
                           <FileCheck2 className="size-3.5 mr-1" />
                           Sənədlər yüklənib
                         </Badge>
                       )}
                     </div>
 
-                    <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-foreground mt-1">
                       {fullName}
                     </h1>
 
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mt-3">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mt-4">
                       <div className="flex items-center gap-1.5">
-                        <div className="flex items-center gap-1 bg-amber-50 text-amber-600 px-2 py-1 rounded-lg text-xs font-black">
+                        <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-lg text-xs font-black shadow-sm">
                           <Star className="size-3.5 fill-amber-400 text-amber-400" />
                           <span className="tabular-nums">{displayRating}</span>
                         </div>
@@ -513,26 +537,36 @@ export default function TechnicianProfilePage({
                 </div>
 
                 {/* Price + CTA Buttons */}
-                <div className="flex flex-col gap-3 sm:min-w-[300px]">
-                  <div className="relative overflow-hidden rounded-2xl bg-slate-900 text-white p-4">
+                <div className="flex flex-col gap-3 sm:min-w-[320px]">
+                  <div className="relative overflow-hidden rounded-2xl bg-[linear-gradient(150deg,#0c0a09_0%,#1c1917_55%,#292524_100%)] text-white p-5 ring-1 ring-white/10 shadow-premium-lg">
+                    {/* premium glow */}
                     <div
                       aria-hidden
-                      className="absolute -right-8 -top-12 size-32 rounded-full bg-primary/50 blur-2xl"
+                      className="absolute -right-10 -top-14 size-40 rounded-full bg-amber-500/25 blur-3xl"
                     />
                     <div
                       aria-hidden
-                      className="absolute -left-6 -bottom-14 size-28 rounded-full bg-accent/30 blur-2xl"
+                      className="absolute -left-8 -bottom-16 size-32 rounded-full bg-orange-500/20 blur-3xl"
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.08),transparent_50%)]"
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"
                     />
                     <div className="relative flex items-end justify-between gap-4">
                       <div className="min-w-0">
-                        <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/55">
+                        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-200/90">
+                          <CircleDollarSign className="size-3.5" />
                           Saatlıq Qiymət
                         </div>
                         <div className="text-3xl sm:text-4xl font-black tracking-tight mt-1.5 tabular-nums">
                           {provider.hourly_rate ? (
                             <>
                               {provider.hourly_rate}
-                              <span className="text-lg font-bold text-white/55 ml-1">
+                              <span className="text-lg font-bold text-amber-200/90 ml-1">
                                 ₼
                               </span>
                             </>
@@ -544,10 +578,10 @@ export default function TechnicianProfilePage({
                       <div className="flex flex-col items-end gap-1.5 shrink-0">
                         <span
                           className={cn(
-                            "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black ring-1",
+                            "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black ring-1 backdrop-blur-sm",
                             provider.is_online
                               ? "bg-emerald-400/15 text-emerald-300 ring-emerald-300/25"
-                              : "bg-white/10 text-white/60 ring-white/10",
+                              : "bg-white/10 text-white/70 ring-white/10",
                           )}
                         >
                           <Activity className="size-3" />
@@ -555,7 +589,7 @@ export default function TechnicianProfilePage({
                             ? t.dashboard.onlineNow
                             : t.dashboard.offlineNow}
                         </span>
-                        <span className="text-[10px] font-semibold text-white/45">
+                        <span className="text-[10px] font-semibold text-white/55">
                           {provider.hourly_rate
                             ? "saat üçün · danışıqla mümkündür"
                             : "qiymət üçün əlaqə saxlayın"}
@@ -568,7 +602,7 @@ export default function TechnicianProfilePage({
                     <Button
                       asChild
                       variant="outline"
-                      className="h-11 rounded-xl font-bold border-border hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600"
+                      className="h-11 rounded-xl font-bold border-border bg-white dark:bg-card hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-200 hover:text-emerald-600 transition-all duration-300"
                     >
                       <a href={`tel:${provider.profiles?.phone}`}>
                         <Phone className="size-4 mr-1.5 text-emerald-500" />
@@ -580,7 +614,7 @@ export default function TechnicianProfilePage({
                         router.push(loc(`/chat?recipient=${provider.user_id}`))
                       }
                       variant="premium"
-                      className="h-11 rounded-xl font-bold gap-1.5 shadow-glow-primary"
+                      className="h-11 rounded-xl font-bold gap-1.5 shadow-glow-primary transition-all duration-300 hover:-translate-y-0.5"
                     >
                       <MessageSquare className="size-4" />
                       {t.dashboard.chat}
@@ -599,21 +633,21 @@ export default function TechnicianProfilePage({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <MetricCard
               Icon={Star}
-              tone="from-amber-400/20 to-yellow-500/10 text-amber-600"
+              tone="from-amber-400/20 to-yellow-500/10 text-amber-600 dark:text-amber-400"
               label="Orta Reytinq"
               value={displayRating}
               sub={`${reviewStats.total} rəy əsasında`}
             />
             <MetricCard
               Icon={BriefcaseBusiness}
-              tone="from-orange-400/20 to-amber-500/10 text-orange-600"
+              tone="from-orange-400/20 to-amber-500/10 text-orange-600 dark:text-orange-400"
               label="Tamamlanmış İş"
               value={String(provider.completed_jobs || 0)}
               sub="Təcrübə nişanı"
             />
             <MetricCard
               Icon={Clock3}
-              tone="from-sky-400/20 to-blue-500/10 text-sky-600"
+              tone="from-sky-400/20 to-blue-500/10 text-sky-600 dark:text-sky-400"
               label="İş Təcrübəsi"
               value={
                 provider.years_experience
@@ -624,7 +658,7 @@ export default function TechnicianProfilePage({
             />
             <MetricCard
               Icon={MapPin}
-              tone="from-emerald-400/20 to-green-500/10 text-emerald-600"
+              tone="from-emerald-400/20 to-green-500/10 text-emerald-600 dark:text-emerald-400"
               label="Ünvan"
               value={provider.profiles?.address ? "Bakı" : "—"}
               sub={provider.profiles?.address || "Ünvan qeyd edilməyib"}
@@ -678,23 +712,11 @@ export default function TechnicianProfilePage({
                       "photo-1588508065123-287b28e013da",
                       "photo-1581578731548-c64695cc6952",
                     ].map((id, i) => (
-                      <div
-                        key={i}
-                        className="group relative aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-border/60"
-                      >
-                        <img
-                          src={`https://images.unsplash.com/${id}?q=80&w=400&auto=format&fit=crop`}
-                          alt={`İş nümunəsi ${i + 1}`}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
-                          <span className="flex items-center gap-1.5 text-[10px] font-bold text-white">
-                            <Camera className="size-3" />
-                            İş nümunəsi {i + 1}
-                          </span>
-                        </div>
-                      </div>
+                      <WorkSampleImage
+                        key={id}
+                        src={`https://images.unsplash.com/${id}?q=80&w=400&auto=format&fit=crop`}
+                        index={i}
+                      />
                     ))}
                   </div>
                 </CardContent>
@@ -760,7 +782,7 @@ export default function TechnicianProfilePage({
               <Card className="border-border/60">
                 <CardContent className="p-5 sm:p-6">
                   {reviewStats.total > 0 ? (
-                    <div className="rounded-2xl border border-border/70 bg-gradient-to-br from-slate-50 to-white p-5 sm:p-6 mb-6 grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center">
+                    <div className="rounded-2xl border border-border/70 bg-gradient-to-br from-slate-50 to-white dark:from-muted/30 dark:to-card p-5 sm:p-6 mb-6 grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center">
                       {/* Big average */}
                       <div className="flex items-center gap-4 sm:flex-col sm:items-start sm:gap-1">
                         <div className="text-5xl font-black tracking-tight text-foreground tabular-nums leading-none">
@@ -775,7 +797,7 @@ export default function TechnicianProfilePage({
                                   "size-4",
                                   i <= Math.round(Number(reviewStats.avg))
                                     ? "fill-amber-400 text-amber-400"
-                                    : "fill-slate-200 text-slate-200",
+                                    : "fill-slate-200 text-slate-200 dark:fill-muted dark:text-muted",
                                 )}
                               />
                             ))}
@@ -801,7 +823,7 @@ export default function TechnicianProfilePage({
                                 {stars}
                                 <Star className="size-2.5 fill-amber-400 text-amber-400" />
                               </span>
-                              <div className="flex-1 h-1.5 rounded-full bg-slate-200/80 overflow-hidden">
+                              <div className="flex-1 h-1.5 rounded-full bg-slate-200/80 dark:bg-muted overflow-hidden">
                                 <div
                                   className="h-full rounded-full bg-gradient-primary transition-all duration-500"
                                   style={{ width: `${pct}%` }}
@@ -829,7 +851,7 @@ export default function TechnicianProfilePage({
                   )}
 
                   {/* Review Composer */}
-                  <div className="rounded-2xl border border-border bg-slate-50/50 p-4 sm:p-5 mb-6">
+                  <div className="rounded-2xl border border-border bg-slate-50/50 dark:bg-muted/30 p-4 sm:p-5 mb-6">
                     <div className="flex items-center justify-between gap-3 mb-3">
                       <h3 className="text-sm font-bold tracking-tight">
                         {ownReview ? "Rəyinizi yeniləyin" : "Sizin rəyiniz"}
@@ -844,8 +866,8 @@ export default function TechnicianProfilePage({
                             className={cn(
                               "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-bold transition disabled:opacity-60 disabled:cursor-not-allowed",
                               val <= reviewRating
-                                ? "border-amber-200 bg-amber-50 text-amber-700"
-                                : "border-border bg-white text-muted-foreground",
+                                ? "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400"
+                                : "border-border bg-white dark:bg-card text-muted-foreground",
                             )}
                           >
                             <Star
@@ -867,11 +889,11 @@ export default function TechnicianProfilePage({
                       onChange={(e) => setReviewComment(e.target.value)}
                       placeholder={t.dashboard.reviewPlaceholder}
                       disabled={!canReview || savingReview}
-                      className="w-full min-h-24 rounded-xl border border-input bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="w-full min-h-24 rounded-xl border border-input bg-white dark:bg-card px-3.5 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-60"
                     />
 
                     {reviewError ? (
-                      <p className="mt-3 text-xs font-semibold text-red-600">
+                      <p className="mt-3 text-xs font-semibold text-red-600 dark:text-red-400">
                         {reviewError}
                       </p>
                     ) : !canReview ? (
@@ -909,7 +931,7 @@ export default function TechnicianProfilePage({
                       <span>{t.common.loading}</span>
                     </div>
                   ) : reviews.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-border bg-slate-50 p-8 text-center">
+                    <div className="rounded-2xl border border-dashed border-border bg-slate-50 dark:bg-muted/30 p-8 text-center">
                       <div className="size-12 rounded-2xl bg-muted grid place-items-center mx-auto mb-3 text-muted-foreground">
                         <Star className="size-6" />
                       </div>
@@ -925,7 +947,7 @@ export default function TechnicianProfilePage({
                       {reviews.map((review) => (
                         <div
                           key={review.id}
-                          className="rounded-2xl border border-border bg-white p-4 sm:p-5 shadow-sm transition-all duration-200 hover:shadow-premium"
+                          className="rounded-2xl border border-border bg-white dark:bg-card p-4 sm:p-5 shadow-sm transition-all duration-200 hover:shadow-premium"
                         >
                           <div className="flex items-start justify-between gap-3 mb-3">
                             <div className="flex items-center gap-3 min-w-0">
@@ -947,7 +969,7 @@ export default function TechnicianProfilePage({
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-1 bg-amber-50 text-amber-600 px-2.5 py-1 rounded-lg text-xs font-black shrink-0">
+                            <div className="flex items-center gap-1 bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400 px-2.5 py-1 rounded-lg text-xs font-black shrink-0">
                               <Star className="size-3.5 fill-amber-400 text-amber-400" />
                               <span className="tabular-nums">
                                 {review.rating.toFixed(1)}
@@ -955,7 +977,7 @@ export default function TechnicianProfilePage({
                             </div>
                           </div>
                           {review.comment && (
-                            <p className="text-sm leading-7 text-foreground/80 bg-slate-50/60 rounded-xl p-3 border border-border/50">
+                            <p className="text-sm leading-7 text-foreground/80 bg-slate-50/60 dark:bg-muted/30 rounded-xl p-3 border border-border/50">
                               {review.comment}
                             </p>
                           )}
@@ -970,7 +992,7 @@ export default function TechnicianProfilePage({
             {/* RIGHT COLUMN (Sticky) */}
             <div className="space-y-6 lg:sticky lg:top-28 self-start order-first lg:order-none">
               {/* Quick Booking Summary */}
-              <Card className="border-border/60 overflow-hidden">
+              <Card className="border-border/50 overflow-hidden shadow-sm hover:shadow-premium transition-shadow duration-300">
                 <div className="relative overflow-hidden bg-gradient-primary p-5 text-white">
                   <div
                     aria-hidden
@@ -979,6 +1001,10 @@ export default function TechnicianProfilePage({
                   <div
                     aria-hidden
                     className="absolute -left-6 -bottom-12 size-24 rounded-full bg-white/10 blur-2xl"
+                  />
+                  <div
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"
                   />
                   <div className="relative flex items-center gap-3">
                     <div className="size-11 rounded-2xl bg-white/15 ring-1 ring-white/25 grid place-items-center backdrop-blur-sm shrink-0">
@@ -1024,8 +1050,8 @@ export default function TechnicianProfilePage({
                         className={cn(
                           "flex items-center gap-1 font-bold text-[11px] px-2.5 py-1 rounded-full",
                           provider.is_online
-                            ? "bg-emerald-50 text-emerald-600"
-                            : "bg-slate-100 text-slate-600",
+                            ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400"
+                            : "bg-slate-100 text-slate-600 dark:bg-secondary dark:text-muted-foreground",
                         )}
                       >
                         <span
@@ -1033,7 +1059,7 @@ export default function TechnicianProfilePage({
                             "size-1.5 rounded-full",
                             provider.is_online
                               ? "bg-emerald-500"
-                              : "bg-slate-400",
+                              : "bg-slate-400 dark:bg-slate-500",
                           )}
                         />
                         {provider.is_online
@@ -1074,22 +1100,24 @@ export default function TechnicianProfilePage({
               </Card>
 
               {/* Verified Badge */}
-              <Card className="border-emerald-200 bg-emerald-50/40">
-                <CardContent className="p-5 flex items-start gap-3">
-                  <div className="size-11 rounded-xl bg-emerald-100 border border-emerald-200 grid place-items-center shrink-0 text-emerald-600 shadow-sm">
-                    <ShieldCheck className="size-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-black text-emerald-800">
-                      Təsdiqlənmiş Usta
-                    </h4>
-                    <p className="text-xs text-emerald-700/80 mt-1 leading-relaxed">
-                      Sənədlər və şəxsiyyət məlumatları HəllVar komandası
-                      tərəfindən yoxlanıb təsdiqlənib. Etibarlı seçim!
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              {provider.profile_status === "APPROVED" && (
+                <Card className="border-emerald-200 bg-emerald-50/40 dark:border-emerald-500/25 dark:bg-emerald-500/10">
+                  <CardContent className="p-5 flex items-start gap-3">
+                    <div className="size-11 rounded-xl bg-emerald-100 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 grid place-items-center shrink-0 text-emerald-600 dark:text-emerald-400 shadow-sm">
+                      <ShieldCheck className="size-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-black text-emerald-800 dark:text-emerald-400">
+                        Təsdiqlənmiş Usta
+                      </h4>
+                      <p className="text-xs text-emerald-700/80 dark:text-emerald-300/80 mt-1 leading-relaxed">
+                        Sənədlər və şəxsiyyət məlumatları HəllVar komandası
+                        tərəfindən yoxlanıb təsdiqlənib. Etibarlı seçim!
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
         </Container>
@@ -1101,7 +1129,7 @@ export default function TechnicianProfilePage({
           <Container size="xl">
             <div className="flex items-end justify-between gap-4 mb-6">
               <div>
-                <Badge className="bg-primary/10 text-primary border-primary/20 rounded-full text-[11px] font-bold mb-2">
+                <Badge className="bg-primary/15 text-primary border-primary/30 rounded-full text-[11px] font-bold mb-2 shadow-sm">
                   <ChevronRight className="size-3.5 mr-1" />
                   Oxşar Ustalar
                 </Badge>
@@ -1153,11 +1181,15 @@ function MetricCard({
   truncate?: boolean;
 }) {
   return (
-    <Card className="group border-border/60 bg-white shadow-sm transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-0.5 hover:border-primary/20">
-      <CardContent className="p-4 sm:p-5 flex items-center gap-4">
+    <Card className="group relative overflow-hidden border-border/50 bg-white dark:bg-card shadow-sm transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/25">
+      <div
+        aria-hidden
+        className="absolute -right-6 -top-8 size-20 rounded-full bg-gradient-to-br from-primary/10 to-transparent blur-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      />
+      <CardContent className="p-4 sm:p-5 flex items-center gap-4 relative">
         <div
           className={cn(
-            "size-12 rounded-2xl grid place-items-center bg-gradient-to-br ring-1 ring-black/5 shadow-sm shrink-0 transition-transform duration-300 group-hover:scale-105",
+            "size-12 rounded-2xl grid place-items-center bg-gradient-to-br ring-1 ring-black/5 shadow-sm shrink-0 transition-transform duration-300 group-hover:scale-110",
             tone,
           )}
         >
@@ -1199,7 +1231,7 @@ function InfoRow({
   success?: boolean;
 }) {
   const content = (
-    <div className="group/info flex items-center gap-3.5 rounded-2xl border border-border/70 bg-white px-4 py-3.5 transition-all duration-200 hover:border-primary/25 hover:shadow-sm">
+    <div className="group/info flex items-center gap-3.5 rounded-2xl border border-border/70 bg-white dark:bg-card px-4 py-3.5 transition-all duration-200 hover:border-primary/25 hover:shadow-sm">
       <div className="size-10 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 text-primary ring-1 ring-primary/10 grid place-items-center shrink-0">
         <Icon className="size-5" />
       </div>
@@ -1210,7 +1242,7 @@ function InfoRow({
         <div
           className={cn(
             "text-sm font-bold mt-0.5 truncate",
-            success ? "text-emerald-600" : "text-foreground",
+            success ? "text-emerald-600 dark:text-emerald-400" : "text-foreground",
           )}
           title={value}
         >
@@ -1241,7 +1273,7 @@ function RelatedCard({
   onChat: () => void;
 }) {
   return (
-    <Card className="group flex flex-col h-full overflow-hidden border border-border/60 bg-white transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/20 cursor-pointer">
+    <Card className="group flex flex-col h-full overflow-hidden border border-border/60 bg-white dark:bg-card transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/20 cursor-pointer">
       <div onClick={onClick} className="flex-1">
         <CardContent className="p-5 flex flex-col gap-4 h-full">
           <div className="flex items-start gap-3.5">
@@ -1252,8 +1284,8 @@ function RelatedCard({
               </div>
               <span
                 className={cn(
-                  "absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-white shadow-sm",
-                  provider.is_online ? "bg-emerald-500" : "bg-slate-300",
+                  "absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-white dark:border-card shadow-sm",
+                  provider.is_online ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600",
                 )}
               />
             </div>
@@ -1325,8 +1357,14 @@ function SectionHeader({
   return (
     <div className="flex items-start justify-between gap-4 mb-5">
       <div className="flex items-center gap-3 min-w-0">
-        <div className="size-10 rounded-xl bg-gradient-to-br from-primary/10 to-accent/15 text-primary ring-1 ring-primary/10 grid place-items-center shrink-0">
-          <Icon className="size-5" />
+        <div className="relative">
+          <div
+            aria-hidden
+            className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/10 blur-md opacity-60"
+          />
+          <div className="relative size-10 rounded-xl bg-gradient-to-br from-primary/10 to-accent/15 text-primary ring-1 ring-primary/10 grid place-items-center shrink-0">
+            <Icon className="size-5" />
+          </div>
         </div>
         <div className="min-w-0">
           <h2 className="text-base sm:text-lg font-bold tracking-tight">
@@ -1342,9 +1380,46 @@ function SectionHeader({
   );
 }
 
+function WorkSampleImage({
+  src,
+  index,
+}: {
+  src: string;
+  index: number;
+}) {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div className="group relative aspect-square rounded-2xl overflow-hidden bg-slate-100 dark:bg-secondary border border-border/60">
+      {failed ? (
+        <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100 dark:from-secondary dark:via-muted dark:to-secondary text-muted-foreground/60">
+          <div className="flex flex-col items-center gap-1.5">
+            <Camera className="size-6" />
+            <span className="text-[10px] font-bold">Şəkil mövcud deyil</span>
+          </div>
+        </div>
+      ) : (
+        <img
+          src={src}
+          alt={`İş nümunəsi ${index + 1}`}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          loading="lazy"
+          onError={() => setFailed(true)}
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+        <span className="flex items-center gap-1.5 text-[10px] font-bold text-white">
+          <Camera className="size-3" />
+          İş nümunəsi {index + 1}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function ProfileSkeleton() {
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50/60">
+    <div className="flex flex-col min-h-screen bg-slate-50/60 dark:bg-background">
       <div className="pt-8 pb-4">
         <Container size="xl">
           <div className="flex items-center justify-between gap-3 flex-wrap">
@@ -1359,12 +1434,12 @@ function ProfileSkeleton() {
 
       <section className="pt-6 pb-6 sm:pb-10">
         <Container size="xl">
-          <div className="overflow-hidden rounded-3xl border border-border/60 bg-white shadow-premium">
+          <div className="overflow-hidden rounded-3xl border border-border/60 bg-white dark:bg-card shadow-premium">
             <Skeleton className="h-44 sm:h-56 w-full rounded-none bg-gradient-primary/10" />
             <div className="p-5 sm:p-8 -mt-20 sm:-mt-28 relative">
               <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
                 <div className="flex flex-col sm:flex-row sm:items-end gap-5">
-                  <Skeleton className="size-28 sm:size-36 rounded-3xl border-4 border-white shrink-0" />
+                  <Skeleton className="size-28 sm:size-36 rounded-3xl border-4 border-white dark:border-card shrink-0" />
                   <div className="flex-1 min-w-0 space-y-3 pt-14 sm:pt-16 pb-1">
                     <Skeleton className="h-6 w-64 max-w-full" />
                     <Skeleton className="h-4 w-52 max-w-full" />

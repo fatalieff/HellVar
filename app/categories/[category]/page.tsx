@@ -688,7 +688,7 @@ export default function CategoryDetailPage({
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50/50">
+    <div className="flex flex-col min-h-screen bg-slate-50/50 dark:bg-background">
       {/* Background decoration */}
       <div
         aria-hidden
@@ -764,7 +764,7 @@ export default function CategoryDetailPage({
         <Container size="xl">
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
             {/* Filters Sidebar */}
-            <aside className="space-y-6 bg-white border border-border/60 rounded-3xl p-5 shadow-sm self-start">
+            <aside className="space-y-6 bg-white dark:bg-card border border-border/60 rounded-3xl p-5 shadow-sm self-start">
               <div className="flex items-center justify-between border-b border-border/80 pb-3">
                 <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
                   <SlidersHorizontal className="size-4 text-muted-foreground" />
@@ -802,7 +802,7 @@ export default function CategoryDetailPage({
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full text-xs font-semibold text-foreground border border-border bg-slate-50/50 rounded-xl p-2.5 outline-none focus:border-primary transition-colors cursor-pointer"
+                  className="w-full text-xs font-semibold text-foreground border border-border bg-slate-50/50 dark:bg-muted/40 rounded-xl p-2.5 outline-none focus:border-primary transition-colors cursor-pointer"
                 >
                   <option value="rating">
                     {t.categoriesPage.detail.sortOptions.ratingDesc}
@@ -838,7 +838,7 @@ export default function CategoryDetailPage({
                   max="50"
                   value={radiusFilter}
                   onChange={(e) => setRadiusFilter(Number(e.target.value))}
-                  className="w-full accent-primary h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer"
+                  className="w-full accent-primary h-1.5 bg-slate-100 dark:bg-muted rounded-lg appearance-none cursor-pointer"
                 />
               </div>
 
@@ -886,7 +886,7 @@ export default function CategoryDetailPage({
                   max="20"
                   value={minExperience}
                   onChange={(e) => setMinExperience(Number(e.target.value))}
-                  className="w-full accent-primary h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer"
+                  className="w-full accent-primary h-1.5 bg-slate-100 dark:bg-muted rounded-lg appearance-none cursor-pointer"
                 />
               </div>
 
@@ -904,7 +904,7 @@ export default function CategoryDetailPage({
                         "flex-1 py-1.5 rounded-xl border text-[10px] font-bold transition-all cursor-pointer",
                         minRating === ratingVal
                           ? "border-primary bg-primary/10 text-primary"
-                          : "border-border bg-slate-50 text-foreground hover:bg-slate-100",
+                          : "border-border bg-slate-50 dark:bg-muted/40 text-foreground hover:bg-slate-100 dark:hover:bg-muted/60",
                       )}
                     >
                       {ratingVal === 0
@@ -928,7 +928,7 @@ export default function CategoryDetailPage({
                   onClick={() => setOnlineOnly(!onlineOnly)}
                   className={cn(
                     "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out outline-none",
-                    onlineOnly ? "bg-primary" : "bg-slate-200",
+                    onlineOnly ? "bg-primary" : "bg-slate-200 dark:bg-muted",
                   )}
                 >
                   <span
@@ -950,12 +950,12 @@ export default function CategoryDetailPage({
                   placeholder={t.categoriesPage.detail.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-11 h-12 bg-white rounded-2xl border border-border/60 shadow-sm text-sm"
+                  className="pl-11 h-12 bg-white dark:bg-card rounded-2xl border border-border/60 shadow-sm text-sm"
                 />
               </div>
 
               {error ? (
-                <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-700 animate-fade-in shadow-sm">
+                <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 dark:border-red-500/30 dark:bg-red-500/10 p-4 text-red-700 dark:text-red-400 animate-fade-in shadow-sm">
                   <AlertCircle className="size-5 shrink-0 mt-0.5" />
                   <div className="space-y-1">
                     <p className="text-sm font-semibold">{t.common.error}</p>
@@ -975,8 +975,8 @@ export default function CategoryDetailPage({
                   </p>
                 </div>
               ) : filteredAndSortedProviders.length === 0 ? (
-                <div className="flex flex-col items-center justify-center border border-dashed border-border rounded-3xl bg-white p-12 text-center shadow-sm">
-                  <div className="size-16 rounded-2xl bg-slate-50 text-muted-foreground flex items-center justify-center mb-4">
+                <div className="flex flex-col items-center justify-center border border-dashed border-border rounded-3xl bg-white dark:bg-card p-12 text-center shadow-sm">
+                  <div className="size-16 rounded-2xl bg-slate-50 dark:bg-muted/40 text-muted-foreground flex items-center justify-center mb-4">
                     <Search className="size-7" />
                   </div>
                   <h3 className="text-base font-bold text-foreground">
@@ -991,7 +991,7 @@ export default function CategoryDetailPage({
                   {filteredAndSortedProviders.map((provider) => (
                     <Card
                       key={provider.user_id}
-                      className="group flex flex-col h-full overflow-hidden border border-border/60 bg-white transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/20"
+                      className="group flex flex-col h-full overflow-hidden border border-border/60 bg-white dark:bg-card transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/20"
                     >
                       <CardContent className="p-5 flex-1 flex flex-col justify-between gap-4">
                         {/* Provider profile summary header */}
@@ -1008,10 +1008,10 @@ export default function CategoryDetailPage({
                               {/* Online Status Dot Badge */}
                               <span
                                 className={cn(
-                                  "absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-white shadow-sm",
+                                  "absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-white dark:border-card shadow-sm",
                                   provider.is_online
                                     ? "bg-emerald-500"
-                                    : "bg-slate-350",
+                                    : "bg-slate-300 dark:bg-slate-600",
                                 )}
                               />
                             </div>
@@ -1020,13 +1020,13 @@ export default function CategoryDetailPage({
                                 {provider.profiles?.first_name}{" "}
                                 {provider.profiles?.last_name}
                               </h3>
-                              <span className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-semibold border mt-0.5 inline-block">
+                              <span className="text-[10px] bg-slate-100 dark:bg-secondary text-slate-700 dark:text-muted-foreground px-2 py-0.5 rounded-full font-semibold border mt-0.5 inline-block">
                                 {localizeCategory(provider.category, t)}
                               </span>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-1 bg-amber-50 text-amber-600 px-2 py-1 rounded-xl text-xs font-bold shadow-sm/5">
+                          <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-xl text-xs font-bold shadow-sm/5">
                             <Star className="size-3.5 fill-amber-500 text-amber-500" />
                             <span>
                               {provider.rating
@@ -1093,7 +1093,7 @@ export default function CategoryDetailPage({
                               }
                               variant="outline"
                               size="sm"
-                              className="h-8 min-w-0 px-2 rounded-lg text-[11px] font-bold border-border hover:bg-slate-50 cursor-pointer"
+                              className="h-8 min-w-0 px-2 rounded-lg text-[11px] font-bold border-border hover:bg-slate-50 dark:hover:bg-muted/40 cursor-pointer"
                             >
                               {t.categoriesPage.viewButton}
                             </Button>
@@ -1146,10 +1146,10 @@ export default function CategoryDetailPage({
 
                       <span
                         className={cn(
-                          "absolute -bottom-0.5 -right-0.5 size-4 rounded-full border-2 border-white shadow-sm",
+                          "absolute -bottom-0.5 -right-0.5 size-4 rounded-full border-2 border-white dark:border-card shadow-sm",
                           selectedProvider.is_online
                             ? "bg-emerald-500"
-                            : "bg-slate-350",
+                            : "bg-slate-300 dark:bg-slate-600",
                         )}
                       />
                     </div>
@@ -1170,7 +1170,7 @@ export default function CategoryDetailPage({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-100 text-amber-600 px-3 py-1 rounded-2xl text-sm font-extrabold shadow-sm/5">
+                  <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/30 text-amber-600 dark:text-amber-400 px-3 py-1 rounded-2xl text-sm font-extrabold shadow-sm/5">
                     <Star className="size-4 fill-amber-500 text-amber-500" />
                     <span>
                       {selectedProvider.rating
@@ -1230,7 +1230,7 @@ export default function CategoryDetailPage({
                         <span>{t.categoriesPage.detail.reviewsLoading}</span>
                       </div>
                     ) : reviews.length === 0 ? (
-                      <p className="text-xs text-muted-foreground border border-dashed border-border rounded-xl bg-slate-50/50 p-4">
+                      <p className="text-xs text-muted-foreground border border-dashed border-border rounded-xl bg-slate-50/50 dark:bg-muted/30 p-4">
                         {t.dashboard.noReviewsYet}
                       </p>
                     ) : (
@@ -1238,7 +1238,7 @@ export default function CategoryDetailPage({
                         {reviews.map((review) => (
                           <div
                             key={review.id}
-                            className="rounded-xl border border-border bg-slate-50/50 p-3 flex flex-col gap-1.5"
+                            className="rounded-xl border border-border bg-slate-50/50 dark:bg-muted/30 p-3 flex flex-col gap-1.5"
                           >
                             <div className="flex justify-between items-center">
                               <span className="text-xs font-bold text-foreground">
@@ -1252,7 +1252,7 @@ export default function CategoryDetailPage({
                               </div>
                             </div>
                             {review.comment && (
-                              <p className="text-xs text-foreground/75 leading-relaxed bg-white border border-border/40 rounded-lg p-2 mt-0.5">
+                              <p className="text-xs text-foreground/75 leading-relaxed bg-white dark:bg-card border border-border/40 rounded-lg p-2 mt-0.5">
                                 {review.comment}
                               </p>
                             )}
@@ -1269,7 +1269,7 @@ export default function CategoryDetailPage({
                 </div>
 
                 {/* Sidebar details info box */}
-                <div className="space-y-4 bg-slate-50 border border-border/80 rounded-2xl p-4 self-start">
+                <div className="space-y-4 bg-slate-50 dark:bg-muted/30 border border-border/80 rounded-2xl p-4 self-start">
                   <div className="space-y-1">
                     <span className="text-[10px] text-muted-foreground block font-bold uppercase tracking-wider">
                       {t.techniciansPage.card.hourlyLabel}

@@ -74,14 +74,25 @@ export default async function RootLayout({
         : "az";
   const dictionary = await getDictionary(locale);
 
+  // FOUC-un qarşısını almaq üçün theme cookie-sini serverdə oxuyuruq
+  const themeCookie = cookieStore.get("hellvar.theme")?.value;
+  const initialTheme: "light" | "dark" | undefined =
+    themeCookie === "dark" || themeCookie === "light" ? themeCookie : undefined;
+
   return (
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${
+        initialTheme === "dark" ? "dark" : ""
+      } h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <Providers initialLocale={locale} initialDictionary={dictionary}>
+        <Providers
+          initialLocale={locale}
+          initialDictionary={dictionary}
+          initialTheme={initialTheme}
+        >
           <SiteLayout>{children}</SiteLayout>
         </Providers>
       </body>

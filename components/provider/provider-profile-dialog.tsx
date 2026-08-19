@@ -241,7 +241,7 @@ export function ProviderProfileDialog({
       <DialogContent className="max-w-3xl p-0 overflow-hidden">
         {provider ? (
           <div className="max-h-[85vh] overflow-y-auto">
-            <DialogHeader className="border-b border-border bg-slate-50/80 px-6 py-5 pr-14">
+            <DialogHeader className="border-b border-border bg-slate-50/80 dark:bg-muted/30 px-6 py-5 pr-14">
               <DialogTitle className="text-xl font-bold">
                 {fullName || t.dashboard.viewProfile}
               </DialogTitle>
@@ -250,13 +250,13 @@ export function ProviderProfileDialog({
 
             <div className="grid gap-6 px-6 py-6 md:grid-cols-[1.1fr_0.9fr]">
               <div className="space-y-5">
-                <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+                <div className="rounded-2xl border border-border bg-white dark:bg-card p-5 shadow-sm">
                   <div className="flex items-start gap-4">
                     <UserAvatar
                       avatarUrl={provider.profiles?.avatar_url}
                       name={fullName}
                       className="size-16 border border-border"
-                      fallbackClassName="bg-slate-100 text-muted-foreground"
+                      fallbackClassName="bg-slate-100 dark:bg-secondary text-muted-foreground"
                     />
                     <div className="min-w-0 flex-1 space-y-2">
                       <div>
@@ -269,15 +269,15 @@ export function ProviderProfileDialog({
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2 text-sm">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 font-semibold text-amber-700">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-500/10 px-2.5 py-1 font-semibold text-amber-700 dark:text-amber-400">
                           <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
                           {(provider.rating || 0).toFixed(1)}
                         </span>
-                        <span className="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-700">
+                        <span className="rounded-full bg-slate-100 dark:bg-secondary px-2.5 py-1 font-medium text-slate-700 dark:text-muted-foreground">
                           {reviews.length} {t.common.reviews}
                         </span>
                         {provider.distance !== undefined ? (
-                          <span className="rounded-full bg-emerald-50 px-2.5 py-1 font-medium text-emerald-700">
+                          <span className="rounded-full bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-400">
                             {t.dashboard.distance.replace("{distance}", String(provider.distance ?? 0))}
                           </span>
                         ) : null}
@@ -286,7 +286,7 @@ export function ProviderProfileDialog({
                   </div>
 
                   <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
-                    <div className="rounded-xl border border-border bg-slate-50 px-4 py-3">
+                    <div className="rounded-xl border border-border bg-slate-50 dark:bg-secondary px-4 py-3">
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {t.dashboard.phoneLabel}
                       </p>
@@ -299,7 +299,7 @@ export function ProviderProfileDialog({
                       </a>
                     </div>
 
-                    <div className="rounded-xl border border-border bg-slate-50 px-4 py-3">
+                    <div className="rounded-xl border border-border bg-slate-50 dark:bg-secondary px-4 py-3">
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {t.dashboard.priceLabel}
                       </p>
@@ -308,7 +308,7 @@ export function ProviderProfileDialog({
                       </p>
                     </div>
 
-                    <div className="rounded-xl border border-border bg-slate-50 px-4 py-3 sm:col-span-2">
+                    <div className="rounded-xl border border-border bg-slate-50 dark:bg-secondary px-4 py-3 sm:col-span-2">
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {t.dashboard.categoryLabel}
                       </p>
@@ -316,12 +316,12 @@ export function ProviderProfileDialog({
                     </div>
                   </div>
 
-                  <div className="mt-5 rounded-xl border border-border bg-slate-50 p-4">
+                  <div className="mt-5 rounded-xl border border-border bg-slate-50 dark:bg-secondary p-4">
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {t.dashboard.aboutLabel}
                       </p>
-                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${provider.is_online ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-700"}`}>
+                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${provider.is_online ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400" : "bg-slate-100 text-slate-700 dark:bg-secondary dark:text-muted-foreground"}`}>
                         <Activity className="h-3.5 w-3.5" />
                         {provider.is_online ? t.dashboard.onlineNow : t.dashboard.offlineNow}
                       </span>
@@ -332,7 +332,7 @@ export function ProviderProfileDialog({
                   </div>
 
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-xl border border-border bg-white px-4 py-3">
+                    <div className="rounded-xl border border-border bg-white dark:bg-card px-4 py-3">
                       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         <Clock3 className="h-4 w-4 text-primary" />
                         <span>{t.dashboard.experienceLabel}</span>
@@ -342,7 +342,7 @@ export function ProviderProfileDialog({
                       </p>
                     </div>
 
-                    <div className="rounded-xl border border-border bg-white px-4 py-3">
+                    <div className="rounded-xl border border-border bg-white dark:bg-card px-4 py-3">
                       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         <BriefcaseBusiness className="h-4 w-4 text-primary" />
                         <span>{t.dashboard.completedJobsLabel}</span>
@@ -352,7 +352,7 @@ export function ProviderProfileDialog({
                       </p>
                     </div>
 
-                    <div className="rounded-xl border border-border bg-white px-4 py-3">
+                    <div className="rounded-xl border border-border bg-white dark:bg-card px-4 py-3">
                       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         <ShieldCheck className="h-4 w-4 text-emerald-500" />
                         <span>{t.dashboard.availabilityLabel}</span>
@@ -394,7 +394,7 @@ export function ProviderProfileDialog({
               </div>
 
               <div className="space-y-5">
-                <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+                <div className="rounded-2xl border border-border bg-white dark:bg-card p-5 shadow-sm">
                   <div className="flex items-center justify-between gap-3">
                     <h3 className="text-base font-bold text-foreground">{t.dashboard.customerReviews}</h3>
                     <span className="text-sm font-medium text-muted-foreground">
@@ -409,12 +409,12 @@ export function ProviderProfileDialog({
                         <span>{t.common.loading}</span>
                       </div>
                     ) : reviews.length === 0 ? (
-                      <p className="rounded-xl border border-dashed border-border bg-slate-50 px-4 py-5 text-sm text-muted-foreground">
+                      <p className="rounded-xl border border-dashed border-border bg-slate-50 dark:bg-secondary px-4 py-5 text-sm text-muted-foreground">
                         {t.dashboard.noReviewsYet}
                       </p>
                     ) : (
                       reviews.map((review) => (
-                        <div key={review.id} className="rounded-xl border border-border bg-slate-50 px-4 py-3">
+                        <div key={review.id} className="rounded-xl border border-border bg-slate-50 dark:bg-secondary px-4 py-3">
                           <div className="flex items-start justify-between gap-3">
                             <div>
                               <p className="font-semibold text-foreground">
@@ -426,7 +426,7 @@ export function ProviderProfileDialog({
                                 {new Date(review.updated_at).toLocaleDateString()}
                               </p>
                             </div>
-                            <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-xs font-semibold text-amber-700">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-white dark:bg-card px-2 py-1 text-xs font-semibold text-amber-700 dark:text-amber-400">
                               <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                               {review.rating}
                             </span>
@@ -438,7 +438,7 @@ export function ProviderProfileDialog({
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+                <div className="rounded-2xl border border-border bg-white dark:bg-card p-5 shadow-sm">
                   <h3 className="text-base font-bold text-foreground">{t.dashboard.yourReview}</h3>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {[1, 2, 3, 4, 5].map((value) => (
@@ -449,8 +449,8 @@ export function ProviderProfileDialog({
                         disabled={!canReview || savingReview}
                         className={`inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-medium transition ${
                           value <= reviewRating
-                            ? "border-amber-200 bg-amber-50 text-amber-700"
-                            : "border-border bg-white text-muted-foreground"
+                            ? "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400"
+                            : "border-border bg-white dark:bg-card text-muted-foreground"
                         } disabled:cursor-not-allowed disabled:opacity-60`}
                       >
                         <Star className={`h-4 w-4 ${value <= reviewRating ? "fill-amber-400 text-amber-400" : "text-muted-foreground"}`} />

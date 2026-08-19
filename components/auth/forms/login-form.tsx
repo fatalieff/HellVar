@@ -127,7 +127,7 @@ export function LoginForm() {
                 placeholder={t.auth.signIn.emailPlaceholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 bg-white border-border focus-visible:ring-primary"
+                className="pl-10 bg-white dark:bg-card border-border focus-visible:ring-primary"
                 disabled={loading}
               />
             </div>
@@ -151,14 +151,14 @@ export function LoginForm() {
                 placeholder={t.auth.signIn.passwordPlaceholder}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 bg-white border-border focus-visible:ring-primary"
+                className="pl-10 bg-white dark:bg-card border-border focus-visible:ring-primary"
                 disabled={loading}
               />
             </div>
           </div>
 
           {error && (
-            <div className="p-3 bg-red-50 text-red-700 text-sm rounded-lg flex items-start space-x-2 border border-red-200">
+            <div className="p-3 bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/30 text-sm rounded-lg flex items-start space-x-2 border border-red-200">
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
               <span className="font-medium">{error}</span>
             </div>

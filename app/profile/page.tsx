@@ -189,7 +189,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <main className="flex-1 relative overflow-hidden bg-slate-50/50">
+      <main className="flex-1 relative overflow-hidden bg-slate-50/50 dark:bg-background">
         <Container size="lg" className="py-12 space-y-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-2">
@@ -208,7 +208,7 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <main className="flex-1 relative overflow-hidden bg-slate-50/50">
+      <main className="flex-1 relative overflow-hidden bg-slate-50/50 dark:bg-background">
         <Container size="sm" className="py-24">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -355,7 +355,7 @@ export default function ProfilePage() {
   const isProvider = profile?.role === "PROVIDER";
 
   return (
-    <main className="relative flex-1 overflow-hidden bg-slate-50/50">
+    <main className="relative flex-1 overflow-hidden bg-slate-50/50 dark:bg-background">
       {/* Decorative background */}
       <div className="pointer-events-none absolute -top-16 -left-16 h-[420px] w-[420px] rounded-full bg-[oklch(0.6231_0.1880_41.11)]/5 blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-24 -right-16 h-[420px] w-[420px] rounded-full bg-[oklch(0.7900_0.1400_70.00)]/5 blur-[120px]" />
@@ -401,8 +401,8 @@ export default function ProfilePage() {
               className={cn(
                 "mb-6 flex items-start gap-2.5 rounded-xl border p-3.5 text-sm",
                 message.type === "success"
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border-red-200 bg-red-50 text-red-700",
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400"
+                  : "border-red-200 bg-red-50 text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400",
               )}
             >
               {message.type === "success" ? (
@@ -543,7 +543,7 @@ export default function ProfilePage() {
                     <Button
                       type="button"
                       variant="ghost"
-                      className="mt-2 w-full text-red-500 hover:bg-red-50 hover:text-red-600"
+                      className="mt-2 w-full text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400"
                       onClick={handleRemoveAvatar}
                       disabled={removing}
                     >
@@ -585,7 +585,7 @@ export default function ProfilePage() {
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       placeholder={p.firstNamePlaceholder}
-                      className="bg-white border-border focus-visible:ring-primary"
+                      className="bg-white dark:bg-card border-border focus-visible:ring-primary"
                     />
                   </div>
                   <div className="space-y-2">
@@ -596,7 +596,7 @@ export default function ProfilePage() {
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       placeholder={p.lastNamePlaceholder}
-                      className="bg-white border-border focus-visible:ring-primary"
+                      className="bg-white dark:bg-card border-border focus-visible:ring-primary"
                     />
                   </div>
                 </div>
@@ -612,7 +612,7 @@ export default function ProfilePage() {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder={p.phonePlaceholder}
-                        className="bg-white pl-10 border-border focus-visible:ring-primary"
+                        className="bg-white dark:bg-card pl-10 border-border focus-visible:ring-primary"
                       />
                     </div>
                   </div>
@@ -642,14 +642,14 @@ export default function ProfilePage() {
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       placeholder={p.addressPlaceholder}
-                      className="bg-white pl-10 border-border focus-visible:ring-primary"
+                      className="bg-white dark:bg-card pl-10 border-border focus-visible:ring-primary"
                     />
                   </div>
                 </div>
 
                 {isProvider && (
                   <>
-                    <div className="space-y-3 rounded-xl border border-border/60 bg-slate-50/60 p-4">
+                    <div className="space-y-3 rounded-xl border border-border/60 bg-slate-50/60 dark:bg-muted/30 p-4">
                       <div>
                         <p className="text-sm font-semibold text-foreground">{p.priceLabel}</p>
                         <p className="mt-1 text-xs text-muted-foreground">{p.priceHint}</p>
@@ -669,7 +669,7 @@ export default function ProfilePage() {
                               value={priceMin}
                               onChange={(e) => setPriceMin(e.target.value)}
                               placeholder="20"
-                              className="bg-white pl-9 border-border focus-visible:ring-primary"
+                              className="bg-white dark:bg-card pl-9 border-border focus-visible:ring-primary"
                             />
                           </div>
                         </div>
@@ -687,7 +687,7 @@ export default function ProfilePage() {
                               value={priceMax}
                               onChange={(e) => setPriceMax(e.target.value)}
                               placeholder="50"
-                              className="bg-white pl-9 border-border focus-visible:ring-primary"
+                              className="bg-white dark:bg-card pl-9 border-border focus-visible:ring-primary"
                             />
                           </div>
                         </div>
@@ -703,7 +703,7 @@ export default function ProfilePage() {
                         placeholder={p.bioPlaceholder}
                         rows={4}
                         maxLength={500}
-                        className="resize-none bg-white border-border focus-visible:ring-primary"
+                        className="resize-none bg-white dark:bg-card border-border focus-visible:ring-primary"
                       />
                     </div>
                   </>

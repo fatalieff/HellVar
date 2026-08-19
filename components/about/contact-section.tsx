@@ -22,7 +22,7 @@ export function ContactSection() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ type: "spring", stiffness: 80, damping: 15 }}
         >
-          <Card className="overflow-hidden border border-white/80 bg-gradient-to-br from-primary/10 via-white to-amber-50 shadow-[0_20px_60px_-30px_oklch(0.2_0.02_250_/_0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_-28px_oklch(0.2_0.02_250_/_0.4)]">
+          <Card className="overflow-hidden border border-white/80 dark:border-border bg-gradient-to-br from-primary/10 via-white to-amber-50 dark:from-primary/15 dark:via-card dark:to-card shadow-[0_20px_60px_-30px_oklch(0.2_0.02_250_/_0.35)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_-28px_oklch(0.2_0.02_250_/_0.4)]">
             <CardContent className="grid gap-8 p-8 sm:p-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{t.aboutPage.contactEyebrow}</p>
@@ -35,7 +35,7 @@ export function ContactSection() {
               </div>
 
               <div className="rounded-3xl border border-border/70 bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-premium">
-                <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3 text-sm text-foreground/80 hover:bg-slate-100 transition-colors duration-200">
+                <div className="flex items-center gap-3 rounded-2xl bg-slate-50 dark:bg-muted/40 p-3 text-sm text-foreground/80 hover:bg-slate-100 dark:hover:bg-muted/60 transition-colors duration-200">
                   <MessageCircleQuestion className="size-5 text-primary" />
                   <span>{t.aboutPage.contactEmail}</span>
                 </div>

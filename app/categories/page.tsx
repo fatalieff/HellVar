@@ -215,7 +215,7 @@ export default function CategoriesPage() {
           className="pointer-events-none absolute inset-0"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 12% -10%, oklch(0.7900 0.1400 70.00 / 0.10), transparent 45%), radial-gradient(circle at 92% 0%, oklch(0.6231 0.1880 41.11 / 0.10), transparent 42%), linear-gradient(180deg, oklch(0.9880 0.0030 90.00) 0%, oklch(0.9850 0.0020 90.00) 100%)",
+              "radial-gradient(circle at 12% -10%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 45%), radial-gradient(circle at 92% 0%, color-mix(in oklab, var(--primary) 10%, transparent), transparent 42%), linear-gradient(180deg, var(--background) 0%, color-mix(in oklab, var(--background) 94%, var(--muted) 6%) 100%)",
           }}
         />
         <Hero3DScene />
@@ -247,7 +247,7 @@ export default function CategoriesPage() {
                     style={{ animationDelay: `${i * 80}ms` }}
                   >
                   {/* Card Image Cover */}
-                  <div className="relative h-48 w-full overflow-hidden bg-slate-100/50">
+                  <div className="relative h-48 w-full overflow-hidden bg-slate-100/50 dark:bg-muted/40">
                     <img
                       src={image}
                       alt={cats[k as keyof typeof cats] as string}
@@ -295,7 +295,7 @@ export default function CategoriesPage() {
                       <Button
                         asChild
                         variant="outline"
-                        className="h-10 rounded-xl text-xs font-bold border-border hover:bg-slate-50 transition-colors cursor-pointer"
+                        className="h-10 rounded-xl text-xs font-bold border-border hover:bg-slate-50 dark:hover:bg-muted/40 transition-colors cursor-pointer"
                       >
                         <Link href={loc(`/categories/${k}`)}>
                           {t.categoriesPage.viewButton}

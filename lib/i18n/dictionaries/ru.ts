@@ -18,6 +18,10 @@ const ru: Dictionary = {
     providerPanel: "Режим мастера",
     logout: "Выйти",
   },
+  theme: {
+    toggleToLight: "Переключить на светлую тему",
+    toggleToDark: "Переключить на тёмную тему",
+  },
   hero: {
     title: "Найдите подходящего мастера для вашего дома",
     subtitle:

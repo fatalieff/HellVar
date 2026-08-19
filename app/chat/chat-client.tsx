@@ -175,8 +175,8 @@ function InboxView({
   }, [currentUserId, loadConversations]);
 
   return (
-    <main className="min-h-[calc(100vh-64px)] bg-slate-50/70 px-4 py-7">
-      <div className="mx-auto flex min-h-[min(680px,calc(100vh-120px))] max-w-2xl flex-col overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
+    <main className="min-h-[calc(100vh-64px)] bg-slate-50/70 dark:bg-background px-4 py-7">
+      <div className="mx-auto flex min-h-[min(680px,calc(100vh-120px))] max-w-2xl flex-col overflow-hidden rounded-3xl border border-border bg-white dark:bg-card shadow-sm">
         {/* Header */}
         <header className="flex items-center gap-3 border-b border-border px-5 py-4">
           <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -198,7 +198,7 @@ function InboxView({
             </div>
           ) : conversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 px-6 text-center gap-3">
-              <div className="flex size-16 items-center justify-center rounded-full bg-slate-100">
+              <div className="flex size-16 items-center justify-center rounded-full bg-slate-100 dark:bg-secondary">
                 <MessageSquare className="size-7 text-muted-foreground/40" />
               </div>
               <p className="text-sm font-semibold text-muted-foreground">
@@ -473,8 +473,8 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
     : t.chatPage.chatTitle;
 
   return (
-    <main className="min-h-[calc(100vh-64px)] bg-slate-50/70 px-4 py-7">
-      <div className="mx-auto flex min-h-[min(680px,calc(100vh-120px))] max-w-2xl flex-col overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
+    <main className="min-h-[calc(100vh-64px)] bg-slate-50/70 dark:bg-background px-4 py-7">
+      <div className="mx-auto flex min-h-[min(680px,calc(100vh-120px))] max-w-2xl flex-col overflow-hidden rounded-3xl border border-border bg-white dark:bg-card shadow-sm">
         <header className="flex items-center gap-3 border-b border-border px-5 py-4">
           <Button
             variant="ghost"
@@ -507,7 +507,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
               <h1 className="font-bold group-hover:text-primary transition-colors truncate">
                 {title}
               </h1>
-              <p className="text-xs text-emerald-600">{t.chatPage.liveChat}</p>
+              <p className="text-xs text-emerald-600 dark:text-emerald-400">{t.chatPage.liveChat}</p>
             </div>
           </button>
         </header>
@@ -518,7 +518,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
               <Loader2 className="animate-spin text-primary" />
             </div>
           ) : error ? (
-            <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
+            <p className="rounded-xl bg-red-50 dark:bg-red-500/10 p-3 text-sm text-red-700 dark:text-red-400">
               {error}
             </p>
           ) : messages.length === 0 ? (
@@ -532,7 +532,7 @@ function ActiveChatView({ recipientId }: { recipientId: string }) {
                 className={`w-fit max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
                   message.sender_id === currentUserId
                     ? "ml-auto rounded-br-md bg-primary text-primary-foreground"
-                    : "rounded-bl-md bg-slate-100 text-foreground"
+                    : "rounded-bl-md bg-slate-100 dark:bg-secondary text-foreground"
                 }`}
               >
                 <p>{message.body}</p>

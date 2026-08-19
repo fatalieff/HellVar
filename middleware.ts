@@ -41,7 +41,7 @@ export function middleware(request: NextRequest) {
     (p) => internal === p || internal.startsWith(`${p}/`)
   );
   if (protectedHit && !hasSession) {
-    const url = request.nextUrl.clone();
+    const url = request.nextUrl.clone();    
     url.pathname = '/login';
     url.searchParams.set('redirectTo', pathname);
     return NextResponse.redirect(url);

@@ -36,12 +36,12 @@ type Props = {
 const INTL_LOCALE: Record<Locale, string> = { az: "az-AZ", en: "en-GB", tr: "tr-TR", ru: "ru-RU" };
 
 const STATUS_CLASSES: Record<BookingStatus, string> = {
-  PENDING: "bg-amber-50 text-amber-700 border-amber-200",
-  ACCEPTED: "bg-sky-50 text-sky-700 border-sky-200",
-  REJECTED: "bg-red-50 text-red-700 border-red-200",
-  CANCELLED: "bg-slate-100 text-slate-600 border-slate-200",
-  COMPLETED: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  EXPIRED: "bg-slate-100 text-slate-600 border-slate-200",
+  PENDING: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/30",
+  ACCEPTED: "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/30",
+  REJECTED: "bg-red-50 text-red-700 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/30",
+  CANCELLED: "bg-slate-100 text-slate-600 border-slate-200 dark:bg-secondary dark:text-muted-foreground dark:border-border",
+  COMPLETED: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30",
+  EXPIRED: "bg-slate-100 text-slate-600 border-slate-200 dark:bg-secondary dark:text-muted-foreground dark:border-border",
 };
 
 function formatDateTime(iso: string, locale: Locale): string {
@@ -157,13 +157,13 @@ export function ProviderBookings({ userId }: Props) {
   return (
     <div className="space-y-6">
       {error && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+        <div className="rounded-xl border border-red-200 bg-red-50 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400 px-4 py-3 text-sm font-semibold text-red-700">
           {error}
         </div>
       )}
 
       {bookings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-border bg-white px-6 py-14 text-center">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-border bg-white dark:bg-card px-6 py-14 text-center">
           <Inbox className="size-10 text-muted-foreground/40" />
           <p className="font-bold text-foreground">{t.bookings.emptyTitle}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
@@ -190,7 +190,7 @@ export function ProviderBookings({ userId }: Props) {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="rounded-xl text-red-600 border-red-200 hover:bg-red-50"
+                  className="rounded-xl text-red-600 border-red-200 hover:bg-red-50 dark:border-red-500/30 dark:text-red-400 dark:hover:bg-red-500/10"
                   disabled={busyId === b.id}
                   onClick={() => void updateStatus(b, "REJECTED")}
                 >
@@ -274,7 +274,7 @@ function BookingSection({
   if (bookings.length === 0 && !emptyText) return null;
 
   return (
-    <section className="rounded-2xl border border-border bg-white shadow-sm">
+    <section className="rounded-2xl border border-border bg-white dark:bg-card shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
         <div className="flex items-center gap-2">
           <span className="text-primary">{icon}</span>
@@ -307,7 +307,7 @@ function BookingSection({
                         avatarUrl={booking.customerAvatar}
                         name={booking.customerName}
                         className="size-14 border border-border"
-                        fallbackClassName="bg-slate-100 text-muted-foreground"
+                        fallbackClassName="bg-slate-100 text-muted-foreground dark:bg-secondary"
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">

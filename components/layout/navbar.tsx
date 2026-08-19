@@ -32,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { LanguageSwitcher } from "./language-switcher";
+import { ThemeToggle } from "./theme-toggle";
 import { Container } from "./container";
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { localizedPath } from "@/lib/i18n/url";
@@ -565,6 +566,7 @@ export function Navbar() {
 
         <div className="ml-auto flex items-center gap-2">
           <LanguageSwitcher />
+          <ThemeToggle />
 
           {/* DYNAMIC AUTHENTICATED OR UNAUTHENTICATED ACTION LINKS */}
           {user ? (
@@ -742,7 +744,12 @@ onClick={() => router.push(loc("/dashboard"))}
                   </div>
                 </div>
                 <Separator />
-                
+
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold">{t.brand.name}</span>
+                  <ThemeToggle />
+                </div>
+
                 {/* Navigation Links - Always visible on mobile */}
                 <nav className="flex flex-col gap-1">
                   {NAV_LINKS.map((k) => {
@@ -771,7 +778,7 @@ onClick={() => router.push(loc("/dashboard"))}
                         {userAvatarUrl ? (
                           <AvatarImage src={userAvatarUrl} alt="Avatar" />
                         ) : null}
-                        <AvatarFallback className="bg-slate-100 font-bold text-muted-foreground">
+                        <AvatarFallback className="bg-slate-100 dark:bg-secondary font-bold text-muted-foreground">
                           {profile?.first_name ? profile.first_name[0].toUpperCase() : <UserIcon className="w-5 h-5" />}
                         </AvatarFallback>
                       </Avatar>

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function BookingsPage() {
   return (
-    <div className="flex-1 flex flex-col min-h-[calc(100vh-64px)] bg-slate-50/50">
+    <div className="flex-1 flex flex-col min-h-[calc(100vh-64px)] bg-slate-50/50 dark:bg-background">
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6">
         <BookingList />
       </main>

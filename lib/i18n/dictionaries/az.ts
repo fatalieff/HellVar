@@ -18,6 +18,10 @@ const az: Dictionary = {
     providerPanel: "Usta Rejiminə Keç",
     logout: "Çıxış et",
   },
+  theme: {
+    toggleToLight: "Açıq rejimə keç",
+    toggleToDark: "Tünd rejimə keç",
+  },
   hero: {
     title: "Ev probleminə uyğun ustanı tap",
     subtitle:

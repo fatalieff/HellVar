@@ -34,7 +34,7 @@ export function FaqSection() {
   );
 
   return (
-    <section className="border-t border-border/60 bg-slate-50/70">
+    <section className="border-t border-border/60 bg-slate-50/70 dark:bg-muted/30">
       <Container size="xl" className="py-16 sm:py-20">
         <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
           <motion.div
@@ -72,7 +72,7 @@ export function FaqSection() {
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpen ? -1 : index)}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-semibold text-foreground hover:bg-slate-50/50 transition-colors"
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-semibold text-foreground hover:bg-slate-50/50 dark:hover:bg-muted/30 transition-colors"
                   >
                     <span>{faq.question}</span>
                     <span className={cn("text-xl text-muted-foreground transition-transform duration-200", isOpen && "rotate-45 text-primary")}>
@@ -89,7 +89,7 @@ export function FaqSection() {
                         transition={{ duration: 0.25, ease: "easeInOut" }}
                         className="overflow-hidden"
                       >
-                        <p className="border-t border-border/60 px-5 py-4 text-sm leading-7 text-foreground/70 bg-slate-50/20">
+                        <p className="border-t border-border/60 px-5 py-4 text-sm leading-7 text-foreground/70 bg-slate-50/20 dark:bg-muted/10">
                           {faq.answer}
                         </p>
                       </motion.div>

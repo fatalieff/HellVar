@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <div className="flex-1 flex flex-col min-h-[calc(100vh-64px)] bg-slate-50/50">
+    <div className="flex-1 flex flex-col min-h-[calc(100vh-64px)] bg-slate-50/50 dark:bg-background">
       <DashboardClient />
     </div>
   );

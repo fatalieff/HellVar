@@ -459,13 +459,13 @@ export default function TechniciansPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50/50">
+    <div className="flex flex-col min-h-screen bg-slate-50/50 dark:bg-background">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 15% 0%, oklch(0.7900 0.1400 70.00 / 0.10), transparent 50%), radial-gradient(circle at 85% 10%, oklch(0.6231 0.1880 41.11 / 0.08), transparent 45%)",
+            "radial-gradient(circle at 15% 0%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 50%), radial-gradient(circle at 85% 10%, color-mix(in oklab, var(--primary) 8%, transparent), transparent 45%)",
         }}
       />
 
@@ -600,7 +600,7 @@ export default function TechniciansPage() {
       {/* ============ TABS + SEARCH + FILTERS ============ */}
       <section
         id="all"
-        className="border-y border-border/60 bg-white/70 backdrop-blur-md sticky top-16 z-30"
+        className="border-y border-border/60 bg-white/70 dark:bg-card/70 backdrop-blur-md sticky top-16 z-30"
       >
         <Container size="xl" className="py-4">
           <div className="flex flex-col lg:flex-row lg:items-center gap-4">
@@ -621,8 +621,8 @@ export default function TechniciansPage() {
                     className={cn(
                       "group inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-300",
                       isActive
-                        ? "bg-white text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/50",
+                        ? "bg-white dark:bg-card text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/50 dark:hover:bg-muted/40",
                     )}
                   >
                     <span
@@ -641,7 +641,7 @@ export default function TechniciansPage() {
                         "text-[10px] font-black px-1.5 py-0.5 rounded-full",
                         isActive
                           ? key === "favorites"
-                            ? "bg-rose-100 text-rose-600"
+                            ? "bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400"
                             : "bg-primary/10 text-primary"
                           : "bg-muted text-muted-foreground",
                       )}
@@ -661,7 +661,7 @@ export default function TechniciansPage() {
                   placeholder={t.techniciansPage.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-11 h-11 bg-white rounded-2xl border-border/60 shadow-sm text-sm"
+                  className="pl-11 h-11 bg-white dark:bg-card rounded-2xl border-border/60 shadow-sm text-sm"
                 />
               </div>
 
@@ -725,14 +725,14 @@ export default function TechniciansPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="flex flex-col items-center justify-center border border-dashed border-border rounded-3xl bg-white p-12 sm:p-16 text-center shadow-sm"
+                className="flex flex-col items-center justify-center border border-dashed border-border rounded-3xl bg-white dark:bg-card p-12 sm:p-16 text-center shadow-sm"
               >
                 <div
                   className={cn(
                     "size-20 rounded-3xl grid place-items-center mb-5",
                     activeTab === "favorites"
-                      ? "bg-rose-50 text-rose-500"
-                      : "bg-slate-50 text-muted-foreground",
+                      ? "bg-rose-50 text-rose-500 dark:bg-rose-500/10 dark:text-rose-400"
+                      : "bg-slate-50 text-muted-foreground dark:bg-muted/40",
                   )}
                 >
                   {activeTab === "favorites" ? (
@@ -882,7 +882,7 @@ export default function TechniciansPage() {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-foreground hover:bg-white/95 shadow-none h-12 rounded-2xl px-6 font-bold flex-1 lg:flex-none"
+                  className="bg-white text-foreground hover:bg-white/95 shadow-none h-12 rounded-2xl px-6 font-bold flex-1 lg:flex-none dark:text-background"
                 >
                   <Link href={loc("/signup")} className="gap-2">
                     <Sparkles className="size-4.5" />
@@ -954,9 +954,9 @@ function RankBadge({ rank }: { rank: number }) {
     number,
     { cls: string; Icon: React.ComponentType<{ className?: string }> }
   > = {
-    1: { cls: "bg-amber-100 text-amber-700 border-amber-200", Icon: Award },
-    2: { cls: "bg-slate-100 text-slate-700 border-slate-200", Icon: Award },
-    3: { cls: "bg-orange-100 text-orange-700 border-orange-200", Icon: Award },
+    1: { cls: "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-500/15 dark:text-amber-400 dark:border-amber-500/30", Icon: Award },
+    2: { cls: "bg-slate-100 text-slate-700 border-slate-200 dark:bg-muted dark:text-muted-foreground dark:border-border", Icon: Award },
+    3: { cls: "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-500/15 dark:text-orange-400 dark:border-orange-500/30", Icon: Award },
   };
   const cfg = map[rank] || {
     cls: "bg-primary/10 text-primary border-primary/20",
@@ -1009,7 +1009,7 @@ function PodiumCard({
   return (
     <Card
       className={cn(
-        "group relative border bg-white overflow-hidden transition-all duration-300 hover:-translate-y-1.5",
+        "group relative border bg-white dark:bg-card overflow-hidden transition-all duration-300 hover:-translate-y-1.5",
         rank === 1
           ? "shadow-premium-lg border-primary/30"
           : "shadow-sm border-border/60 hover:shadow-premium-lg hover:border-primary/20",
@@ -1031,7 +1031,7 @@ function PodiumCard({
           <span
             className={cn(
               "absolute -bottom-0.5 -right-0.5 size-4 rounded-full border-2 border-white flex items-center justify-center text-[9px]",
-              provider.is_online ? "bg-emerald-400" : "bg-slate-300",
+              provider.is_online ? "bg-emerald-400" : "bg-slate-300 dark:bg-slate-600",
             )}
           />
           <span className="absolute -top-3 -right-3 text-3xl drop-shadow">
@@ -1090,8 +1090,8 @@ function PodiumCard({
             className={cn(
               "size-10 rounded-xl grid place-items-center border transition-all duration-300 shrink-0",
               isFavorite(provider.user_id)
-                ? "bg-rose-50 border-rose-200 text-rose-500 shadow-sm"
-                : "bg-slate-50 border-border text-muted-foreground hover:border-rose-200 hover:text-rose-500 hover:bg-rose-50",
+                ? "bg-rose-50 border-rose-200 text-rose-500 shadow-sm dark:bg-rose-500/10 dark:border-rose-500/30 dark:text-rose-400"
+                : "bg-slate-50 dark:bg-muted/40 border-border text-muted-foreground hover:border-rose-200 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10",
             )}
             title={t.techniciansPage.card.favoriteButtonTitle}
           >
@@ -1109,7 +1109,7 @@ function PodiumCard({
             onClick={() => router.push(loc(`/technicians/${provider.user_id}`))}
             variant="outline"
             size="sm"
-            className="h-10 rounded-xl text-[11px] font-bold border-border hover:bg-slate-50"
+            className="h-10 rounded-xl text-[11px] font-bold border-border hover:bg-slate-50 dark:hover:bg-muted/40"
             title={t.techniciansPage.card.profileButton}
           >
             {t.techniciansPage.card.profileButton}
@@ -1161,7 +1161,7 @@ function MiniStat({
   label: string;
 }) {
   return (
-    <div className="rounded-xl border border-border/60 bg-slate-50/50 px-2 py-2.5 text-center">
+    <div className="rounded-xl border border-border/60 bg-slate-50/50 dark:bg-muted/30 px-2 py-2.5 text-center">
       <Icon className="size-3.5 mx-auto text-primary mb-1" />
       <div className="text-[13px] font-black tracking-tight text-foreground leading-none">
         {value}
@@ -1193,7 +1193,7 @@ function MasterCard({
   const { t } = useI18n();
 
   return (
-    <Card className="group flex flex-col h-full overflow-hidden border border-border/60 bg-white transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/20">
+    <Card className="group flex flex-col h-full overflow-hidden border border-border/60 bg-white dark:bg-card transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 hover:border-primary/20">
       <CardContent className="p-5 flex-1 flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
@@ -1207,8 +1207,8 @@ function MasterCard({
               />
               <span
                 className={cn(
-                  "absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-white shadow-sm",
-                  provider.is_online ? "bg-emerald-500" : "bg-slate-350",
+                  "absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-white dark:border-card shadow-sm",
+                  provider.is_online ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600",
                 )}
               />
             </div>
@@ -1217,7 +1217,7 @@ function MasterCard({
                 {provider.profiles?.first_name} {provider.profiles?.last_name}
               </h3>
               <div className="flex flex-wrap items-center gap-1 mt-1">
-                <span className="inline-block text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-semibold border">
+                <span className="inline-block text-[10px] bg-slate-100 text-slate-700 dark:bg-secondary dark:text-muted-foreground px-2 py-0.5 rounded-full font-semibold border">
                   {provider.category}
                 </span>
                 {badge}
@@ -1230,8 +1230,8 @@ function MasterCard({
             className={cn(
               "size-9 rounded-xl grid place-items-center border transition-all duration-300 shrink-0",
               isFavorite
-                ? "bg-rose-50 border-rose-200 text-rose-500 shadow-sm"
-                : "bg-slate-50 border-border text-muted-foreground hover:border-rose-200 hover:text-rose-500 hover:bg-rose-50",
+                ? "bg-rose-50 border-rose-200 text-rose-500 shadow-sm dark:bg-rose-500/10 dark:border-rose-500/30 dark:text-rose-400"
+                : "bg-slate-50 dark:bg-muted/40 border-border text-muted-foreground hover:border-rose-200 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10",
             )}
             aria-label={t.techniciansPage.card.favoriteButtonTitle}
           >
@@ -1246,12 +1246,12 @@ function MasterCard({
 
         {/* Rating & Verified */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 bg-amber-50 text-amber-600 px-2 py-1 rounded-xl text-xs font-black shadow-sm/5">
+          <div className="flex items-center gap-1 bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400 px-2 py-1 rounded-xl text-xs font-black shadow-sm/5">
             <Star className="size-3.5 fill-amber-500 text-amber-500" />
             <span>{provider.rating ? provider.rating.toFixed(1) : "5.0"}</span>
           </div>
           {provider.documents_uploaded && (
-            <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 rounded-full text-[10px] font-bold">
+            <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 rounded-full text-[10px] font-bold dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30">
               <ShieldCheck className="size-3 mr-1" />
               ŞV
             </Badge>
@@ -1311,7 +1311,7 @@ function MasterCard({
               onClick={onViewProfile}
               variant="outline"
               size="sm"
-              className="h-9 px-2.5 rounded-lg text-[11px] font-bold border-border hover:bg-slate-50"
+              className="h-9 px-2.5 rounded-lg text-[11px] font-bold border-border hover:bg-slate-50 dark:hover:bg-muted/40"
               title={t.techniciansPage.card.profileButton}
             >
               {t.techniciansPage.card.profileButton}

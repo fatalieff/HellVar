@@ -18,6 +18,10 @@ const tr: Dictionary = {
     providerPanel: "Usta Moduna Geç",
     logout: "Çıkış yap",
   },
+  theme: {
+    toggleToLight: "Açık moda geç",
+    toggleToDark: "Karanlık moda geç",
+  },
   hero: {
     title: "Ev sorununa uygun ustayı bul",
     subtitle:

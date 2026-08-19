@@ -20,12 +20,12 @@ type Tab = "active" | "completed" | "cancelled";
 const INTL_LOCALE: Record<Locale, string> = { az: "az-AZ", en: "en-GB", tr: "tr-TR", ru: "ru-RU" };
 
 const STATUS_CLASSES: Record<BookingStatus, string> = {
-  PENDING: "bg-amber-50 text-amber-700 border-amber-200",
-  ACCEPTED: "bg-sky-50 text-sky-700 border-sky-200",
-  REJECTED: "bg-red-50 text-red-700 border-red-200",
-  CANCELLED: "bg-slate-100 text-slate-600 border-slate-200",
-  COMPLETED: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  EXPIRED: "bg-slate-100 text-slate-600 border-slate-200",
+  PENDING: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/30",
+  ACCEPTED: "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/30",
+  REJECTED: "bg-red-50 text-red-700 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/30",
+  CANCELLED: "bg-slate-100 text-slate-600 border-slate-200 dark:bg-secondary dark:text-muted-foreground dark:border-border",
+  COMPLETED: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30",
+  EXPIRED: "bg-slate-100 text-slate-600 border-slate-200 dark:bg-secondary dark:text-muted-foreground dark:border-border",
 };
 
 function formatDateTime(iso: string, locale: Locale): string {
@@ -185,7 +185,7 @@ export function BookingList() {
               "rounded-full border px-4 py-2 text-sm font-semibold transition-all duration-200",
               tab === item.key
                 ? "border-primary bg-primary text-primary-foreground shadow-glow-primary"
-                : "border-border bg-white text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                : "border-border bg-white dark:bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
             )}
           >
             {item.label}
@@ -194,13 +194,13 @@ export function BookingList() {
       </div>
 
       {error && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+        <div className="rounded-xl border border-red-200 bg-red-50 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400 px-4 py-3 text-sm font-semibold text-red-700">
           {error}
         </div>
       )}
 
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-border bg-white px-6 py-16 text-center">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-border bg-white dark:bg-card px-6 py-16 text-center">
           <CalendarCheck2 className="size-10 text-muted-foreground/40" />
           <p className="font-bold text-foreground">{t.bookings.listEmptyTitle}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
@@ -220,7 +220,7 @@ export function BookingList() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: 30 }}
-                  className="rounded-2xl border border-border bg-white p-5 shadow-sm"
+                  className="rounded-2xl border border-border bg-white dark:bg-card p-5 shadow-sm"
                 >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="flex min-w-0 flex-1 gap-3">
@@ -228,7 +228,7 @@ export function BookingList() {
                         avatarUrl={booking.providerAvatar}
                         name={booking.providerName}
                         className="size-14 border border-border"
-                        fallbackClassName="bg-slate-100 text-muted-foreground"
+                        fallbackClassName="bg-slate-100 text-muted-foreground dark:bg-secondary"
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
@@ -267,7 +267,7 @@ export function BookingList() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="rounded-xl text-red-600 border-red-200 hover:bg-red-50"
+                          className="rounded-xl text-red-600 border-red-200 hover:bg-red-50 dark:border-red-500/30 dark:text-red-400 dark:hover:bg-red-500/10"
                           disabled={cancellingId === booking.id}
                           onClick={() => void cancelBooking(booking)}
                         >

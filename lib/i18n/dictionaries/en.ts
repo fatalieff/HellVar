@@ -18,6 +18,10 @@ const en: Dictionary = {
     providerPanel: "Switch to Provider Mode",
     logout: "Sign out",
   },
+  theme: {
+    toggleToLight: "Switch to light mode",
+    toggleToDark: "Switch to dark mode",
+  },
   hero: {
     title: "Find the right pro for your home",
     subtitle:

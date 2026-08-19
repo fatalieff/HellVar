@@ -225,21 +225,21 @@ export function BookingDialog({
 
         <div className="max-h-[62vh] overflow-y-auto px-6 py-5 space-y-5">
           {!authState.uid ? (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 dark:border-amber-500/30 dark:bg-amber-500/10 p-4 flex items-start gap-3">
               <AlertTriangle className="size-5 text-amber-500 shrink-0 mt-0.5" />
               <div>
-                <div className="text-sm font-bold text-amber-800">{t.bookings.authRequiredTitle}</div>
-                <div className="text-xs text-amber-700/90 mt-1 leading-relaxed">
+                <div className="text-sm font-bold text-amber-800 dark:text-amber-400">{t.bookings.authRequiredTitle}</div>
+                <div className="text-xs text-amber-700/90 dark:text-amber-400/80 mt-1 leading-relaxed">
                   {t.bookings.authRequiredDesc}
                 </div>
               </div>
             </div>
           ) : !isCustomer ? (
-            <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4 flex items-start gap-3">
+            <div className="rounded-2xl border border-sky-200 bg-sky-50 dark:border-sky-500/30 dark:bg-sky-500/10 p-4 flex items-start gap-3">
               <ShieldCheck className="size-5 text-sky-500 shrink-0 mt-0.5" />
               <div>
-                <div className="text-sm font-bold text-sky-800">{t.bookings.roleRequiredTitle}</div>
-                <div className="text-xs text-sky-700/90 mt-1 leading-relaxed">
+                <div className="text-sm font-bold text-sky-800 dark:text-sky-400">{t.bookings.roleRequiredTitle}</div>
+                <div className="text-xs text-sky-700/90 dark:text-sky-400/80 mt-1 leading-relaxed">
                   {t.bookings.roleRequiredDesc}
                 </div>
               </div>
@@ -247,7 +247,7 @@ export function BookingDialog({
           ) : null}
 
           {success && (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 flex items-start gap-3 animate-fade-up">
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 dark:border-emerald-500/30 dark:bg-emerald-500/10 p-4 flex items-start gap-3 animate-fade-up">
               <CheckCircle2 className="size-5 text-emerald-500 shrink-0 mt-0.5" />
               <div>
                 <div className="text-sm font-bold text-emerald-800">{t.bookings.successTitle}</div>
@@ -291,7 +291,7 @@ export function BookingDialog({
                     className={`shrink-0 rounded-2xl border px-4 py-3 text-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                       active
                         ? "border-primary bg-primary text-primary-foreground ring-2 ring-primary/20 shadow-glow-primary"
-                        : "border-border bg-slate-50 hover:border-primary/40 hover:bg-white"
+                        : "border-border bg-slate-50 hover:border-primary/40 hover:bg-white dark:bg-secondary dark:hover:bg-card"
                     }`}
                   >
                     <span className={`block text-xs font-bold ${active ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{d.label}</span>
@@ -312,7 +312,7 @@ export function BookingDialog({
               value={time}
               onChange={(e) => setTime(e.target.value)}
               disabled={!isCustomer || loading || success}
-              className="w-full rounded-xl border border-border bg-white pl-3 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-xl border border-border bg-white dark:bg-card pl-3 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="">{t.bookings.timePlaceholder}</option>
               {timeSlots.map((slot) => (
@@ -331,7 +331,7 @@ export function BookingDialog({
                 value={duration}
                 onChange={(e) => setDuration(Number(e.target.value))}
                 disabled={!isCustomer || loading || success}
-                className="w-full rounded-xl border border-border bg-white pl-3 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full rounded-xl border border-border bg-white dark:bg-card pl-3 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {DURATIONS.map((d) => (
                   <option key={d} value={d}>{t.bookings.durationMinutes.replace("{count}", String(d))}</option>
@@ -389,7 +389,7 @@ export function BookingDialog({
           </div>
 
           {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">
+            <div className="rounded-xl border border-red-200 bg-red-50 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400 px-4 py-3 text-xs font-semibold text-red-700">
               {error}
             </div>
           )}
@@ -399,7 +399,7 @@ export function BookingDialog({
           <DialogClose asChild>
             <Button
               variant="outline"
-              className="h-11 rounded-xl font-bold border-border hover:bg-slate-50 flex-1 sm:flex-none"
+              className="h-11 rounded-xl font-bold border-border hover:bg-slate-50 dark:hover:bg-muted/40 flex-1 sm:flex-none"
               disabled={loading}
             >
               {t.bookings.cancel}

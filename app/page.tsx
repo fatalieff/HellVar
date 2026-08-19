@@ -149,7 +149,7 @@ export default function Home() {
           className="pointer-events-none absolute inset-0"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 12% -10%, oklch(0.7900 0.1400 70.00 / 0.10), transparent 45%), radial-gradient(circle at 92% 0%, oklch(0.6231 0.1880 41.11 / 0.10), transparent 42%), linear-gradient(180deg, oklch(0.9880 0.0030 90.00) 0%, oklch(0.9850 0.0020 90.00) 100%)",
+              "radial-gradient(circle at 12% -10%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 45%), radial-gradient(circle at 92% 0%, color-mix(in oklab, var(--primary) 10%, transparent), transparent 42%), linear-gradient(180deg, var(--background) 0%, color-mix(in oklab, var(--background) 94%, var(--muted) 6%) 100%)",
           }}
         />
         <Hero3DScene />
@@ -252,7 +252,7 @@ export default function Home() {
                           className={cn(
                             "mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-2xl border shadow-sm",
                             advice.urgent
-                              ? "border-red-200 bg-red-50 text-red-600"
+                              ? "border-red-200 bg-red-50 text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400"
                               : "border-primary/15 bg-primary/10 text-primary"
                           )}
                         >
@@ -316,7 +316,7 @@ export default function Home() {
                     </div>
                   ) : (
                     <div className="flex items-start gap-3">
-                      <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-2xl border border-amber-200 bg-amber-50 text-amber-600 shadow-sm">
+                      <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-2xl border border-amber-200 bg-amber-50 text-amber-600 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400 shadow-sm">
                         <AlertTriangle className="size-5" />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -364,7 +364,7 @@ export default function Home() {
                       style={{ animationDelay: `${420 + i * 50}ms` }}
                     >
                     {/* Image Header */}
-                    <div className="relative h-44 w-full overflow-hidden bg-slate-100/50">
+                    <div className="relative h-44 w-full overflow-hidden bg-slate-100/50 dark:bg-muted/40">
                       <img
                         src={image}
                         alt={cats[k as keyof typeof cats] as string}
@@ -403,7 +403,7 @@ export default function Home() {
                           asChild
                           variant="outline"
                           size="sm"
-                          className="h-9 rounded-lg text-xs font-semibold border-border hover:bg-slate-50 transition-colors cursor-pointer"
+                          className="h-9 rounded-lg text-xs font-semibold border-border hover:bg-slate-50 dark:hover:bg-muted/40 transition-colors cursor-pointer"
                         >
                           <Link href={loc(`/categories/${k}`)}>
                             {t.homePage.viewButtonLabel}
@@ -515,7 +515,7 @@ export default function Home() {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-foreground hover:bg-white/90 shadow-none"
+                  className="bg-white text-foreground hover:bg-white/90 shadow-none dark:text-background"
                 >
                   <Link href={loc("/become-technician")}>
                     {t.nav.becomeTechnician}
